@@ -1,0 +1,47 @@
+#!/bin/sh
+
+#-e removed so that it doesnt stop on error
+#
+# rc.local
+#
+# This script is executed at the end of each multiuser runlevel.
+# Make sure that the script will "exit 0" on success or any other
+# value on error.
+#
+# In order to enable or disable this script just change the execution
+# bits.
+#
+# By default this script does nothing
+
+#for sensors
+sudo modprobe it87
+/etc/init.d/kmod start
+
+#start some basic services
+
+#be quiet please
+sudo service fancontrol stop
+fancontrol &
+
+#drive & UPS monitoring
+sudo service apcupsd start
+sudo service smartd stop
+smartd -l local1 &
+
+#stop apcupsd from annonying terminal user
+chmod -x /usr/bin/wall
+
+#enable openencrypteddrive command for easy mounting
+source /root/.bashrc
+
+#make sure no writing happens until encrypted drive is mounted
+chattr +i /var/ftp
+
+#allow WOL
+ethtool -s eth0 wol g
+
+#start next bootstrap script
+/etc/scripts/bootstrap_stage_1.sh &
+
+exit 0
+

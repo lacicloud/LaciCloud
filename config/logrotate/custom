@@ -1,0 +1,20 @@
+/var/ftp/logs/*.txt {
+    daily
+    rotate 36500
+    sharedscripts
+    postrotate 
+	cp -p /var/ftp/config/logrotate/logs_default/* /var/ftp/logs
+	service rsyslog restart
+	service mysql restart
+	service php7.0-fpm restart
+	pkill pure-ftpd
+	/usr/local/sbin/pure-ftpd -f ftp -l mysql:/var/ftp/config/pure-ftpd/mysql.conf -t 8192:384 -0 -C 50 -c 10000 -E -A -H -D -S 60 -p 12000:13000 -u 1 -j -P lacicloud.net -F /var/ftp/config/pure-ftpd/fortune_cookie -k 98 -b --fscharset=UTF-8 --clientcharset=ISO-8859-2 -Y 1 -y 50:1 &
+	service nginx restart
+	/etc/init.d/denyhosts restart
+	service monitorix restart
+	service cron restart
+	service smartd restart
+	service apcupsd restart
+	service cron restart
+    endscript
+}

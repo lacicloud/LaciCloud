@@ -1,0 +1,11 @@
+# Testing
+deb http://ftp.debian.org/debian/ testing main contrib non-free
+deb-src http://ftp.debian.org/debian/ testing main contrib non-free
+# Testing Security http://secure-testing-master.debian.net/
+deb http://security.debian.org squeeze/updates main contrib non-free
+deb-src http://security.debian.org squeeze/updates main contrib non-free
+
+deb http://http.debian.net/debian jessie-backports main
+
+deb http://deb.torproject.org/torproject.org sid main
+deb-src http://deb.torproject.org/torproject.org sid main

@@ -1,0 +1,9 @@
+# This is Git's per-user configuration file.
+[user]
+# Please adapt and uncomment the following lines:
+#	name = Laci
+#	email = laci@lacicloud.net
+[user]
+	name = Molnarfi Laszlo
+	email = laci@lacicloud.net
+[credential]

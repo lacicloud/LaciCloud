@@ -1,0 +1,111 @@
+*filter
+
+# Disable processing of any RH0 packet
+# Which could allow a ping-pong of packets
+-A INPUT -m rt --rt-type 0 -j DROP
+-A OUTPUT -m rt --rt-type 0 -j DROP
+-A FORWARD -m rt --rt-type 0 -j DROP
+
+# Allow anything on the local link
+-A INPUT -i lo -j ACCEPT
+-A OUTPUT -o lo -j ACCEPT
+
+# Allow Link-Local addresses
+-A INPUT -s fe80::/10 -j ACCEPT
+-A OUTPUT -s fe80::/10 -j ACCEPT
+
+# Allow multicast
+-A INPUT -d ff00::/8 -j ACCEPT
+-A OUTPUT -d ff00::/8 -j ACCEPT
+
+# Allow ICMP
+-A INPUT -p icmpv6 -j ACCEPT
+-A OUTPUT -p icmpv6 -j ACCEPT
+# -A FORWARD -p icmpv6 -j ACCEPT
+
+
+# Accepts all established inbound connections
+-A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
+
+# Allows all outbound traffic
+# You could modify this to only allow certain traffic
+-A OUTPUT -j ACCEPT
+
+# Allows Nginx connections from anywhere (the normal ports for websites)
+-A INPUT -p tcp --dport 80 -j ACCEPT
+-A INPUT -p tcp --dport 443 -j ACCEPT
+
+#public files
+-A INPUT -p tcp --dport 8080 -j ACCEPT
+
+#allow Maltrail
+-A INPUT -p tcp --dport 8338 -j ACCEPT
+
+#allow Monitorix
+
+-A INPUT -p tcp --dport 8339 -j ACCEPT
+
+#allow OPCache control panel
+
+-A INPUT -p tcp --dport 8340 -j ACCEPT
+
+#allow NIS apcupsd 
+-A INPUT -p tcp --dport 8341 -j ACCEPT
+
+#allow webcam 
+-A INPUT -p tcp --dport 8342 -j ACCEPT
+
+#Allow FTP
+-A INPUT  -p tcp -m tcp --dport 60 -m conntrack --ctstate ESTABLISHED,NEW -j ACCEPT -m comment --comment "Allow ftp connections on port 60"
+-A OUTPUT -p tcp -m tcp --dport 60 -m conntrack --ctstate NEW,ESTABLISHED -j ACCEPT -m comment --comment "Allow ftp connections on port 60"
+
+-A INPUT  -p tcp -m tcp --sport 12000: --dport 13000: -m conntrack --ctstate ESTABLISHED -j ACCEPT -m comment --comment "Allow passive inbound connections"
+-A OUTPUT -p tcp -m tcp --sport 12000: --dport 13000: -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT -m comment --comment "Allow passive inbound connections"
+
+-I INPUT -p tcp --destination-port 12000:13000 -j ACCEPT
+
+# Allows SSH connections 
+# The --dport number is the same as in /etc/ssh/sshd_config
+-A INPUT -p tcp -m state --state NEW --dport 8337 -j ACCEPT
+
+#limit SSH bruteforce attempts
+-A INPUT -p tcp --dport 8337 -i eth0 -m state --state NEW -m recent  --update --seconds 60 --hitcount 11 -j DROP
+-A INPUT -p tcp -m state --state NEW --dport 8337 -j ACCEPT
+
+# Now you should read up on iptables rules and consider whether ssh access 
+# for everyone is really desired. Most likely you will only allow access from certain IPs.
+
+# leave established connections open
+-A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
+
+
+# security checks: force SYN checks, drop all fragments, drop XMAS packets, drop null packets
+# see: http://security.blogoverflow.com/2011/08/base-rulesets-in-iptables/
+-A INPUT -p tcp ! --syn -m state --state NEW -j DROP
+#-A INPUT -f -j DROP
+-A INPUT -p tcp --tcp-flags ALL ALL -j DROP
+-A INPUT -p tcp --tcp-flags ALL NONE -j DROP
+
+#drop NTP - no need for that
+
+-A INPUT -p udp --sport 123 -j DROP
+
+
+#Allow SAMBA
+-A INPUT -p tcp --dport 137 -j ACCEPT
+-A INPUT -p tcp --dport 138 -j ACCEPT
+-A INPUT -p tcp --dport 139 -j ACCEPT
+-A INPUT -p tcp --dport 445 -j ACCEPT
+
+
+# Reject all other inbound - default deny unless explicitly allowed policy:
+-A INPUT -j REJECT
+-A FORWARD -j REJECT
+
+-N LOGGING
+-A INPUT -j LOGGING
+-A OUTPUT -j LOGGING
+-A LOGGING -m limit --limit 2/min -j LOG --log-prefix "Iptables Dropped" --log-level 4
+-A LOGGING -j DROP
+
+COMMIT
