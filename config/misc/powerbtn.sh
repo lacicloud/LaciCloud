@@ -20,6 +20,9 @@ rm -r /var/log
 cat /dev/null > ~/.bash_history && history -c && history -w
 echo > .wget-hsts
 
+#clear tmp directory
+rm -r /tmp
+
 sudo umount /var/ftp
 sudo cryptsetup luksClose /dev/mapper/ftp
 
