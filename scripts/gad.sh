@@ -1,0 +1,237 @@
+#!/bin/sh
+
+# Gandi Automatic DNS 0.4
+
+# Copyright (c) 2012, 2013, 2014, 2015 Brian P. Curran <brian@brianpcurran.com>
+#
+# Permission to use, copy, modify, and distribute this software for any
+# purpose with or without fee is hereby granted, provided that the above
+# copyright notice and this permission notice appear in all copies.
+#
+# THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+# WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+# MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+# ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+# WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+# ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+# OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+
+usage() {
+  printf "\nUsage: $0 [-6] [-f] [-t] [-e] [-v] [-s] [-i EXT_IF] -a APIKEY -d EXAMPLE.COM -r \"RECORD-NAMES\"
+
+-6: Update AAAA record(s) instead of A record(s)
+-f: Force the creation of a new zonefile regardless of IP address discrepancy
+-t: If a new version of the zonefile is created, do not activate it
+-e: Print debugging information to stdout
+-v: Print information to stdout even if a new zonefile isn't needed
+-s: Use stdin instead of OpenDNS to determine external IP address
+-i: Use ifconfig instead of OpenDNS to determine external IP address
+
+EXT_IF: The name of your external network interface
+APIKEY: Your API key provided by Gandi
+EXAMPLE.COM: The domain name whose active zonefile will be updated
+RECORD-NAMES: A space-separated list of the name(s) of the A or AAAA record(s) to update or create\n\n"
+  exit 1
+}
+
+while [ $# -gt 0 ]; do
+  case "$1" in
+    -6) ipv6="yes";;
+    -f) force="yes";;
+    -t) testing="yes";;
+    -e) debug="yes";;
+    -v) verbose="yes";;
+    -s) stdin_ip="yes";;
+    -i) ext_if="$2"; shift;;
+    -a) apikey="$2"; shift;;
+    -d) domain="$2"; shift;;
+    -r) records="$2"; shift;;
+    *) usage; break
+  esac
+  shift
+done
+if [ -z "$apikey" -o -z "$domain" -o -z "$records" ]; then
+  usage
+fi
+if [ "$ipv6" = "yes" ]; then
+  record_type="AAAA"
+  ip_regex="\([0-9A-Fa-f:]*\)"
+  inet="inet6"
+else
+  record_type="A"
+  ip_regex="\([0-9]*\.[0-9]*\.[0-9]*\.[0-9]*\)"
+  inet="inet"
+fi
+
+if [ "$debug" = "yes" ]; then
+  printf "Initial flags:\n\napikey = %s\ndomain = %s\nrecords = %s\nrecord_type = %s\nip_regex = %s\n\n" "$apikey" "$domain" "$records" "$record_type" "$ip_regex"
+fi
+
+gandi="rpc.gandi.net:443"
+
+rpc() {
+  if [ "$debug" = "yes" ]; then
+    printf "RPC call to methodName = %s\n\n" "$1" 1>&2
+  fi
+  tmp_xml="<?xml version=\"1.0\"?>
+<methodCall>
+  <methodName>"$1"</methodName>
+  <params>
+    <param>
+      <value><string>"$apikey"</string></value>
+    </param>"
+  shift
+  while [ ! -z "$1" ]; do
+    if [ "$1" != "struct" ]; then
+      tmp_xml="$tmp_xml
+    <param>
+      <value><"$1">"$2"</"$1"></value>
+    </param>"
+    shift; shift
+    else
+      tmp_xml="$tmp_xml
+    <param>
+      <value>
+        <struct>"
+      shift;
+      while [ ! -z "$1" ]; do
+        if [ "$1" != "struct" ]; then
+          tmp_xml="$tmp_xml
+          <member>
+            <name>"$1"</name>
+            <value><"$2">"$3"</"$2"></value>
+          </member>"
+            shift; shift; shift;
+        else
+          break
+        fi
+      done
+      tmp_xml="$tmp_xml
+        </struct>
+      </value>
+    </param>"
+    fi
+  done
+  tmp_xml="$tmp_xml
+  </params>
+</methodCall>"
+  tmp_post="POST /xmlrpc/ HTTP/1.0
+User-Agent: Gandi Automatic DNS shell script/0.4
+Host: "$gandi"
+Content-Type: text/xml
+Content-Length: `printf "%s" "$tmp_xml" | wc -c | tr -d "[:space:]"`
+
+"
+  tmp_message="$tmp_post$tmp_xml"
+  if [ "$debug" = "yes" ]; then
+    printf "Sending XML-RPC message tmp_message =\n\n%s\n\n" "$tmp_message" 1>&2
+  fi
+  printf "%s" "$tmp_message" | openssl s_client -quiet -connect "$gandi" 2> /dev/null
+  unset tmp_xml
+  unset tmp_post
+  unset tmp_message
+}
+
+update() {
+  while [ ! -z "$1" ]; do
+    new_record_id=`rpc "domain.zone.record.list" "int" "$zone_id" "int" "$new_version_id" "struct" "name" "string" "$1" "type" "string" "$record_type" | grep -A 1 ">id<" | sed -n 's/.*<int>\([0-9]*\).*/\1/p'`
+    if [ "$debug" = "yes" ]; then
+      printf "new_record_id = %s\n\n" "$new_record_id"
+    fi
+    rpc "domain.zone.record.update" "int" "$zone_id" "int" "$new_version_id" "struct" "id" "int" "$new_record_id" "struct" "name" "string" "$1" "type" "string" "$record_type" "value" "string" "$ext_ip"
+    shift
+  done
+}
+
+create() {
+  while [ ! -z "$1" ]; do
+    rpc "domain.zone.record.add" "int" "$zone_id" "int" "$new_version_id" "struct" "name" "string" "$1" "type" "string" "$record_type" "value" "string" "$ext_ip"
+    shift
+  done
+}
+
+check() {
+  while [ ! -z "$1" ]; do
+    record_value=`rpc "domain.zone.record.list" "int" "$zone_id" "int" "0" "struct" "name" "string" "$1" "type" "string" "$record_type" | grep -A 1 ">value<" | sed -n "s/.*<string>"$ip_regex".*/\1/p"`
+    record_count=`printf "$record_value" | wc -w`
+    if [ "$record_count" -gt "1" ]; then
+      printf "Sorry, but gad does not support updating multiple records with the same name.\n"
+      exit 1
+    elif [ -z "$record_value" ]; then
+      if [ -z "$records_to_create" ]; then
+        records_to_create="$1"
+      else
+        records_to_create="$records_to_create $1"
+      fi
+    elif [ "$ext_ip" != "$record_value" -o "$force" = "yes" ]; then
+      if [ -z "$records_to_update" ]; then
+        records_to_update="$1"
+      else
+        records_to_update="$records_to_update $1"
+      fi
+    fi
+    if [ "$debug" = "yes" ]; then
+      printf "record = %s\nrecord_value = %s\nrecords_to_create = %s\nrecords_to_update = %s\n\n" "$1" "$record_value" "$records_to_create" "$records_to_update"
+    fi
+    shift
+  done
+}
+
+# Get correct IP address
+if [ "$stdin_ip" = "yes" ]; then
+  ext_ip_method="standard input"
+  read ext_ip
+elif [ ! -z "$ext_if" ]; then
+  ext_ip_method="ifconfig "$ext_if""
+  ext_ip=`ifconfig "$ext_if" | sed -n "s/.*"$inet" \(addr:\)* *"$ip_regex".*/\2/p" | head -1`
+else
+  ext_ip_method="OpenDNS"
+  ext_ip=`dig "$record_type" +short @resolver1.opendns.com myip.opendns.com`
+fi
+if [ -z "$ext_ip" ]; then
+  printf "Failed to determine external IP address with %s. See above error.\n" "$ext_ip_method"
+  exit 1
+fi
+if [ "$debug" = "yes" ]; then
+  printf "IP information:\n\next_ip_method = %s\next_ip = %s\n\n" "$ext_ip_method" "$ext_ip"
+fi
+
+# Get the active zonefile for the domain
+zone_id=`rpc "domain.info" "string" "$domain" | grep -A 1 zone_id | sed -n 's/.*<int>\([0-9]*\).*/\1/p'`
+if [ "$debug" = "yes" ]; then
+  printf "zone_id = %s\n\n" "$zone_id"
+fi
+if [ -z "$zone_id" ]; then
+  printf "No zone_id returned. This is expected with Gandi's test API. Use gad's -t flag for testing.\n"
+  exit 1
+fi
+
+# Check values of records in the active version of the zonefile
+set -f
+check $records
+set +f
+
+# If there are any mismatches, create a new version of the zonefile, update the incorrect records, and activate it
+if [ ! -z "$records_to_update" -o ! -z "$records_to_create" ]; then
+  new_version_id=`rpc "domain.zone.version.new" "int" "$zone_id" | sed -n 's/.*<int>\([0-9]*\).*/\1/p'`
+  if [ "$debug" = "yes" ]; then
+    printf "new_version_id = %s\n\n" "$new_version_id"
+  fi
+  set -f
+  update $records_to_update
+  create $records_to_create
+  set +f
+  if [ "$testing" != "yes" ]; then
+    printf "Activating version %s of the zonefile for domain %s...\n\nopenssl s_client output and domain.zone.version.set() method response:\n\n" "$new_version_id" "$domain"
+    rpc "domain.zone.version.set" "int" "$zone_id" "int" "$new_version_id"
+    printf "\nTried to update the following %s records to %s: %s %s\n\nThere is no error checking on the RPCs so check the web interface if you want to be sure the update was successful, or look at the methodResponse from domain.zone.version.set() above (a response of "1" means success).\n" "$record_type" "$ext_ip" "$records_to_update" "$records_to_create"
+  else
+    printf "Created version %s of the zonefile for domain %s.\n\nTried to update the following %s records to %s: %s %s\n\nThere is no error checking on the RPCs so check the web interface if you want to be sure the update was successful.\n" "$new_version_id" "$domain" "$record_type" "$ext_ip" "$records_to_update" "$records_to_create"
+  fi
+  exit
+else
+  if [ "$verbose" = "yes" ]; then
+    printf "External IP address %s detected with %s matches records: %s. No update needed. Exiting.\n" "$ext_ip" "$ext_ip_method" "$records"
+  fi
+  exit
+fi
