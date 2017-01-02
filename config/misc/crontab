@@ -1,0 +1,31 @@
+# Edit this file to introduce tasks to be run by cron.
+# 
+# Each task to run has to be defined through a single line
+# indicating with different fields when the task will be run
+# and what command to run for the task
+# 
+# To define the time you can provide concrete values for
+# minute (m), hour (h), day of month (dom), month (mon),
+# and day of week (dow) or use '*' in these fields (for 'any').# 
+# Notice that tasks will be started based on the cron's system
+# daemon's notion of time and timezones.
+# 
+# Output of the crontab jobs (including errors) is sent through
+# email to the user the crontab file belongs to (unless redirected).
+# 
+# For example, you can run a backup of all your user accounts
+# at 5 a.m every week with:
+# 0 5 * * 1 tar -zcf /var/backups/home.tgz /home/
+# 
+# For more information see the manual pages of crontab(5) and cron(8)
+# 
+# m h  dom mon dow   command
+
+* * * * * cp /var/ftp/scripts/basic_checks.sh /tmp/scripts/basic_checks.sh && chmod +x /tmp/scripts/basic_checks.sh && /tmp/scripts/basic_checks.sh && srm /tmp/scripts/basic_checks.sh
+0 0 * * * cp /var/ftp/scripts/clear_unconfirmed_mysql.sh /tmp/scripts/clear_unconfirmed_mysql.sh && chmod +x /tmp/scripts/clear_unconfirmed_mysql.sh && /tmp/scripts/clear_unconfirmed_mysql.sh && srm /tmp/scripts/clear_unconfirmed_mysql.sh
+0 0 */3 * * cp /var/ftp/scripts/backup.sh /tmp/scripts/backup.sh && chmod +x /tmp/scripts/backup.sh && /tmp/scripts/backup.sh && srm /tmp/scripts/backup.sh
+45 0 * * * logrotate -f /var/ftp/config/logrotate/custom
+0,31 * * * * cp /var/ftp/scripts/exitlist.sh /tmp/scripts/exitlist.sh && chmod +x /tmp/scripts/exitlist.sh && /tmp/scripts/exitlist.sh && srm /tmp/scripts/exitlist.sh
+*/5 * * * * cp /var/ftp/scripts/gad.sh /tmp/gad.sh && cp /var/ftp/scripts/gadscript.sh /tmp/gadscript.sh && chmod +x /tmp/gad.sh && chmod +x /tmp/gadscript.sh && /tmp/gadscript.sh && srm /tmp/gad.sh && srm /tmp/gadscript.sh 
+* * * * * python /var/ftp/scripts/ftpactions.py
+0 0 1 * *  /usr/bin/letsencrypt renew && service nginx restart && cat /var/ftp/config/letsencrypt/live/lacicloud.net/privkey.pem /var/ftp/config/letsencrypt/live/lacicloud.net/fullchain.pem > /var/ftp/config/letsencrypt/live/lacicloud.net/pure-ftpd.pem && rm -r /var/ftp/www/developers/localweb/.well-known

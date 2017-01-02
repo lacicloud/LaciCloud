@@ -31,6 +31,7 @@ ln -sf /var/ftp/config/php/pool.d/www.conf /etc/php/7.0/fpm/pool.d/www.conf
 ln -sf /var/ftp/config/nginx/nginx.conf /etc/nginx/nginx.conf
 ln -sf /var/ftp/config/nginx/mime.types /etc/nginx/mime.types
 ln -sf /var/ftp/config/nginx/.webcam /etc/nginx/.webcam
+ln -sf /var/ftp/config/nginx/.localweb_htpasswd /etc/nginx/.localweb_htpasswd
 ln -sf /var/ftp/config/nginx/sites-enabled/* /etc/nginx/sites-enabled/
 
 #mysql config
