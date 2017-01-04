@@ -9,7 +9,7 @@
 //captcha
 require_once('localweb/securimage_captcha/securimage.php');
 //swiftmailer for sending emails
-require_once('SwiftMailer/swift_required.php');
+require_once('SwiftMailer/lib/swift_required.php');
 
 //for Login page
 require_once('BruteForceBlock/BruteForceBlock.php');
