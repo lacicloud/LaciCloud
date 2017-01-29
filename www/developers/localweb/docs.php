@@ -17,7 +17,7 @@
         <ul class="topnav" id="mainNav">
             <li><a class="menu-link" href="/">Home</a><span class="menu-dot">.</span></li>
             <li><a class="menu-link" href="/about_us">About Us</a><span class="menu-dot">.</span></li>
-            <li><a class="menu-link" href="/docs">Help & Others</a></li>
+            <li><a class="menu-link active" href="/docs">Help & Others</a></li>
             <li class="logo-li">
                 <img class="logo-img" src="/resources/laci-logo.png" />
             </li>
