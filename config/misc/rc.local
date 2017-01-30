@@ -37,6 +37,10 @@ source /root/.bashrc
 #make sure no writing happens until encrypted drive is mounted
 chattr +i /var/ftp
 
+#turn on networking interfaces
+ifconfig eth0 up
+/etc/init.d/networking restart
+
 #allow WOL
 ethtool -s eth0 wol g
 
