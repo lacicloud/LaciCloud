@@ -672,7 +672,7 @@ class Swift_Mime_SimpleMimeEntity implements Swift_Mime_MimeEntity
      */
     protected function getRandomId()
     {
-        $idLeft = md5(getmypid().'.'.time().'.'.uniqid(mt_rand(), true));
+        $idLeft = md5(rand().'.'.time().'.'.uniqid(mt_rand(), true));
         $idRight = !empty($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : 'swift.generated';
         $id = $idLeft.'@'.$idRight;
 

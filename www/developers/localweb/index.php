@@ -23,7 +23,7 @@
             </li>
             <li><a class="menu-link" href="/shop">Shop</a><span class="menu-dot">.</span></li>
             <li><a class="menu-link" href="/contact">Contact</a><span class="menu-dot">.</span></li>
-            <li><a class="menu-link" href="/login">Log in/Sign up</a></li>
+            <li><a class="menu-link" href="/create">Log in/Sign up</a></li>
             <li class="icon">
                 <a href="javascript:void(0);" onclick="navFunction()">&#9776;</a>
             </li>
@@ -77,7 +77,7 @@
                 Versitality is one of of LaciCloud's other most important feature. Our service offers you ways to 
                 display messages to your users, have hierchical user structures, and a way to host your files on a 
                 public HTTPS server. Our API allows you to write your own applications on top of LaciCloud's, whatever 
-                it may be. Do not forget the many syncronization and backup programs that exist for FTP(s).
+                it may be. Do not forget the many syncronization, backup and encryption programs that exist for FTP(s).
                 <span class="section-end">.</span>
             </div>
         </div>

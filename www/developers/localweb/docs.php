@@ -64,7 +64,7 @@
         <div class="footer-leftbox">
             <span class="text-uppercase bold-font">LaciCloud</span><br />
             <span class="text-italic">Made with love</span><br />
-            <span class="text-italic">Brussels, Belgium  - <a href="mailto:laci@lacicloud.net">lac@lacicloud.net</a></span>
+            <span class="text-italic">Brussels, Belgium  - <a href="mailto:laci@lacicloud.net">laci@lacicloud.net</a></span>
         </div>
         <div class="footer-social">
             <a href="#" class="icon tw"><img src="/resources/social-twitter.png" /></a>

@@ -1,5 +1,9 @@
 
-# DenyHosts: Wed Dec  7 10:33:21 2016 | sshd: 69.162.124.237
+# DenyHosts: Fri Jan 13 16:55:09 2017 | sshd: 63.143.42.242
+sshd: 63.143.42.242
+# DenyHosts: Fri Jan 13 16:55:09 2017 | sshd: 69.162.124.237
 sshd: 69.162.124.237
-# DenyHosts: Tue Dec 20 22:16:04 2016 | sshd: 63.143.42.243
+# DenyHosts: Mon Jan 16 21:14:11 2017 | sshd: 192.168.1.2
+sshd: 192.168.1.2
+# DenyHosts: Tue Jan 24 08:26:14 2017 | sshd: 63.143.42.243
 sshd: 63.143.42.243

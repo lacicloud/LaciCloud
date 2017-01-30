@@ -5,7 +5,7 @@
 
 mac=`cfget -C /var/ftp/www/developers/secrets.ini secrets/self_mac_address`
 
-if ping -c 1 mainserver &> /dev/null
+if ping -c 1 wheatley &> /dev/null
 then
   echo "OK"
 else

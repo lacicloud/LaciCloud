@@ -9,7 +9,7 @@
 	    "types": ["ftp"],
 		"ftp": {
 			"host": "lacicloud.net",
-			"port": 60,
+			"port": 21,
 			"passive": true,
 			"ssl": true
 		}

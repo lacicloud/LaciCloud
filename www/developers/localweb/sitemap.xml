@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset
+      xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+            http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+
+<url>
+  <loc>https://lacicloud.net/</loc>
+</url>
+<url>
+  <loc>https://lacicloud.net/ftp</loc>
+</url>
+<url>
+  <loc>https://lacicloud.net/interface</loc>
+</url>
+<url>
+  <loc>https://lacicloud.net/login</loc>
+</url>
+<url>
+  <loc>https://lacicloud.net/create</loc>
+</url>
+<url>
+  <loc>https://lacicloud.net/forgot</loc>
+</url>
+<url>
+  <loc>https://lacicloud.net/resources/lacicloud_api_documentation.pdf</loc>
+</url>
+<url>
+  <loc>https://lacicloud.net/resources/lacicloud_help.pdf</loc>
+</url>
+<url>
+  <loc>https://lacicloud.net/resources/lacicloud_legal.pdf</loc>
+</url>
+</urlset>

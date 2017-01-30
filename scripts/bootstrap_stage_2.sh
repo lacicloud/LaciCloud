@@ -78,7 +78,7 @@ cp /var/ftp/config/misc/limits.conf /etc/security/limits.conf
 #megatools config
 ln -sf /var/ftp/config/megatools/.megarc /root/.megarc
 #SSL certs (from LE!)
-ln -sf /var/ftp/config/letsencrypt /etc/letsencrypt
+ln -sfT /var/ftp/config/letsencrypt /etc/letsencrypt
 
 #a little optimization can never hurt
 sudo echo 0 >> /proc/sys/vm/swappiness
@@ -134,12 +134,15 @@ sudo service monitorix start
 sudo service monitorix restart
 
 #no need for these
-/etc/init.d/samba stop
+#/etc/init.d/samba stop
 systemctl stop samba-ad-dc
 sudo service apache2 stop
 sudo service php5-fpm stop
 sudo service postfix stop
 sudo service postgresql stop
+
+#need this tho
+/etc/init.d/samba start
 
 #just to be sure
 modprobe ip_conntrack_ftp
@@ -155,7 +158,7 @@ modprobe ip_nat_ftp
 #set total process limit
 ulimit -n 4096
 
-#ODFP is torrent-only atm
+#no need for tor atm
 service tor stop
 
 #pureftpd; add -b for compatibility with ftp_ssl_connect in php
@@ -165,7 +168,7 @@ service tor stop
 #pureftpd; removed -4 
 
 #start  pure-ftpd
-/usr/local/sbin/pure-ftpd -f ftp -l mysql:/var/ftp/config/pure-ftpd/mysql.conf -t 8192:384 -0 -C 50 -c 10000 -E -A -H -D -Z -S 60 -p 12000:13000 -u 1 -j -P lacicloud.net -F /var/ftp/config/pure-ftpd/fortune_cookie -k 98 -b --fscharset=UTF-8 --clientcharset=UTF-8 -Y 1 -y 50:1 &
+/usr/local/sbin/pure-ftpd -f ftp -l mysql:/var/ftp/config/pure-ftpd/mysql.conf -t 8192:384 -0 -C 50 -c 10000 -E -A -H -D -Z -S 21 -p 12000:13000 -u 1 -j -P lacicloud.net -F /var/ftp/config/pure-ftpd/fortune_cookie -k 98 -b --fscharset=UTF-8 --clientcharset=UTF-8 -Y 1 -y 50:1 &
 
 #for some reason MySQL only starts if we put sleep 5 before, and sleep 3 after
 sleep 5
@@ -177,9 +180,6 @@ sleep 3
 #start maltral
 python /root/maltrail/sensor.py & 
 python /root/maltrail/server.py & 
-
-#start supporting python scripts
-python /var/ftp/scripts/ftpactions.py &
 
 exit 0
 

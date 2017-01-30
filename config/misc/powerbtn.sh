@@ -20,7 +20,7 @@ rm -r /var/log
 cat /dev/null > ~/.bash_history && history -c && history -w
 echo > .wget-hsts
 
-#clear tmp directory
+#clear temp directory
 rm -r /tmp
 
 sudo umount /var/ftp

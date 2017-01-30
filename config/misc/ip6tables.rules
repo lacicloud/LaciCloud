@@ -56,8 +56,8 @@
 -A INPUT -p tcp --dport 8342 -j ACCEPT
 
 #Allow FTP
--A INPUT  -p tcp -m tcp --dport 60 -m conntrack --ctstate ESTABLISHED,NEW -j ACCEPT -m comment --comment "Allow ftp connections on port 60"
--A OUTPUT -p tcp -m tcp --dport 60 -m conntrack --ctstate NEW,ESTABLISHED -j ACCEPT -m comment --comment "Allow ftp connections on port 60"
+-A INPUT  -p tcp -m tcp --dport 21 -m conntrack --ctstate ESTABLISHED,NEW -j ACCEPT -m comment --comment "Allow ftp connections on port 21"
+-A OUTPUT -p tcp -m tcp --dport 21 -m conntrack --ctstate NEW,ESTABLISHED -j ACCEPT -m comment --comment "Allow ftp connections on port 21"
 
 -A INPUT  -p tcp -m tcp --sport 12000: --dport 13000: -m conntrack --ctstate ESTABLISHED -j ACCEPT -m comment --comment "Allow passive inbound connections"
 -A OUTPUT -p tcp -m tcp --sport 12000: --dport 13000: -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT -m comment --comment "Allow passive inbound connections"

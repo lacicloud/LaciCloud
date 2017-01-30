@@ -1,6 +1,5 @@
-#!/bin/sh
+#!/bin/bash
 
-#-e removed so that it doesnt stop on error
 #
 # rc.local
 #
@@ -38,8 +37,7 @@ source /root/.bashrc
 chattr +i /var/ftp
 
 #turn on networking interfaces
-ifconfig eth0 up
-/etc/init.d/networking restart
+ifup eth0
 
 #allow WOL
 ethtool -s eth0 wol g

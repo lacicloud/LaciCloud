@@ -131,14 +131,14 @@ echo "Testing HTTP website port reachibility... ".var_export(ping("lacicloud.net
 echo "<br>";
 echo "Testing HTTPS website port reachibility... ".var_export(ping("lacicloud.net", 443), true);
 echo "<br>";
-echo "Testing FTP port reachibility... ".var_export(ping("lacicloud.net", 60), true);
+echo "Testing FTP port reachibility... ".var_export(ping("lacicloud.net", 21), true);
 echo "<br>";
 echo "Testing website HTML content...".var_export(checkWebsite("https://lacicloud.net"), true);
 echo "<br>";
 
 echo "Testing API (addftpuser)...".var_export(testAPIPart1("https://lacicloud.net/api/",$api_key,$username,$password), true);
 echo "<br>";
-echo "Testing FTP connection...".var_export(testFTPConnection("lacicloud.net", 60, $username, $password), true);
+echo "Testing FTP connection...".var_export(testFTPConnection("lacicloud.net", 21, $username, $password), true);
 echo "<br>";
 echo "Testing API (removeftpuser)...".var_export(testAPIPart2("https://lacicloud.net/api/",$api_key,$username), true);
 

@@ -11,9 +11,6 @@ require_once('localweb/securimage_captcha/securimage.php');
 //swiftmailer for sending emails
 require_once('SwiftMailer/lib/swift_required.php');
 
-//for Login page
-require_once('BruteForceBlock/BruteForceBlock.php');
-
 //payments
 require_once("GoUrl/cryptobox.class.php");
 
@@ -170,23 +167,10 @@ class LaciCloud {
 	public function loginUser($email, $password, $captcha, $dbc) {
 		$lacicloud_errors_api = new Errors();
 
-		$BFBresponse = ejfrancis\BruteForceBlock::getLoginStatus($this->login_throttle_settings, $_SERVER["REMOTE_ADDR"]);
-
-		switch ($BFBresponse['status']){
-		      case 'safe':
-		          //login allowed, continue
-		          break;
-		      case 'captcha':
-		          //captcha required	  	
-				  if ($this -> checkCaptcha($captcha) !== true) {
+		//captcha required	  	
+		if ($this -> checkCaptcha($captcha) !== true) {
 						return 4;
-				  } else {
-				  	$BFBresponse = ejfrancis\BruteForceBlock::clearDatabase($_SERVER["REMOTE_ADDR"]);
-				  }
-
-		          break;
-		  }
-
+		}
 
 		//don't waste memory by quering email/password combinations that couldn't have existed in the first place
 		if ($this -> validateUserInfo($email, $password, $password) !== true) {
@@ -226,7 +210,6 @@ class LaciCloud {
 
 		if (!\password_verify($password, $database_password) or $email !== $database_email) {
 			$lacicloud_errors_api -> msgLogger("LOW", "Wrong password when logging in... Id: ".$id, 5);
-			$BFBresponse = ejfrancis\BruteForceBlock::addFailedLoginAttempt($id, $_SERVER['REMOTE_ADDR']);
 			return 5;
 		}
 
@@ -387,6 +370,8 @@ class LaciCloud {
         	return 10;
         } 
 
+
+
         //send email
         
      	try{
@@ -430,7 +415,7 @@ class LaciCloud {
 			}
 
 			$this -> deleteUser($id, $dbc);
-
+			
 			return 10;
 		}
 
@@ -809,7 +794,7 @@ class LaciCloud {
 	}
 
 	public function getTierData($tier) {
-		$data = array(1 => array(10000, 10, 256, 600, "- Free - For Occasional Users"), 2 => array(25000, 50, 512, 2000, " - 10€ / Month - For regular Users"), 3 => array(50000, 75, 1000, 5000, " - 20€ / Month - For advanced Users"));
+		$data = array(1 => array(75000, 25, 256, 600, "- Free - For Occasional Users"), 2 => array(250000, 250, 512, 2000, " - 5€ / Month - For regular Users"), 3 => array(525000, 500, 1000, 5000, " - 10€ / Month - For advanced Users"));
 
 		return $data[$tier];
 
@@ -1163,7 +1148,7 @@ class Payments extends LaciCloud {
 	private $period = "1 MONTH";
 
 	//12 = 10 euro, 22 = 20 euro
-	private $paymentPriceArray = array("1" => 0.0,"2" => 12, "3" => 22); 
+	private $paymentPriceArray = array("1" => 0.0,"2" => 7, "3" => 12); 
 
 	//Stripe payment vars
 	//...

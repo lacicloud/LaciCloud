@@ -2,7 +2,7 @@
 
 #pure-ftpd crashes sometimes
 if [[ ! `pidof -s pure-ftpd` ]]; then
-	/usr/local/sbin/pure-ftpd -f ftp -l mysql:/var/ftp/config/pure-ftpd/mysql.conf -t 8192:384 -0 -C 50 -c 10000 -E -A -H -D -Z -S 60 -p 12000:13000 -u 1 -j -P lacicloud.net -F /var/ftp/config/pure-ftpd/fortune_cookie -k 98 -b --fscharset=UTF-8 --clientcharset=UTF-8 -Y 1 -y 50:1 &
+	/usr/local/sbin/pure-ftpd -f ftp -l mysql:/var/ftp/config/pure-ftpd/mysql.conf -t 8192:384 -0 -C 50 -c 10000 -E -A -H -D -Z -S 21 -p 12000:13000 -u 1 -j -P lacicloud.net -F /var/ftp/config/pure-ftpd/fortune_cookie -k 98 -b --fscharset=UTF-8 --clientcharset=UTF-8 -Y 1 -y 50:1 &
 	date=$(date +"%T")
 	echo "Restarted pure-ftpd at $date" >> /var/ftp/logs/events.txt
 fi
@@ -52,7 +52,7 @@ fi
 #restart networking in case of networking problems
 ROUTER_IP=192.168.1.1
 
-( ! ping -c1 $ROUTER_IP >/dev/null 2>&1 ) && service network restart >/dev/null 2>&1 && ifup eth0 && echo "Re-established network connection at $date" >> /var/ftp/logs/events.txt
+( ! ping -c1 $ROUTER_IP >/dev/null 2>&1 ) && ifdown eth0  && ifup eth0 && echo "Attempted network reconnection at $date" >> /var/ftp/logs/events.txt
 
 #just in case
 mkdir -p /tmp/scripts
