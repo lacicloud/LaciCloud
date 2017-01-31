@@ -90,7 +90,7 @@
             </div>
             <div class="feature-block">
                 <div class="text-center content-h-400">
-                    <div class="section-icon"><img src="/resources/versatility-icon.png" /></div>
+                    <div class="section-icon"><img src="/resources/security-icon.png" /></div>
                     <div class="section-heading"><h1>Security</h1></div>
                     <div class="section-text pad-lr versatility-text">
                             <ul>

@@ -15,7 +15,7 @@
     <!--start - main menu-->
     <nav>
         <ul class="topnav" id="mainNav">
-            <li><a class="menu-link" href="/">Home</a><span class="menu-dot">.</span></li>
+            <li><a class="menu-link active" href="/">Home</a><span class="menu-dot">.</span></li>
             <li><a class="menu-link" href="/about_us">About Us</a><span class="menu-dot">.</span></li>
             <li><a class="menu-link" href="/docs">Help & Others</a></li>
             <li class="logo-li">
@@ -92,7 +92,7 @@
         </div>
         <div class="bodylast-content-wrapper content-box">
             <div class="col-1 text-center content-h-400">
-                <div class="section-icon"><img src="resources/versatility-icon2.png" /></div>
+                <div class="section-icon"><img src="resources/open_source-icon.png" /></div>
                 <div class="section-heading"><h1>Open-Source</h1></div>
                 <div class="section-text pad-lr versatility-text">
                     Open-sourcing LaciCloud allows anyone access to view and enhance the source code. What this means is bug's gets fixed faster, 
