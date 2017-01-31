@@ -1,4 +1,4 @@
-﻿@font-face {
+@font-face {
     font-family: 'Montserrat-Regular';
     src: url('../resources/Montserrat-Regular.ttf') format('truetype');
 }
@@ -196,6 +196,7 @@ ul.topnav li.icon {
 .feature-block {
     width: 33%;
     float: left;
+    text-align: center;
 }
 
 .body-docs .h-about .col-3 {
@@ -405,7 +406,7 @@ ul.topnav li.icon {
     height: auto;
     float: left;
     position: relative;
-    top: 42%;
+    top: 32%;
 }
 
 .team-name {
@@ -415,12 +416,13 @@ ul.topnav li.icon {
 }
 
 .team-description {
-    width: 100%;
+    width: 88%;
     height: 100%;
     float: left;
     text-align: center;
     font-size: 16px;
     color: #9d9ea0;
+    padding-left: 5%;
 }
 
 .team-image {
@@ -798,6 +800,19 @@ ul.topnav li.icon {
 
         .privacy {
             padding-top: 15%;
+        }
+        
+        .body-about_us .topheader{
+            background-size: contain;
+            background-position: 50% -30px;
+        }
+        
+        .body-about_us .h-header{
+            height: 280px;
+        }
+        
+        .body-about_us nav, .body-docs nav{
+            height: 100px;
         }
     }
 
