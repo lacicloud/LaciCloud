@@ -42,7 +42,7 @@
             <div class="section-icon"><img src="/resources/icon-whylaci.png" /></div>
             <div class="section-heading"><h1>Why LaciCloud?</h1></div>
             <div class="section-text about-text">
-               Why did we create LaciCloud? Simply put, we have tried to find a cloud storage service for personal use. What was available didn't fit us. They aren't flexible, they aren't open-source, they don't allow you to encrypt your stuff, and they most certainly breach your constitutional rights by keeping an eye on your stuff so to say. Back in 2013, my Dropbox account was suspended due to allegedly uploading pirated software to the site; that's when I thought I had enough. By creating LaciCloud, I created a secure environment for myself and my friends where they could upload files in complete security and privacy to an FTP server. This quickly grew into LaciCloud. <br><strong>LaciCloud is the hard work of multiple people:</strong>
+               Why did we create LaciCloud? Simply put, we have tried to find a cloud storage service for personal use. What was available didn't fit us. They aren't flexible, they aren't open-source, they don't allow you to encrypt your stuff, and they most certainly breach your constitutional rights by keeping an eye on your stuff so to say. Back in 2013, my Dropbox account was suspended due to allegedly uploading pirated software to the site; that's when I thought I had enough. By creating LaciCloud, I created a secure environment for myself and my friends where they could upload files in complete security and privacy to an FTP server. This quickly grew into LaciCloud. <br><strong>LaciCloud is the hard work of multiple people;</strong>
                 <!-- Quick, simple, flexible => IT REALLY ISN'T ROCKET SCIENCE! -->
             </div>
         </div>
@@ -57,38 +57,53 @@
                 <div class="section-icon"><img src="/resources/versatility-icon.png" /></div>
                 <div class="section-heading"><h1>Versatility</h1></div>
                 <div class="section-text pad-lr versatility-text">
-  <strong>Head Of ICT</strong><br>Laci is our excellent prograrnmer. He is an aspiring young computer scientist with the desire to create software that makes people happy. He has experience in web development, web app and network security, computer forensics and system administration. He has been passionate about computers since the age of 4, and probably will be forever. 
-                    <span class="section-end">.</span>
-                </div>
-
-            </div>
-        </div>
-        <div class="feature-block">
-            <div class="text-center content-h-400">
-                <div class="section-icon"><img src="/resources/icon-features.png" /></div>
-                <div class="section-heading"><h1>Features</h1></div>
-                <div class="section-icon"><img src="/resources/compatibility-icon.png" /></div>
-                <div class="section-heading"><h1>Privacy</h1></div>
-                <div class="section-text pad-lr versatility-text">
                         <ul>
-                                <li>Test</li>
+                                <li>FTP device and programs Compatibility</li>
+                                <li>API</li>
+                                <li>Public files feature for website hosting</li>
+                                <li>Flexible payments</li>
                         </ul>
-                    <span class="section-end">.</span>
+                  <span class="section-end">.</span>
                 </div>
 
             </div>
         </div>
-        <div class="feature-block">
-            <div class="text-center content-h-400">
-                <div class="section-icon"><img src="/resources/versatility-icon.png" /></div>
-                <div class="section-heading"><h1>Security</h1></div>
-                <div class="section-text pad-lr versatility-text">
-                                <strong>Head Of ICT</strong><br>Laci is our excellent prograrnmer. He is an aspiring young computer scientist with the desire to create software that makes people happy. He has experience in web development, web app and network security, computer forensics and system administration. He has been passionate about computers since the age of 4, and probably will be forever. 
+            <div class="feature-block">
+                <div class="text-center content-h-400">
+                     <!--
+                    <div class="section-icon"><img src="/resources/icon-features.png" /></div>
+                    <div class="section-heading"><h1>Features</h1></div>
+                     -->
+                    <div class="section-icon"><img src="/resources/privacy-icon.png" /></div>
+                    <div class="section-heading"><h1>Privacy</h1></div>
+                    <div class="section-text pad-lr versatility-text">
+                            <ul>
+                                    <li>Bitcoin payments</li>
+                                    <li>Temporary FTP accounts</li>
+                                    <li>Minimal log keeping and data policy</li>
+                                    <li>Possible user data encryption</li>
+                            </ul>
                     <span class="section-end">.</span>
-                </div>
+                    </div>
 
+                </div>
             </div>
-        </div>
+            <div class="feature-block">
+                <div class="text-center content-h-400">
+                    <div class="section-icon"><img src="/resources/versatility-icon.png" /></div>
+                    <div class="section-heading"><h1>Security</h1></div>
+                    <div class="section-text pad-lr versatility-text">
+                            <ul>
+                                    <li>Open-source</li>
+                                    <li>Priviliege seperation</li>
+                                    <li>Secure coding practices (OWASP)</li>
+                                    <li>Pentested</li>
+                            </ul> 
+                        <span class="section-end">.</span>
+                    </div>
+
+                </div>
+            </div>
     </section>
 
     <div class="clear"></div>
