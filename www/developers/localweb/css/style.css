@@ -304,7 +304,9 @@ ul.topnav li.icon {
 }
 
 .body-about_us .h-header {
-    height: 537px;
+    height: auto;
+    min-height: 500px;
+    max-height: 644px;
 }
 
 .body-about_us .h-header {
