@@ -786,6 +786,10 @@ ul.topnav li.icon {
             width: 100%;
         }
 
+        .meet-the-team span {
+            font-size: 26px;
+        }
+
         .team-user {
             width: 100%;
             position: relative;
@@ -802,12 +806,21 @@ ul.topnav li.icon {
             .team-image img {
                 position: absolute;
                 left: 0;
-                width: 36%;
+                width: 36% !important;
                 margin-left: 32%;
+                margin-top: 40px;
             }
 
         .h-features {
             height: 100%;
+        }
+
+        .team-row-2 {
+            margin-top: 50px;
+        }
+
+        .user-2 {
+            margin-top: -90px;
         }
     }
 
