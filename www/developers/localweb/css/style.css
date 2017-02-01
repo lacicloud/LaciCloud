@@ -494,6 +494,8 @@ ul.topnav li.icon {
     border-top: 1px solid #4CEBAE;
     color: #898B8B;
     background-color: #F7F7F7;
+    position: absolute;
+    width: 100%;
 }
 
 .footer-leftbox {
@@ -857,6 +859,10 @@ ul.topnav li.icon {
         .compatibility .right-img-box {
             margin-top: 0;
         }
+
+        .footer-wrapper {
+            margin-top: 23%;
+        }
     }
 
     @media screen and (max-width:360px) {
@@ -875,6 +881,10 @@ ul.topnav li.icon {
 
         .row {
             padding-bottom: 20px;
+        }
+
+        .footer-wrapper {
+            margin-top: 25%;
         }
     }
 }
