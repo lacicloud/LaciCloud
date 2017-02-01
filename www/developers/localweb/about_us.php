@@ -123,10 +123,10 @@
                         <strong>Head Of ICT</strong><br>Laci is our excellent prograrnmer. He is an aspiring young computer scientist with the desire to create software that makes people happy. He has experience in web development, web app and network security, computer forensics and system administration. He has been passionate about computers since the age of 4, and probably will be forever. 
                     </div>
                 </div>
-                <div class="team-image">image</div>
+                <div class="team-image"><img style="height:100%; width:100%" src="/resources/laci.jpg"></img></div>
             </div>
             <div class="team-row">
-                <div class="team-image">image</div>
+                <div class="team-image"><img style="height:100%; width:100%" src="/resources/tristan.jpg"></img></div>
                 <div class="team-user">
                     <div class="team-name">Tristan Thomson</div>
                     <span class="team-end">.</span>
@@ -143,7 +143,7 @@
                         <strong>Head of User Experience and Testing</strong><br> Fabio is our excellent Beta tester. Over the past few months, Fabio has been greatly dedicated to this project. Finding every little bug, content problem, spelling mistake and always had great suggestions for the site. He is also a young aspiring computer scientist like Laci. In addition to these team members, i feel it is neccesarry to mention some amazing people who have helped us on our journey to create LaciCloud; Click <strong><a style="color:inherit;text-decoration:none;" href="/humans.txt">here</a></strong> to read more about these other members.
                     </div>
                 </div>
-                <div class="team-image">image</div>
+                <div class="team-image"><img style="height:100%; width:100%" src="/resources/fabio_profile_pic.png"></img></div>
             </div>
         </div>
     </section>
