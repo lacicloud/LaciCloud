@@ -177,8 +177,7 @@ ul.topnav li.icon {
 }
 
 .h-about {
-    height: 100%;
-    padding-bottom: 8%;
+    min-height: 100px;
 }
 
     .h-about .col-2 {
@@ -187,6 +186,7 @@ ul.topnav li.icon {
 
     .h-about .col-3 {
         padding-top: 110px;
+        min-height: 400px;
     }
 
 .body-about_us .h-about .col-3 {
@@ -263,7 +263,6 @@ ul.topnav li.icon {
 .col-3 {
     display: block;
     width: 100%;
-    height: 100%;
     max-height: 800px;
 }
 
@@ -783,6 +782,27 @@ ul.topnav li.icon {
         .feature-block {
             width: 100%;
         }
+
+        .team-user {
+            width: 100%;
+            position: relative;
+        }
+
+        .team-image {
+            width: 100%;
+            height: 20%;
+            float: none;
+            position: relative;
+        }
+
+            .team-image img {
+                position: absolute;
+                left: 0;
+            }
+
+        .h-features {
+            height: 100%;
+        }
     }
 
     @media screen and (max-width:560px) {
@@ -801,17 +821,17 @@ ul.topnav li.icon {
         .privacy {
             padding-top: 15%;
         }
-        
-        .body-about_us .topheader{
+
+        .body-about_us .topheader {
             background-size: contain;
             background-position: 50% -30px;
         }
-        
-        .body-about_us .h-header{
+
+        .body-about_us .h-header {
             height: 280px;
         }
-        
-        .body-about_us nav, .body-docs nav{
+
+        .body-about_us nav, .body-docs nav {
             height: 100px;
         }
     }
