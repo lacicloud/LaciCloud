@@ -578,6 +578,12 @@ ul.topnav li.icon {
 /*=======================================================================================*/
 /*RESPONSIVE / MEDIA QUERIES*/
 /*=======================================================================================*/
+@media only screen and (min-width: 1780px) {
+    .body-about_us .topheader {
+        background-position: 50% -180px;
+    }
+}
+
 @media only screen and (max-width: 1300px) {
     .section-text {
         font-size: 14px;
