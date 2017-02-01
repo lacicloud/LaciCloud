@@ -796,11 +796,14 @@ ul.topnav li.icon {
             height: 20%;
             float: none;
             position: relative;
+            background-image: none;
         }
 
             .team-image img {
                 position: absolute;
                 left: 0;
+                width: 36%;
+                margin-left: 32%;
             }
 
         .h-features {
