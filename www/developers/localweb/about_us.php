@@ -120,8 +120,8 @@
             <span>Meet the team!</span>
         </div>
         <div class="team-wrapper">
-            <div class="team-row">
-                <div class="team-user">
+            <div class="team-row team-row-1">
+                <div class="team-user user-1">
                     <div class="team-name">Molnarfi Laszlo</div>
                     <span class="team-end">.</span>
                     <div class="team-description">
@@ -134,9 +134,9 @@
                 </div>
                 <div class="team-image"><img style="height:100%; width:100%" src="/resources/laci.jpg"></div>
             </div>
-            <div class="team-row">
+            <div class="team-row team-row-2">
                 <div class="team-image"><img style="height:100%; width:100%" src="/resources/tristan.jpg"></div>
-                <div class="team-user">
+                <div class="team-user user-2">
                     <div class="team-name">Tristan Thomson</div>
                     <span class="team-end">.</span>
                     <div class="team-description">
@@ -147,8 +147,8 @@
                     </div>
                 </div>
             </div>
-            <div class="team-row">
-                <div class="team-user">
+            <div class="team-row team-row-3">
+                <div class="team-user user-3">
                     <div class="team-name">Fabio Barbero</div>
                     <span class="team-end">.</span>
                     <div class="team-description">
