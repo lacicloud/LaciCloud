@@ -116,7 +116,7 @@ ul.responsive li a {
     color: #f2f2f2 !important;
 }
 
-.body-docs ul.topnav li a, .body-about_us ul.topnav li a {
+.body-docs ul.topnav li a, .body-about_us ul.topnav li a, .body-contact ul.topnav li a {
     color: #727272;
 }
 
@@ -129,7 +129,7 @@ ul.topnav li a:hover {
     border-bottom: 4px solid #ffffff;
 }
 
-.body-docs ul.topnav li a:hover, .body-about_us ul.topnav li a:hover {
+.body-docs ul.topnav li a:hover, .body-about_us ul.topnav li a:hover, .body-contact ul.topnav li a:hover {
     color: #64C29E;
     border-bottom: 4px solid #727272;
 }
@@ -144,7 +144,7 @@ ul.topnav li.icon {
     font-size: 1.4em;
 }
 
-.body-docs .menu-dot, .body-about_us .menu-dot {
+.body-docs .menu-dot, .body-about_us .menu-dot, .body-contact .menu-dot {
     color: #727272;
 }
 
@@ -302,7 +302,7 @@ ul.topnav li.icon {
     margin-top: -5%;
 }
 
-.body-docs .h-header {
+.body-docs .h-header, .body-contact .h-header {
     height: 200px;
 }
 
@@ -322,11 +322,11 @@ ul.topnav li.icon {
     padding-top: 20px;
 }
 
-.body-docs nav, .body-about_us nav {
+.body-docs nav, .body-about_us nav, .body-contact nav {
     height: 140px;
 }
 
-.body-docs .topheader {
+.body-docs .topheader, .body-contact .topheader {
     background-image: url(/resources/docs-topheader.jpg);
     background-size: cover;
     background-repeat: no-repeat;
@@ -497,6 +497,149 @@ ul.topnav li.icon {
         width: 100%;
     }
 
+.col-half {
+    width: 40%;
+    float: left;
+    min-height: 360px;
+    padding-left: 5%;
+    padding-right: 5%;
+}
+
+    .col-half .section-heading {
+        text-align: center;
+        margin-top: 50px;
+    }
+
+    .col-half input, .col-half textarea {
+        font-size: 26px;
+        background-color: #dadada;
+        border: none;
+        height: 45px;
+        border-radius: 2px;
+        width: 100%;
+        color: #828587 !important;
+        font-family: 'Montserrat-Regular', Fallback, sans-serif;
+        font-weight: 100;
+        padding-left: 6px;
+        box-sizing: border-box;
+    }
+
+    .col-half textarea {
+        max-height: 100%;
+        max-width: 100%;
+        height: 340px;
+    }
+
+.body-contact select {
+    background: transparent;
+    width: 100%;
+    font-size: 26px;
+    border: 1px solid #dadada;
+    border-radius: 2px;
+    height: 45px;
+    color: #828587 !important;
+    font-family: 'Montserrat-Regular', Fallback, sans-serif;
+    font-weight: 100;
+}
+
+.col-half input::-webkit-input-placeholder, .col-half textarea::-webkit-input-placeholder {
+    color: #828591;
+}
+
+
+.h-contact .form-field {
+    margin-top: 20px;
+}
+
+.h-contact .form-button input {
+    width: 25%;
+    float: right;
+    font-size: 32px;
+    background-color: transparent;
+    cursor: pointer;
+    margin-bottom: 8px;
+    letter-spacing: -4px;
+}
+
+    .h-contact .form-button input:hover {
+        background-color: transparent;
+        cursor: pointer;
+        color: #4cebae !important;
+        box-shadow: 2px black;
+        transition: ease-in-out 0.25s;
+    }
+
+.body-contact .select-wrapper {
+    width: 100%;
+    height: 45px;
+    border-radius: 2px;
+    overflow: hidden;
+    background-color: #dadada;
+    margin-top: 40px;
+}
+
+.social-icons-large {
+    width: 20%;
+    height: 310px;
+    margin-right: 5%;
+    margin-top: 40px;
+    float: left;
+    display: inline-block;
+}
+
+.youtube-embed-container {
+    width: 70%;
+    margin-top: 80px;
+    margin-left: 5%;
+    float: left;
+    display: inline-block;
+}
+
+.youtube-embed-inner {
+    height: 310px;
+    background-color: #dcdcdc;
+}
+
+#sprite-twitter {
+    width: 112px;
+    height: 112px;
+    background: url(../resources/sprite-social-1.png) 0 0;
+    object-fit: none;
+    object-position: 0 0;
+}
+
+#sprite-facebook {
+    width: 112px;
+    height: 112px;
+    background: url(../resources/sprite-social-1.png) -112px 259px;
+    object-fit: none;
+    object-position: -112px 259px;
+}
+
+#sprite-youtube {
+    width: 112px;
+    height: 112px;
+    background: url(../resources/sprite-social-1.png) 0 112px;
+    object-fit: none;
+    object-position: 0 112px;
+}
+
+#sprite-twitter:hover {
+    background: url(../resources/sprite-social-2.png) 0px 0px;
+    transition: ease-in-out 0.25s;
+}
+
+#sprite-facebook:hover {
+    background: url(../resources/sprite-social-2.png) -112px 259px;
+    transition: ease-in-out 0.25s;
+}
+
+#sprite-youtube:hover {
+    background: url(../resources/sprite-social-2.png) 0px 112px;
+    transition: ease-in-out 0.25s;
+}
+
+/*-------------------footer------------------*/
 .footer-wrapper {
     height: 250px;
     border-top: 1px solid #4CEBAE;
@@ -564,7 +707,7 @@ ul.topnav li.icon {
         border-radius: 50%;
         transition: .3s all;
         border: 3px solid;
-        width: 30px;
+        width: 31px;
         height: 29px;
         margin-left: 11px;
     }
