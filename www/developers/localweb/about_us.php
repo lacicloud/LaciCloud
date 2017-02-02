@@ -157,7 +157,7 @@
                         little bug, content problem, spelling mistake and always had great suggestions for the site.
                         He is also a young aspiring computer scientist like Laci. In addition to these team members,
                         i feel it is neccesarry to mention some amazing people who have helped us on our journey to
-                        create LaciCloud; Click
+                        create LaciCloud; <br>Click
                         <strong><a style="color:inherit;text-decoration:none;" href="/humans.txt">here</a></strong>
                         to read more about these other members.
                     </div>
