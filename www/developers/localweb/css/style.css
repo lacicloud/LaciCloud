@@ -191,7 +191,7 @@ ul.topnav li.icon {
 
 .body-about_us .h-about .col-3 {
     padding-top: 0;
-    max-height: 400px;
+    max-height: 400px; 
 }
 
 .feature-block {
@@ -853,6 +853,10 @@ ul.topnav li.icon {
 
         .body-about_us nav, .body-docs nav {
             height: 100px;
+        }
+
+        .body-about_us .h-about .col-3 {
+            max-height: 700px;
         }
     }
 
