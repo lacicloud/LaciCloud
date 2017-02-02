@@ -12,6 +12,8 @@ body {
     padding: 0;
     margin: 0;
     font-family: 'Montserrat-Regular', Fallback, sans-serif;
+    height: 100%;
+    width: 100%;
 }
 
 h1 {
@@ -191,7 +193,7 @@ ul.topnav li.icon {
 
 .body-about_us .h-about .col-3 {
     padding-top: 0;
-    max-height: 400px; 
+    max-height: 400px;
 }
 
 .feature-block {
@@ -294,9 +296,10 @@ ul.topnav li.icon {
 
 .body-about_us .topheader {
     background-image: url(/resources/about_us-topheader.jpg);
-    background-size: cover;
+    background-size: contain;
     background-repeat: no-repeat;
-    background-position: 50% -100px;
+    background-position: 50% 0px;
+    margin-top: -5%;
 }
 
 .body-docs .h-header {
@@ -305,8 +308,9 @@ ul.topnav li.icon {
 
 .body-about_us .h-header {
     height: auto;
-    min-height: 500px;
+    min-height: 400px;
     max-height: 644px;
+    overflow: hidden;
 }
 
 .body-about_us .h-header {
@@ -315,7 +319,7 @@ ul.topnav li.icon {
 
 .body-about_us .h-about {
     background-color: #F7F7F7;
-    padding-top: 17px;
+    padding-top: 20px;
 }
 
 .body-docs nav, .body-about_us nav {
@@ -588,6 +592,16 @@ ul.topnav li.icon {
     .section-text {
         font-size: 14px;
     }
+
+    .h-about {
+        margin-top: -8%;
+    }
+}
+
+@media only screen and (max-width: 1080px) {
+    .h-about {
+        margin-top: -20%;
+    }
 }
 
 @media only screen and (max-width: 890px) {
@@ -602,7 +616,7 @@ ul.topnav li.icon {
     }
 
     .about {
-        margin-top: -80px;
+        margin-top: -32%;
     }
 
     .body-docs .about {
@@ -833,6 +847,12 @@ ul.topnav li.icon {
         }
     }
 
+    @media screen and (max-width:670px) {
+        .about {
+            margin-top: -30%;
+        }
+    }
+
     @media screen and (max-width:560px) {
         body {
             font-size: 0.9em;
@@ -852,7 +872,8 @@ ul.topnav li.icon {
 
         .body-about_us .topheader {
             background-size: contain;
-            background-position: 50% -30px;
+            background-position: 50% -60px;
+            background-size: 180%;
         }
 
         .body-about_us .h-header {
