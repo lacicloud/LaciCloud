@@ -800,6 +800,45 @@ class LaciCloud {
 
 	}
 
+	public function sendContactEmail($contact_reason, $subject, $body, $reply_to_address) {
+		$lacicloud_errors_api = new Errors();
+
+		//spent 15 mins debugging why the object was sending its own headers, turns out i named the $body variable $message at first... :P
+		try{
+     		$title = "LaciCloud_Contact_Email";
+	        $transport = Swift_SmtpTransport::newInstance(gethostbyname("mail.gandi.net"), 465, "ssl") 
+				->setUsername($this -> grabSecret("email"))
+				->setPassword($this -> grabSecret("email_password"))
+				->setSourceIp("0.0.0.0");
+			$mailer = Swift_Mailer::newInstance($transport);
+			$logger = new \Swift_Plugins_Loggers_ArrayLogger();
+			$mailer->registerPlugin(new \Swift_Plugins_LoggerPlugin($logger));
+			$message = Swift_Message::newInstance("$title");
+			$message 
+				->setSubject("[CONTACT] " . $contact_reason . " : " . $subject)
+				->setFrom(array("bot@lacicloud.net" => "LaciCloud"))
+				->setReplyTo(array($reply_to_address))
+				->setTo(array("laci@lacicloud.net"))
+				->setCharset('utf-8') 
+				->setBody(strip_tags($body));
+			$result = $mailer->send($message, $errors);	
+	    } catch(\Swift_TransportException $e){
+	        $response = $e->getMessage();
+	        $result = false;
+	    } catch (Exception $e) {
+	    	$response = $e->getMessage();
+	    	$result = false; 
+	    }
+
+
+		if (!$result) {
+			$lacicloud_errors_api -> msgLogger("SEVERE", "Could not send contact email... Error:\n".$logger->dump()." Exception error:\n".$response,40);
+		}
+
+		return true;
+
+	}
+
 
 }
 

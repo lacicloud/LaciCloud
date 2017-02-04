@@ -1,4 +1,14 @@
-﻿<!DOCTYPE html>
+﻿<?php 
+require("../functions.php");
+if (isset($_POST["contact_reason"]) and isset($_POST["subject"]) and isset($_POST["message"]) and isset($_POST["reply_to_address"])) {
+    $lacicloud_api = new LaciCloud();
+    $lacicloud_api->sendContactEmail($_POST["contact_reason"], $_POST["subject"], $_POST["message"], $_POST["reply_to_address"]);
+    $_POST[] = array();
+}
+
+
+?>
+<!DOCTYPE html>
 <html>
 <head>
     <title>LaciCloud</title>
@@ -40,20 +50,23 @@
     <section class="row h-contact contact" id="contact">
         <div class="col-half">
             <div class="section-heading"><h3>Having trouble? Send us an e-mail</h3></div>
-            <form>
+            <form action="/contact/" method="POST" accept-charset="UTF-8">
                 <div class="form-field select-wrapper">
-                    <select>
-                        <option selected>Problem type</option>
-                        <option>Apples</option>
-                        <option>Chocolate</option>
-                        <option>Pancakes</option>
+                    <select required name="contact_reason">
+                        <option selected="true" disabled="disabled">Contact Reason</option>
+                        <option>Technical Support</option>
+                        <option>Question</option>
+                        <option>Sales</option>
                     </select>
                 </div>
                 <div class="form-field">
-                    <input type="text" placeholder="Subject :" />
+                    <input required type="text" name="subject" placeholder="Subject :" />
                 </div>
                 <div class="form-field">
-                    <textarea placeholder="Message :" cols="50" rows="15"></textarea>
+                    <input required type="text" name="reply_to_address" placeholder="Your Email :" />
+                </div>
+                <div class="form-field">
+                    <textarea required name="message" placeholder="Message :" cols="50" rows="15"></textarea>
                 </div>
                 <div class="form-button">
                     <input type="submit" value="Send >"/>
@@ -64,13 +77,14 @@
         <div class="col-half">
             <div class="section-heading"><h3>Or follow us on:</h3></div>
             <div class="social-icons-large">
-                <img id="sprite-twitter" src="resources/sprite-social-1.png" /><br/><br />
-                <img id="sprite-facebook" src="resources/sprite-social-1.png" /><br /><br />
-                <img id="sprite-youtube" src="resources/sprite-social-1.png" /><br /><br />
+                <!-- base64: empty image, css fills it -->
+                <img id="sprite-twitter" src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" /><br/><br />
+                <img id="sprite-facebook" src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" /><br /><br />
+                <img id="sprite-youtube" src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" /><br /><br />
             </div>
             <div class="youtube-embed-container">
                 <div class="youtube-embed-inner">
-
+                    <iframe width="488" height="397" src="https://www.youtube.com/embed/FrG4TEcSuRg" frameborder="0" allowfullscreen></iframe>
                 </div>
             </div>
         </div>

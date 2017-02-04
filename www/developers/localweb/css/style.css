@@ -603,7 +603,7 @@ ul.topnav li.icon {
 #sprite-twitter {
     width: 112px;
     height: 112px;
-    background: url(../resources/sprite-social-1.png) 0 0;
+    background: url(/resources/sprite-social-1.png) 0 0;
     object-fit: none;
     object-position: 0 0;
 }
@@ -611,7 +611,7 @@ ul.topnav li.icon {
 #sprite-facebook {
     width: 112px;
     height: 112px;
-    background: url(../resources/sprite-social-1.png) -112px 259px;
+    background: url(/resources/sprite-social-1.png) -112px 259px;
     object-fit: none;
     object-position: -112px 259px;
 }
@@ -619,23 +619,23 @@ ul.topnav li.icon {
 #sprite-youtube {
     width: 112px;
     height: 112px;
-    background: url(../resources/sprite-social-1.png) 0 112px;
+    background: url(/resources/sprite-social-1.png) 0 112px;
     object-fit: none;
     object-position: 0 112px;
 }
 
 #sprite-twitter:hover {
-    background: url(../resources/sprite-social-2.png) 0px 0px;
+    background: url(/resources/sprite-social-2.png) 0px 0px;
     transition: ease-in-out 0.25s;
 }
 
 #sprite-facebook:hover {
-    background: url(../resources/sprite-social-2.png) -112px 259px;
+    background: url(/resources/sprite-social-2.png) -112px 259px;
     transition: ease-in-out 0.25s;
 }
 
 #sprite-youtube:hover {
-    background: url(../resources/sprite-social-2.png) 0px 112px;
+    background: url(/resources/sprite-social-2.png) 0px 112px;
     transition: ease-in-out 0.25s;
 }
 
