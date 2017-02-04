@@ -5,15 +5,7 @@ $lacicloud_api = new LaciCloud();
 
 if (isset($_POST["contact_reason"]) and isset($_POST["subject"]) and isset($_POST["message"]) and isset($_POST["reply_to_address"]) and isset($_POST["captcha_code"])) {
     $result = $lacicloud_api->sendContactEmail($_POST["contact_reason"], $_POST["subject"], $_POST["message"], $_POST["reply_to_address"], $_POST["captcha_code"]);
-    
-    //reset POST array to prevent duplicate email
-    $_POST[] = array();
-
-    header("Location: /contact/?message=".$result);
-    
-    die(0);
 }
-
 
 ?>
 <!DOCTYPE html>
@@ -41,7 +33,7 @@ if (isset($_POST["contact_reason"]) and isset($_POST["subject"]) and isset($_POS
             </li>
             <li><a class="menu-link" href="/shop">Shop</a><span class="menu-dot">.</span></li>
             <li><a class="menu-link active" href="/contact">Contact</a><span class="menu-dot">.</span></li>
-            <li><a class="menu-link" href="/login">Log in/Sign up</a></li>
+            <li><a class="menu-link" href="/account">Log in/Sign up</a></li>
             <li class="icon">
                 <a href="javascript:void(0);" onclick="navFunction()">☰</a>
             </li>
@@ -61,6 +53,8 @@ if (isset($_POST["contact_reason"]) and isset($_POST["subject"]) and isset($_POS
 
             <div class="success"></div>
             <div class="error"></div>
+            <div class="warning"></div>
+            <div class="info"></div>
 
             <form action="/contact/" method="POST" accept-charset="UTF-8" onsubmit="return validateContactEmail(this);">
                 <div class="form-field select-wrapper">
@@ -94,9 +88,9 @@ if (isset($_POST["contact_reason"]) and isset($_POST["subject"]) and isset($_POS
             <div class="section-heading"><h3>Or follow us on:</h3></div>
             <div class="social-icons-large">
                 <!-- base64: empty image, css fills it -->
-                <img id="sprite-twitter" src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" /><br/><br />
+                <img onclick="location.href = 'https://twitter.com/lacicloud';" id="sprite-twitter" src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" /><br/><br />
                 <img id="sprite-facebook" src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" /><br /><br />
-                <img id="sprite-youtube" src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" /><br /><br />
+                <img onclick="location.href = 'https://www.youtube.com/channel/UC6cwh-kIj7aq4XoiRkzVSug';" id="sprite-youtube" src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" /><br /><br />
             </div>
             <div class="youtube-embed-container">
                 <div class="youtube-embed-inner">
@@ -115,9 +109,9 @@ if (isset($_POST["contact_reason"]) and isset($_POST["subject"]) and isset($_POS
             <span class="text-italic">Brussels, Belgium  - <a href="mailto:laci@lacicloud.net">laci@lacicloud.net</a></span>
         </div>
         <div class="footer-social">
-            <a href="#" class="icon tw"><img src="/resources/social-twitter.png" /></a>
+            <a href="https://twitter.com/lacicloud" class="icon tw"><img src="/resources/social-twitter.png" /></a>
             <a href="#" class="icon fb"><img src="/resources/social-facebook.png" /></a>
-            <a href="#" class="icon yt"><img src="/resources/social-youtube.png" /></a>
+            <a href="https://www.youtube.com/channel/UC6cwh-kIj7aq4XoiRkzVSug" class="icon yt"><img src="/resources/social-youtube.png" /></a>
         </div>
     </footer>
     <!--scripts-->
@@ -131,13 +125,16 @@ var warning = document.getElementsByClassName("warning")[0];
 
 <?php 
 
-if (isset($_GET["message"])) {
-    $message = $lacicloud_errors_api -> getErrorMsgFromID($_GET["message"]);
-    $result =  $lacicloud_errors_api -> getSuccessOrErrorFromID($_GET["message"]);
-    echo "".$result.".textContent='".$message."'";
+if (isset($result)) {
+    $message = $lacicloud_errors_api -> getErrorMsgFromID($result);
+    $result =  $lacicloud_errors_api -> getSuccessOrErrorFromID($result);
+    echo "".$result.".innerHTML='".$message."'";
     echo "\n";
     echo "".$result.".style.display = 'block';";
 }
+
+//reset POST array to prevent duplicate email
+$_POST[] = array();
 
 ?>
 

@@ -22,7 +22,7 @@
             </li>
             <li><a class="menu-link" href="/shop">Shop</a><span class="menu-dot">.</span></li>
             <li><a class="menu-link" href="/contact">Contact</a><span class="menu-dot">.</span></li>
-            <li><a class="menu-link" href="/login">Log in/Sign up</a></li>
+            <li><a class="menu-link" href="/account">Log in/Sign up</a></li>
             <li class="icon">
                 <a href="javascript:void(0);" onclick="navFunction()">☰</a>
             </li>
@@ -101,7 +101,7 @@
                 <div class="section-text pad-lr versatility-text">
                     <ul>
                         <li>Open-source</li>
-                        <li>Privilege seperation</li>
+                        <li>Priviliege seperation</li>
                         <li>Secure coding practices (OWASP)</li>
                         <li>Pentested</li>
                     </ul>
@@ -126,7 +126,7 @@
                     <span class="team-end">.</span>
                     <div class="team-description">
                         <strong>Head Of ICT</strong><br />
-                        Laci is our excellent programmer. He is an aspiring young computer scientist with the
+                        Laci is our excellent prograrnmer. He is an aspiring young computer scientist with the
                         desire to create software that makes people happy. He has experience in web development,
                         web app and network security, computer forensics and system administration. He has been
                         passionate about computers since the age of 4, and probably will be forever.
@@ -141,9 +141,9 @@
                     <span class="team-end">.</span>
                     <div class="team-description">
                         <strong>Head of Design</strong><br />
-                        Tristan is our excellent designer. He has been in the design industry for quite some time.
+                        Tristan is our excellent designer. He has been in the design industry for ,at as of now.
                         He is highly skilled in graphic design, and an excellent, dedicated worker. He has completed
-                        over 100 graphic design projects to date, all with great success...
+                        over a 100 graphic design projects to date all with great success...
                     </div>
                 </div>
             </div>
@@ -154,15 +154,15 @@
                     <div class="team-description">
                         <strong>Head of User Experience and Testing</strong><br /> Fabio is our excellent Beta tester.
                         Over the past few months, Fabio has been greatly dedicated to this project. Finding every
-                        little bug, content problem, spelling mistake, and always had great suggestions for the site.
+                        little bug, content problem, spelling mistake and always had great suggestions for the site.
                         He is also a young aspiring computer scientist like Laci. In addition to these team members,
-                        i feel it is necessary to mention some amazing people who have helped us on our journey to
+                        i feel it is neccesarry to mention some amazing people who have helped us on our journey to
                         create LaciCloud; <br>Click
                         <strong><a style="color:inherit;text-decoration:none;" href="/humans.txt">here</a></strong>
                         to read more about these other members.
                     </div>
                 </div>
-                <div class="team-image"><img style="height:100%; width:100%" src="/resources/fabio_profile_pic.png"></div>
+                <div class="team-image"><img style="height:100%; width:100%" src="/resources/fabio.jpg"></div>
             </div>
         </div>
     </section>
@@ -177,9 +177,9 @@
             <span class="text-italic">Brussels, Belgium  - <a href="mailto:laci@lacicloud.net">laci@lacicloud.net</a></span>
         </div>
         <div class="footer-social">
-            <a href="#" class="icon tw"><img src="/resources/social-twitter.png"></a>
+            <a href="https://twitter.com/lacicloud" class="icon tw"><img src="/resources/social-twitter.png"></a>
             <a href="#" class="icon fb"><img src="/resources/social-facebook.png"></a>
-            <a href="#" class="icon yt"><img src="/resources/social-youtube.png"></a>
+            <a href="https://www.youtube.com/channel/UC6cwh-kIj7aq4XoiRkzVSug" class="icon yt"><img src="/resources/social-youtube.png"></a>
         </div>
     </footer>
     <!--scripts-->

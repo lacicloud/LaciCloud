@@ -23,7 +23,7 @@
             </li>
             <li><a class="menu-link" href="/shop">Shop</a><span class="menu-dot">.</span></li>
             <li><a class="menu-link" href="/contact">Contact</a><span class="menu-dot">.</span></li>
-            <li><a class="menu-link" href="/create">Log in/Sign up</a></li>
+            <li><a class="menu-link" href="/account">Log in/Sign up</a></li>
             <li class="icon">
                 <a href="javascript:void(0);" onclick="navFunction()">&#9776;</a>
             </li>
@@ -117,7 +117,7 @@
             <div class="section-text margin-center">
                 Get started with LaciCloud for free!
             </div>
-            <div class="mailing-button margin-center"><a href="create">Get your personal cloud now!</a></div>
+            <div class="mailing-button margin-center"><a href="/account">Get your personal cloud now!</a></div>
         </div>
     </section>
 
@@ -129,9 +129,9 @@
             <span class="text-italic">Brussels, Belgium  - <a href="mailto:laci@lacicloud.net">laci@lacicloud.net</a></span>
         </div>
         <div class="footer-social">
-            <a href="#" class="icon tw"><img src="resources/social-twitter.png" /></a>
+            <a href="https://twitter.com/lacicloud" class="icon tw"><img src="resources/social-twitter.png" /></a>
             <a href="#" class="icon fb"><img src="resources/social-facebook.png" /></a>
-            <a href="#" class="icon yt"><img src="resources/social-youtube.png" /></a>
+            <a href="https://www.youtube.com/channel/UC6cwh-kIj7aq4XoiRkzVSug" class="icon yt"><img src="resources/social-youtube.png" /></a>
         </div>
     </footer>
     <!--scripts-->
