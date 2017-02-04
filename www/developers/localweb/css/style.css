@@ -600,6 +600,11 @@ ul.topnav li.icon {
     background-color: #dcdcdc;
 }
 
+.youtube-embed-inner iframe{
+    height: 310px;
+    width: 100%;
+}
+
 #sprite-twitter {
     width: 112px;
     height: 112px;
