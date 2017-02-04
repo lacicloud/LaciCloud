@@ -910,6 +910,18 @@ ul.topnav li.icon {
         width: 90%;
     }
 
+    .social-icons-large {
+        margin-right: 0;
+        margin-left: 5%;
+    }
+
+    .youtube-embed-inner {
+        width: 90%;
+    }
+
+    .body-contact footer {
+        margin-top: 60px;
+    }
 
     @media screen and (max-width:830px) {
         /* When the screen is less than 830 pixels wide, hide all list items.
