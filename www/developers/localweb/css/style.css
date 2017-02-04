@@ -1121,6 +1121,12 @@ ul.topnav li.icon {
     }
 }
 
+
+/*=======================================================================================*/
+/*                                  EXTERNAL STYLES                                      */
+/*=======================================================================================*/
+
+
 /* http://www.jankoatwarpspeed.com/css-message-boxes-for-different-message-types/ */
 /* with knob_buttons_toolbar_icons_by_itweek */
 .info, .success, .warning, .error, .validation {
