@@ -1,9 +1,17 @@
 ﻿<?php 
 require("../functions.php");
-if (isset($_POST["contact_reason"]) and isset($_POST["subject"]) and isset($_POST["message"]) and isset($_POST["reply_to_address"])) {
-    $lacicloud_api = new LaciCloud();
-    $lacicloud_api->sendContactEmail($_POST["contact_reason"], $_POST["subject"], $_POST["message"], $_POST["reply_to_address"]);
+$lacicloud_errors_api = new Errors();
+$lacicloud_api = new LaciCloud();
+
+if (isset($_POST["contact_reason"]) and isset($_POST["subject"]) and isset($_POST["message"]) and isset($_POST["reply_to_address"]) and isset($_POST["captcha_code"])) {
+    $result = $lacicloud_api->sendContactEmail($_POST["contact_reason"], $_POST["subject"], $_POST["message"], $_POST["reply_to_address"], $_POST["captcha_code"]);
+    
+    //reset POST array to prevent duplicate email
     $_POST[] = array();
+
+    header("Location: /contact/?message=".$result);
+    
+    die(0);
 }
 
 
@@ -50,7 +58,11 @@ if (isset($_POST["contact_reason"]) and isset($_POST["subject"]) and isset($_POS
     <section class="row h-contact contact" id="contact">
         <div class="col-half">
             <div class="section-heading"><h3>Having trouble? Send us an e-mail</h3></div>
-            <form action="/contact/" method="POST" accept-charset="UTF-8">
+
+            <div class="success"></div>
+            <div class="error"></div>
+
+            <form action="/contact/" method="POST" accept-charset="UTF-8" onsubmit="return validateContactEmail(this);">
                 <div class="form-field select-wrapper">
                     <select required name="contact_reason">
                         <option selected="true" disabled="disabled">Contact Reason</option>
@@ -68,6 +80,10 @@ if (isset($_POST["contact_reason"]) and isset($_POST["subject"]) and isset($_POS
                 <div class="form-field">
                     <textarea required name="message" placeholder="Message :" cols="50" rows="15"></textarea>
                 </div>
+                <div class="form-field">
+                     <?php echo '<img src="/securimage_captcha/securimage_show.php?no_cache='.bin2hex(openssl_random_pseudo_bytes(4)).'"'.' alt="CAPTCHA Image"/>'; ?>
+                     <input type="text" class="form-control" autocomplete="off" name="captcha_code" size="10" maxlength="6" placeholder="Captcha: " required/>
+                </div>
                 <div class="form-button">
                     <input type="submit" value="Send >"/>
                 </div>
@@ -84,7 +100,7 @@ if (isset($_POST["contact_reason"]) and isset($_POST["subject"]) and isset($_POS
             </div>
             <div class="youtube-embed-container">
                 <div class="youtube-embed-inner">
-                    <iframe width="488" height="397" src="https://www.youtube.com/embed/FrG4TEcSuRg" frameborder="0" allowfullscreen></iframe>
+                    <iframe width="535" height="397" src="https://www.youtube.com/embed/FrG4TEcSuRg" frameborder="0" allowfullscreen></iframe>
                 </div>
             </div>
         </div>
@@ -106,6 +122,27 @@ if (isset($_POST["contact_reason"]) and isset($_POST["subject"]) and isset($_POS
     </footer>
     <!--scripts-->
     <script src="/js/main.js"></script>
+
+<script>
+var success = document.getElementsByClassName("success")[0];
+var error = document.getElementsByClassName("error")[0];
+var info = document.getElementsByClassName("info")[0];
+var warning = document.getElementsByClassName("warning")[0];
+
+<?php 
+
+if (isset($_GET["message"])) {
+    $message = $lacicloud_errors_api -> getErrorMsgFromID($_GET["message"]);
+    $result =  $lacicloud_errors_api -> getSuccessOrErrorFromID($_GET["message"]);
+    echo "".$result.".textContent='".$message."'";
+    echo "\n";
+    echo "".$result.".style.display = 'block';";
+}
+
+?>
+
+</script>
+
 </body>
 
 </html>

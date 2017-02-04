@@ -800,8 +800,12 @@ class LaciCloud {
 
 	}
 
-	public function sendContactEmail($contact_reason, $subject, $body, $reply_to_address) {
+	public function sendContactEmail($contact_reason, $subject, $body, $reply_to_address, $captcha) {
 		$lacicloud_errors_api = new Errors();
+
+		if ($this -> checkCaptcha($captcha) !== true) {
+			return 4;
+		}
 
 		//spent 15 mins debugging why the object was sending its own headers, turns out i named the $body variable $message at first... :P
 		try{
@@ -832,10 +836,11 @@ class LaciCloud {
 
 
 		if (!$result) {
-			$lacicloud_errors_api -> msgLogger("SEVERE", "Could not send contact email... Error:\n".$logger->dump()." Exception error:\n".$response,40);
+			$lacicloud_errors_api -> msgLogger("SEVERE", "Could not send contact email... Error:\n".$logger->dump()." Exception error:\n".$response,53);
+			return 53;
 		}
 
-		return true;
+		return 54;
 
 	}
 
@@ -1465,8 +1470,19 @@ class Errors extends LaciCloud {
 		49 => "Error! You can't change to this tier because you have more FTP space used than this tier allows you to! Please delete a few FTP users before continuing...",
 		50 => "Please create an account before continuing!",
 		51 => "Internal server error while changing to this tier! We are working on it...",
-		52 => "IPN Error!"
+		52 => "IPN Error!",
+		53 => "An internal error occured while sending your email! Please try again...",
+		54 => "Successfully sent email! Thank you..."
 	);
+
+	private $result_messages_map = array(
+		53 => "error",
+		54 => "success"
+		);
+
+	public function getSuccessOrErrorFromID($id) {
+		return $this->result_messages_map[$id];
+	}
 
 	public function getErrorMSGFromID($id) {
 		return $this->messages[$id];
