@@ -92,7 +92,7 @@ class LaciCloud {
 
 		session_regenerate_id(true);
 
-		return true;
+		return 58;
 	}
 
 	private function validateUserInfo($email, $password, $password_retyped) {
@@ -172,7 +172,7 @@ class LaciCloud {
 						return 4;
 		}
 
-		//don't waste memory by quering email/password combinations that couldn't have existed in the first place
+		//don't waste memory by quering email/password combinations that Could not have existed in the first place
 		if ($this -> validateUserInfo($email, $password, $password) !== true) {
 			$lacicloud_errors_api -> msgLogger("LOW", "Email/Password not valid when logging in... Email: ".$email, 5);
 			return 5;
@@ -225,7 +225,7 @@ class LaciCloud {
 		$_SESSION["csrf_token"] = bin2hex(openssl_random_pseudo_bytes(16));
 		$_SESSION["id"] = $id;
 
-		return true;
+		return 55;
 
 	}
 
@@ -274,7 +274,7 @@ class LaciCloud {
         	return 9;
         }
 
-        return true;
+        return 56;
 
 
 	}
@@ -419,7 +419,7 @@ class LaciCloud {
 			return 10;
 		}
 
-		return true;
+		return 57;
 
 
 	}
@@ -501,7 +501,7 @@ class LaciCloud {
 				->setFrom(array("bot@lacicloud.net" => "LaciCloud"))
 				->setTo(array("$email"))
 				->setCharset('utf-8') 
-				->setBody("<html><body><img src='".$cid."' alt='LaciCloud Logo'><br>Hi ".$email."! You have requested a login reset. Please click this link to proceed: <a href='https://lacicloud.net/forgot?reset_key=".$reset_key."'>Reset Login</a> or copy-paste your reset-key: ".$reset_key."<br>If you didn't request this, feel free to ignore this email but do report it by sending an email to laci@lacicloud.net!<br>Have a great day, <br>The LaciCloud Team</body></html>",'text/html');
+				->setBody("<html><body><img src='".$cid."' alt='LaciCloud Logo'><br>Hi ".$email."! You have requested a login reset. Please click this link to proceed: <a href='https://lacicloud.net/account/?reset_key=".$reset_key."#forgot_step_2'>Reset Login</a> or copy-paste your reset-key: ".$reset_key."<br>If you didn't request this, feel free to ignore this email but do report it by sending an email to laci@lacicloud.net!<br>Have a great day, <br>The LaciCloud Team</body></html>",'text/html');
 			$result = $mailer->send($message, $errors);
 	    } catch(\Swift_TransportException $e){
 	        $response = $e->getMessage();
@@ -523,14 +523,18 @@ class LaciCloud {
 		//reset post array
 		$_POST = array();
 
-		return true;
+		return 18;
 
 
 	}
 
 	//check key and update password - finish!!
-	public function forgotLoginStep2($email, $password, $password_retyped, $reset_key, $dbc) {
+	public function forgotLoginStep2($email, $password, $password_retyped, $reset_key, $captcha, $dbc) {
 		$lacicloud_errors_api = new Errors();
+
+		if ($this -> checkCaptcha($captcha) !== true) {
+						return 4;
+		}
 
 		if (empty($reset_key)) {
 			$lacicloud_errors_api -> msgLogger("LOW", "Empty reset key when updating account details...", 13);
@@ -615,7 +619,7 @@ class LaciCloud {
 
 		$_POST = array();
 
-		return true; 
+		return 19; 
 
 	}
 
@@ -1425,46 +1429,46 @@ class Errors extends LaciCloud {
 		true => "Everything okay!",
 		1 => "Database connection error!",
 		2 => "FTP Database connection error!",
-		3 => "Could not start session!",
+		3 => "Could not start session, please try again later!",
 		4 => "Captcha code incorrect!",
 		5 => "Email or Password is incorrect!", //also validation error 
 		6 => "Login successfull, but account not confirmed! Please check your email!",
 		7 => "Failed incrementing login counter!",
 		8 => "Failed incrementing index page counter!",
-		9 => "Couldn't confirm account with key!",
-		10 => "Couldn't create account with specified information!",
-		11 => "Couldn't send confirmation email during account creation!",
+		9 => "Could not confirm account with key!",
+		10 => "Could not create account with specified information!",
+		11 => "Could not send confirmation email during account creation!",
 		12 => "Email already exists!",
-		13 => "Couldn't update login details!",
+		13 => "Could not update login details!",
 		14 => "Old password can't be the same as the new one!", //this is seperate error as this one can't be validate using JS
-		15 => "Couldn't find email in database! Are you sure you typed your email correctly?",
-		16 => "Couldn't verify the authenticity of action!",
+		15 => "Couldn not find email in database! Are you sure you typed your email correctly?",
+		16 => "Could not verify the authenticity of action!",
 		//whoops forgot success messages
 		17 => "Account successfully registered! Please check your inbox for confirmation!",
 		18 => "Successfully sent reset email... Please check your inbox!",
 		19 => "Account successfully reset!",
 		//FTPActions class
 		20 => "Unexpected error occured!", //nice to have
-		21 => "Couldn't create FTP user with specified data, maybe FTP user already exists?",
-		22 => "Couldn't remove FTP user! Are you sure you typed his name correctly?",
-		24 => "Couldn't create invoice!",
+		21 => "Could not create FTP user with specified data, maybe FTP user already exists?",
+		22 => "Could not remove FTP user! Are you sure you typed his name correctly?",
+		24 => "Could not create invoice!",
 		25 => "Error while getting values!", //for FTP users list, FTP users values, and user values
 		26 => "Error while regenerating API key!",
 		28 => "Please log-in to continue!",
 		31 => "Successfully created FTP user!",
 		32 => "Successfully removed FTP user!",
 		35 => "Successfully regenerated API key!",
-		37 => "Couldn't send payment email!",
-		38 => "Couldn't update password!",
+		37 => "Could not send payment email!",
+		38 => "Could not update password!",
 		39 => "Password successfully updated!",
-		40 => "Error while sending step 2 reset email!",
+		40 => "Error while sending Step 2 reset email!",
 		//API
 		41 => "Error! No API key found!",
 		42 => "Error! API key wrong!", //the answer to life the universe and everything
 		43 => "Error! Not enough parameters!",
 		44 => "Successfully confirmed account!",
 		//qftp
-		45 => "Couldn't create qFTP user!",
+		45 => "Could not create qFTP user!",
 		46 => "Successfully created qFTP user!", //in js with username/password
 		48 => "Successfully brought tier!",
 		49 => "Error! You can't change to this tier because you have more FTP space used than this tier allows you to! Please delete a few FTP users before continuing...",
@@ -1472,12 +1476,34 @@ class Errors extends LaciCloud {
 		51 => "Internal server error while changing to this tier! We are working on it...",
 		52 => "IPN Error!",
 		53 => "An internal error occured while sending your email! Please try again...",
-		54 => "Successfully sent email! Thank you..."
+		54 => "Successfully sent email! Thank you...",
+		55 => "Successfully logged in...",
+		56 => "Account successfully confirmed, please log-in!",
+		57 => "Successfully registered, please check your xXxemailxXx for confirmation!",
+		58 => "Session started successfully!"
 	);
 
 	private $result_messages_map = array(
+		1 => "error",
+		2 => "error",
+		3 => "error",
+		4 => "error",
+		5 => "error",
+		6 => "warning",
+		11 => "error",
+		13 => "error",
+		14 => "error",
+		15 => "error",
+		18 => "success",
+		19 => "success",
+		10 => "error",
 		53 => "error",
-		54 => "success"
+		54 => "success",
+		55 => "login",
+		56 => "success",
+		57 => "success",
+		58 => "success",
+		9 => "error"
 		);
 
 	public function getSuccessOrErrorFromID($id) {
@@ -1495,14 +1521,14 @@ class Errors extends LaciCloud {
   		 $caller = array_shift($bt);
 
   		 if ($severity == "CRIT" or $severity == "SEVERE") {
-  		 	$POST = print_r($_POST, true);
-  			$GET = print_r($_GET, true);
-  		 	$SERVER = print_r($_SERVER, true);
+  		 	@$POST = print_r($_POST, true);
+  			@$GET = print_r($_GET, true);
+  		 	@$SERVER = print_r($_SERVER, true);
 
   		 }
   		 
 
-  		 $message = "\n".date('l jS \of F Y h:i:s A').':'." Severity: ".$severity." Message: ".$msg." Error ID: ".$id." File: ".$caller['file']." Line: ".$caller['line']." User ID: ".$_SESSION["id"]." IP: ".$_SERVER["REMOTE_ADDR"]." UA: ".$_SERVER['HTTP_USER_AGENT']." Referer: ".$_SERVER["HTTP_REFERER"]." POST: ".$POST." GET: ".$GET." SERVER: ".$SERVER."\n\n";
+  		 @$message = "\n".date('l jS \of F Y h:i:s A').':'." Severity: ".$severity." Message: ".$msg." Error ID: ".$id." File: ".$caller['file']." Line: ".$caller['line']." User ID: ".$_SESSION["id"]." IP: ".$_SERVER["REMOTE_ADDR"]." UA: ".$_SERVER['HTTP_USER_AGENT']." Referer: ".$_SERVER["HTTP_REFERER"]." POST: ".$POST." GET: ".$GET." SERVER: ".$SERVER."\n\n";
 
 		 error_log($message, 3, $lacicloud_api->document_root."/logs/website_custom.txt");
 		 
@@ -1658,8 +1684,8 @@ class Utils extends LaciCloud {
 				$message = "Open ProtonMail";
 				$link = "https://mail.protonmail.com/login";
 		} else {
-			$message = "";
-			$link = "";
+			$message = "Open Google";
+			$link = "https://google.com";
 		}
 
 		return array($message, $link);
