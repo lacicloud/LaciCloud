@@ -1,0 +1,20 @@
+LaciCloud Warrant canary - what is this? - https://www.canarywatch.org/
+
+2017/2/4 2:14PM
+
+As of the date below, I have never received any:
+
+  * National Security Letter, of any type, for any purpose,
+  * Personal requests from any law enforcement agency worldwide or
+    corporate entity for backdoors in any software and/or hardware
+    projects to which I currently am an active contributor, nor am I
+    aware of other contributors to these projects having received such a
+    request,
+  * Foreign Intelligence Surveillance Court orders of any type,
+  * Subpoenas and/or search warrants accompanied by a gag order pursuant
+    to the Electronic Communications Privacy Act,
+
+Nor have I received, nor am I aware of, occurences of any of the above,
+with respect to any and all machines I operate, maintain, and/or develop.
+
+This statement will continue to be updated weekly.
