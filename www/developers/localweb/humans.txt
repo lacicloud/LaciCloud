@@ -1,0 +1,52 @@
+/* TEAM */ 
+
+	Main Programmer (backend + JS) & Sysadmin: Molnarfi Laszlo
+	Contact: laci@lacicloud.net
+
+	Designer & Beta tester: Tristan Thompson 
+	Contact: tristan@lacicloud.net
+
+	Designer & Beta tester: Fabio Barbero
+	Contact: fbarbe@keemail.me
+
+	Designer & Beta tester: Dyosoft
+	Contact: https://steamcommunity.com/id/dyosoft
+
+	PSD To HTML: geostima 
+	Contact: https://www.xbtfreelancer.com/user/1593  
+
+/* THANKS */ 
+
+	Tixati Chat: HBCD, that_man, others
+	Bitcoin testnet faucet: https://testnet.manu.backend.hamburg/faucet
+
+/* SITE */
+	Last Update: 2016/9/11 
+	Language: English
+	Doctype: HTML5
+	Software used: See below
+
+/* LICENSES */
+	Pure-CSS: https://github.com/yahoo/pure/blob/master/LICENSE.md
+	jQuery: jquery.org/license
+	HTML5 Placeholder Jquery Plugin: https://github.com/mathiasbynens/jquery-placeholder/blob/gh-pages/LICENSE.txt
+	Tooltipster: https://github.com/iamceege/tooltipster/blob/master/LICENSE
+	Youtube video function: https://gist.github.com/labnol/5344200
+	Bootstrap: https://github.com/twbs/bootstrap/blob/master/LICENSE
+	Mobile Detect: https://github.com/serbanghita/Mobile-Detect/blob/master/LICENSE.txt
+	Swiftmailer: https://github.com/swiftmailer/swiftmailer/blob/5.x/LICENSE
+	Securimage Captcha: https://github.com/dapphp/securimage/blob/master/LICENSE.txt
+	Monsta FTP: https://github.com/MonstaApps/Monsta-FTP/blob/master/LICENSE
+	xss-filters: https://github.com/yahoo/xss-filters
+	getUrlVars(): http://papermashup.com/read-url-get-variables-withjavascript/
+	GoURL: https://gourl.io/
+	Basis for the account page: https://colorlib.com/wp/html5-and-css3-login-forms/
+	CSS message boxes: http://www.jankoatwarpspeed.com/css-message-boxes-for-different-message-types/
+	Knob buttons by itweek: http://itweek.deviantart.com/art/Knob-Buttons-Toolbar-icons-73463960
+
+	
+
+	Please tell me if i've missed anything.
+
+	 
+	
