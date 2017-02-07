@@ -33,7 +33,6 @@
 	Tooltipster: https://github.com/iamceege/tooltipster/blob/master/LICENSE
 	Youtube video function: https://gist.github.com/labnol/5344200
 	Bootstrap: https://github.com/twbs/bootstrap/blob/master/LICENSE
-	Mobile Detect: https://github.com/serbanghita/Mobile-Detect/blob/master/LICENSE.txt
 	Swiftmailer: https://github.com/swiftmailer/swiftmailer/blob/5.x/LICENSE
 	Securimage Captcha: https://github.com/dapphp/securimage/blob/master/LICENSE.txt
 	Monsta FTP: https://github.com/MonstaApps/Monsta-FTP/blob/master/LICENSE
