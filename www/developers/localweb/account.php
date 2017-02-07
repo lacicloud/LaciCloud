@@ -19,16 +19,10 @@ if (isset($_SESSION["logged_in"]) and $_SESSION["logged_in"] == 1) {
 }
 
 //create
-if (isset($_POST["email"]) and isset($_POST["password"]) and isset($_POST["password_retyped"]) and isset($_POST["captcha_code"]) and isset($_POST["checkbox"])) {
-
-   
-    if ($_POST["beta_code"] !== "hunter2") {
-      echo "<p style='text-align:center'>Beta code incorrect!</p>";
-      die(0);
-    }
+if (isset($_POST["email"]) and isset($_POST["password"]) and isset($_POST["password_retyped"]) and isset($_POST["captcha_code"]) and isset($_POST["checkbox"]) and !isset($result)) {
 
     $dbc = $lacicloud_api -> getMysqlConn();
-    $result = $lacicloud_api -> registerUser($_POST["email"], $_POST["password"], $_POST["password_retyped"], $_POST["captcha_code"], $dbc);
+    $result = $lacicloud_api -> registerUser($_POST["email"], $_POST["password"], $_POST["password_retyped"], $_POST["captcha_code"], $_POST["beta_code"], $dbc);
 
  
     $link = $lacicloud_utils_api->getEmailProvider($_POST["email"])[1]; //email link for message
@@ -38,7 +32,7 @@ if (isset($_POST["email"]) and isset($_POST["password"]) and isset($_POST["passw
 
 
 //login
-if (isset($_POST["email"]) and isset($_POST["password"]) and !isset($_POST["password_retyped"])) {
+if (isset($_POST["email"]) and isset($_POST["password"]) and !isset($_POST["password_retyped"])  and !isset($result)) {
  
   $dbc = $lacicloud_api -> getMysqlConn();
 
@@ -53,13 +47,13 @@ if (isset($_POST["email"]) and isset($_POST["password"]) and !isset($_POST["pass
 
 //forgot
 
-if (isset($_POST["reset_email_address"]) and isset($_POST["captcha_code"]) and !isset($_POST["password_retyped"]) and !isset($_POST["password"])) {
+if (isset($_POST["reset_email_address"]) and isset($_POST["captcha_code"]) and !isset($_POST["password_retyped"]) and !isset($_POST["password"]) and !isset($result)) {
  
   $dbc = $lacicloud_api -> getMysqlConn();
 
   $result = $lacicloud_api -> forgotLoginStep1($_POST["reset_email_address"], $_POST["captcha_code"], $dbc);
 
-} elseif (isset($_SESSION["reset"]) and isset($_POST["new_password"]) and isset($_POST["new_password_retyped"]) and isset($_POST["reset_key"]) and isset($_POST["captcha_code"])) {
+} elseif (isset($_SESSION["reset"]) and isset($_POST["new_password"]) and isset($_POST["new_password_retyped"]) and isset($_POST["reset_key"]) and isset($_POST["captcha_code"])  and !isset($result)) {
   
   $dbc = $lacicloud_api -> getMysqlConn();
 
@@ -131,7 +125,7 @@ if (isset($_POST["reset_email_address"]) and isset($_POST["captcha_code"]) and !
       <button>reset</button>
       <p class="message">Remembered it? <a href="#login">Sign In</a></p>
     </form>
-    <form class="forgot-form-2" action="/account/#login" onsubmit="return ValidateForgotStep2(this);" method="POST" accept-charset="UTF-8">
+    <form class="forgot-form-2" action="/account/#forgot_step_2" onsubmit="return ValidateForgotStep2(this);" method="POST" accept-charset="UTF-8">
       
       <input type="hidden" disabled="disabled" name="email" value="<?php echo $_SESSION["email"]; ?>">
 
@@ -144,7 +138,7 @@ if (isset($_POST["reset_email_address"]) and isset($_POST["captcha_code"]) and !
       <br><br>
       <input required type="text" autocomplete="off" name="captcha_code" size="10" maxlength="6" placeholder="captcha"/>
       <button>reset</button>
-      <p class="message">Remembered it? <a href="#login">Sign In</a></p>
+      <p class="message">Account successfully reset? <a href="#login">Sign In</a></p>
     </form>
   </div>
 </div>
@@ -155,12 +149,17 @@ var error = document.getElementsByClassName("error")[0];
 var info = document.getElementsByClassName("info")[0];
 var warning = document.getElementsByClassName("warning")[0];
 
-
 //by default, hide all
 $('.forgot-form').toggle();
 $('.forgot-form-2').toggle();
 $('.register-form').toggle();
 $('.login-form').toggle();
+
+window.onload = AccountFunc(0);
+window.onhashchange = locationHashChangedAccountEvent;
+
+//IE placeholder 
+$('input, textarea').placeholder();
 
 <?php 
 if (isset($result)) {
@@ -180,49 +179,16 @@ if (isset($result)) {
     echo "".$result.".style.display = 'block';";
 
 }
-//reset post array to prevent multiple submissions
-$_POST[] = array();
 ?>
 
-function AccountFunc(speed) {
-    if (location.hash === "#create") {
-          $('.login-form').hide(speed);
-          $('.forgot-form').hide(speed);
-          $('.forgot-form-2').hide(speed);
-          $('.register-form').animate({height: "toggle", opacity: "toggle"}, "slow");
-    } else if (location.hash === "#login"  || location.hash == "") {
-          $('.register-form').hide(speed);
-          $('.forgot-form').hide(speed);
-          $('.forgot-form-2').hide(speed);
-          $('.login-form').animate({height: "toggle", opacity: "toggle"}, "slow");
-    } else if (location.hash === "#forgot_step_1") {
-          $('.login-form').hide(speed);
-          $('.register-form').hide(speed);
-          $('.forgot-form-2').hide(speed);
-          $('.forgot-form').animate({height: "toggle", opacity: "toggle"}, "slow");
-    } else if (location.hash === "#forgot_step_2") {
-          $('.login-form').hide(speed);
-          $('.register-form').hide(speed);
-          $('.forgot-form').hide(speed);
-          $('.forgot-form-2').animate({height: "toggle", opacity: "toggle"}, "slow");
-    }
-}
-
-function locationHashChangedAccountEvent() {
-    $('.error').hide(750);
-    $('.success').hide(750);
-    $('.warning').hide(750);
-    $('.info').hide(750);
-    AccountFunc(750);
-}
-
-window.onload = AccountFunc(0);
-window.onhashchange = locationHashChangedAccountEvent;
 </script>
-
-
-
 
 </body>
 
 </html>
+
+<?php 
+
+@$lacicloud_api -> blowUpMysql($dbc, $dbc_ftp); 
+
+?>

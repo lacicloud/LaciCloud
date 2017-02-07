@@ -1,11 +1,6 @@
 <?php
 //API & Functions
 
-//~Be smart. Be clean. Be simple. Ship! And keep a small roll of duct tape at the ready, and don’t be afraid to use it. - Uncle Bob (From Robert Martin's blog)
-
-//if method call is successfull returns true (or desired value), else returns error code id
-//warning: You must check for success with === true, not just if($api -> method) way, as PHP regards numbers > 0 as true
-
 //captcha
 require_once('localweb/securimage_captcha/securimage.php');
 //swiftmailer for sending emails
@@ -72,8 +67,8 @@ class LaciCloud {
 
 
 		if (is_null($dbc_ftp) or $dbc_ftp == false) {
-			 $lacicloud_errors_api -> msgLogger("CRIT", 'Could not connect to FTP MySQL server... Connect error: '.mysqli_connect_error($dbc_ftp).' Error: '.mysqli_error($dbc_ftp), 2);
-			 return 2;
+			 $lacicloud_errors_api -> msgLogger("CRIT", 'Could not connect to FTP MySQL server... Connect error: '.mysqli_connect_error($dbc_ftp).' Error: '.mysqli_error($dbc_ftp), 1);
+			 return 1;
 		} else {
 			return $dbc_ftp;
 		}
@@ -86,47 +81,47 @@ class LaciCloud {
 		session_name("secure_session");
 
 		if(!session_start()) {
-			$lacicloud_errors_api -> msgLogger("SEVERE", "Could not start session... Session id: ".session_id(), 3);
-			return 3;
+			$lacicloud_errors_api -> msgLogger("SEVERE", "Could not start session... Session id: ".session_id(), 2);
+			return 2;
 		}
 
 		session_regenerate_id(true);
 
-		return 58;
+		return 3;
 	}
 
 	private function validateUserInfo($email, $password, $password_retyped) {
 		$lacicloud_errors_api = new Errors();
 
 		if (empty($email) or empty($password)) {
-			$lacicloud_errors_api -> msgLogger("LOW", "Email/Password empty when logging in or creating account!", 5);
-			return 5;
+			$lacicloud_errors_api -> msgLogger("LOW", "Email/Password empty when logging in or creating account!", 4);
+			return 4;
 
 		}
 
 		if (preg_match('/\s/',$email) or strlen($email) < 5 or strlen($email) > 320 or !strpos($email, "@") or !strpos($email, ".")) {
-			$lacicloud_errors_api -> msgLogger("LOW", "Email is invalid... Email: ".$email, 5);
-			return 5;
+			$lacicloud_errors_api -> msgLogger("LOW", "Email is invalid... Email: ".$email, 4);
+			return 4;
 		}
 
 		if ($email == $password) {
-			$lacicloud_errors_api -> msgLogger("LOW", "Email same as password...", 5);
-			return 5;
+			$lacicloud_errors_api -> msgLogger("LOW", "Email same as password...", 4);
+			return 4;
 		}
 
 		if (strlen($password) < 8 or !preg_match("#[0-9]+#", $password) or !preg_match("#[a-zA-Z]+#", $password)) {
-			$lacicloud_errors_api -> msgLogger("LOW", "Password strenght too weak...", 5);
-			return 5;
+			$lacicloud_errors_api -> msgLogger("LOW", "Password strenght too weak...", 4);
+			return 4;
 		}
 
 
 		if ($password !== $password_retyped){
-			$lacicloud_errors_api -> msgLogger("LOW", "Password not the same as retyped password", 5);
-			return 5; 
+			$lacicloud_errors_api -> msgLogger("LOW", "Password not the same as retyped password", 4);
+			return 4; 
 
 		}
 
-		return true;
+		return 5;
 	}
 
 	//nice to have
@@ -138,10 +133,10 @@ class LaciCloud {
 			$result = mysqli_stmt_execute($stmt);
 
 			if (!$result) {
-				$lacicloud_errors_api -> msgLogger("SEVERE", "SQL error while incrementing index page counter... Error:".mysqli_error($dbc), 8);
+				$lacicloud_errors_api -> msgLogger("SEVERE", "SQL error while incrementing index page counter... Error:".mysqli_error($dbc), 1);
 			}
 
-			return true;
+			return 7;
 	}
 
 	//nice to have
@@ -158,24 +153,24 @@ class LaciCloud {
 
 			//non-critical so error is only logged
 			if (!$result) {
-				$lacicloud_errors_api -> msgLogger("SEVERE", "SQL error while incrementing login counter... Error:".mysqli_error($dbc), 7);
+				$lacicloud_errors_api -> msgLogger("SEVERE", "SQL error while incrementing login counter... Error:".mysqli_error($dbc), 1);
 			}
 
-			return true;
+			return 9;
 	}
 
 	public function loginUser($email, $password, $captcha, $dbc) {
 		$lacicloud_errors_api = new Errors();
 
 		//captcha required	  	
-		if ($this -> checkCaptcha($captcha) !== true) {
-						return 4;
+		if ($lacicloud_errors_api -> getSuccessOrErrorFromID($this -> checkCaptcha($captcha)) !== "success") {
+						return 10;
 		}
 
-		//don't waste memory by quering email/password combinations that Could not have existed in the first place
-		if ($this -> validateUserInfo($email, $password, $password) !== true) {
-			$lacicloud_errors_api -> msgLogger("LOW", "Email/Password not valid when logging in... Email: ".$email, 5);
-			return 5;
+		//don't waste memory by quering email/password combinations that could not have existed in the first place
+		if ($lacicloud_errors_api -> getSuccessOrErrorFromID($this -> validateUserInfo($email, $password, $password)) !== "success") {
+			$lacicloud_errors_api -> msgLogger("LOW", "Email/Password not valid when logging in... Email: ".$email, 4);
+			return 4;
 		}
 
 		$query = "SELECT unique_id,password,email,id FROM users WHERE email=?";
@@ -203,19 +198,19 @@ class LaciCloud {
 		}
 
 		if (empty($id)) {
-			$lacicloud_errors_api -> msgLogger("LOW", "Wrong Email when logging in... Email: ".$email, 5);
-			return 5;
+			$lacicloud_errors_api -> msgLogger("LOW", "Wrong Email when logging in... Email: ".$email, 40);
+			return 40;
 		}
 
 
 		if (!\password_verify($password, $database_password) or $email !== $database_email) {
-			$lacicloud_errors_api -> msgLogger("LOW", "Wrong password when logging in... Id: ".$id, 5);
-			return 5;
+			$lacicloud_errors_api -> msgLogger("LOW", "Wrong password when logging in... Id: ".$id, 40);
+			return 40;
 		}
 
 		if ((int)$user_unique_key !== 1) {
-			$lacicloud_errors_api -> msgLogger("LOW", "Account not confirmed when logging in... Id: ".$id, 6);
-			return 6;
+			$lacicloud_errors_api -> msgLogger("LOW", "Account not confirmed when logging in... Id: ".$id, 12);
+			return 12;
 		}
 
 		$this -> increaseUserLoginCounter($dbc);
@@ -225,7 +220,7 @@ class LaciCloud {
 		$_SESSION["csrf_token"] = bin2hex(openssl_random_pseudo_bytes(16));
 		$_SESSION["id"] = $id;
 
-		return 55;
+		return 13;
 
 	}
 
@@ -233,8 +228,8 @@ class LaciCloud {
 		$lacicloud_errors_api = new Errors();
 
 		if (empty($unique_key)) {
-			$lacicloud_errors_api -> msgLogger("LOW", "Unique key empty when confirming account...", 9);
-			return 9; 
+			$lacicloud_errors_api -> msgLogger("LOW", "Unique key empty when confirming account...", 14);
+			return 14; 
 		}
 
 		$unique_key = preg_replace('/\s+/', '', $unique_key); //strip whitespace
@@ -246,8 +241,8 @@ class LaciCloud {
         $result = mysqli_stmt_execute($stmt);
 
         if (!$result) {
-        	$lacicloud_errors_api -> msgLogger("SEVERE", "SQL error while confirming account... Error: ".mysqli_error($dbc), 9);
-        	return 9;
+        	$lacicloud_errors_api -> msgLogger("SEVERE", "SQL error while confirming account... Error: ".mysqli_error($dbc), 1);
+        	return 1;
         }
 
         $stmt->bind_result($mysql_database_user_unique_key);
@@ -259,8 +254,8 @@ class LaciCloud {
 		}
 
 		if (empty($database_user_unique_key)) {
-			$lacicloud_errors_api -> msgLogger("LOW", "Unique key incorrect when confirming account... Unique key: ".$unique_key, 9);
-			return 9;
+			$lacicloud_errors_api -> msgLogger("LOW", "Unique key incorrect when confirming account... Unique key: ".$unique_key, 14);
+			return 14;
 		}
 
 
@@ -270,31 +265,46 @@ class LaciCloud {
         $result = mysqli_stmt_execute($stmt);
 
         if (!$result) {
-        	$lacicloud_errors_api -> msgLogger("SEVERE", "SQL error while confirming account... Error:".mysqli_error($dbc), 9);
-        	return 9;
+        	$lacicloud_errors_api -> msgLogger("SEVERE", "SQL error while confirming account... Error:".mysqli_error($dbc), 1);
+        	return 1;
         }
 
-        return 56;
+        return 15;
 
 
 	}
 
-	public function registerUser($email, $password, $password_retyped, $captcha, $dbc) {
+	public function verifyBetaCode($beta_code) {
+		//beta code verificaiton
+    	if ($beta_code !== $this->grabSecret("beta_code_lacicloud")) {
+    		return 41;
+    	}
+
+    	return 42;
+	}
+
+	public function registerUser($email, $password, $password_retyped, $captcha, $beta_code, $dbc) {
 		$lacicloud_errors_api = new Errors();
 		
-		if ($this -> checkCaptcha($captcha) !== true) {
-			return 4;
+		if ($lacicloud_errors_api -> getSuccessOrErrorFromID($this -> verifyBetaCode($beta_code)) !== "success") {
+			return 41;
+		}
+
+		//captcha required	  	
+		if ($lacicloud_errors_api -> getSuccessOrErrorFromID($this -> checkCaptcha($captcha)) !== "success") {
+			return 10;
 		}
 
 
-		if ($this -> validateUserInfo($email, $password, $password_retyped) !== true) {
-			return 10;
+		if ($lacicloud_errors_api -> getSuccessOrErrorFromID($this -> validateUserInfo($email, $password, $password_retyped)) !== "success") {
+			$lacicloud_errors_api -> msgLogger("LOW", "Email/Password not valid when creating acocunt... Email: ".$email, 4);
+			return 4;
 		}
 
 		//check terms & conditions checkbox
 		if (count($_POST["checkbox"]) == 0) {
-			$lacicloud_errors_api -> msgLogger("LOW", "Terms & Conditions checkbox not checked when creating account...", 10);
-			return 10;  
+			$lacicloud_errors_api -> msgLogger("LOW", "Terms & Conditions checkbox not checked when creating account...", 1);
+			return 1;  
 		}
 
 		//check wheter email already exists
@@ -304,8 +314,8 @@ class LaciCloud {
         $result = mysqli_stmt_execute($stmt);
 
         if (!$result) {
-        	$lacicloud_errors_api -> msgLogger("SEVERE", "SQL error while creating account... Error: ".mysqli_error($dbc), 10);
-        	return 10;
+        	$lacicloud_errors_api -> msgLogger("SEVERE", "SQL error while creating account... Error: ".mysqli_error($dbc), 1);
+        	return 1;
         }
 
         $stmt->bind_result($mysql_email);
@@ -317,8 +327,8 @@ class LaciCloud {
 		}
 
 		if (!empty($email_in_database)) {
-			$lacicloud_errors_api -> msgLogger("LOW", "Email already exists when creating account... Email: ".$email, 12);
-			return 12;
+			$lacicloud_errors_api -> msgLogger("LOW", "Email already exists when creating account... Email: ".$email, 17);
+			return 17;
 		}
 
 		$api_key = bin2hex(openssl_random_pseudo_bytes(32));
@@ -336,19 +346,19 @@ class LaciCloud {
         $affected_rows = mysqli_stmt_affected_rows($stmt);
 
         if (!$result or $affected_rows !== 1) {
-        	$lacicloud_errors_api -> msgLogger("SEVERE", "SQL error while creating user account... Error:".mysqli_error($dbc)." Affected rows: ".$affected_rows, 10);
-        	return 10;
+        	$lacicloud_errors_api -> msgLogger("SEVERE", "SQL error while creating user account... Error:".mysqli_error($dbc)." Affected rows: ".$affected_rows, 1);
+        	return 1;
         }
 
-        //check wheter email already exists
+        //fetch ID
 		$query = "SELECT id FROM users WHERE password = ?";
 		$stmt = mysqli_prepare($dbc, $query);
 		mysqli_stmt_bind_param($stmt, "s", $bcrypt_password);
         $result = mysqli_stmt_execute($stmt);
 
         if (!$result) {
-        	$lacicloud_errors_api -> msgLogger("SEVERE", "SQL error while creating account... Error: ".mysqli_error($dbc), 10);
-        	return 10;
+        	$lacicloud_errors_api -> msgLogger("SEVERE", "SQL error while creating account... Error: ".mysqli_error($dbc), 1);
+        	return 1;
         }
 
         $stmt->bind_result($mysql_id);
@@ -366,8 +376,8 @@ class LaciCloud {
         $result = mysqli_stmt_execute($stmt);
 
         if (!$result) {
-        	$lacicloud_errors_api -> msgLogger("SEVERE", "SQL error while creating account... Error: ".mysqli_error($dbc), 10);
-        	return 10;
+        	$lacicloud_errors_api -> msgLogger("SEVERE", "SQL error while creating account... Error: ".mysqli_error($dbc), 1);
+        	return 1;
         } 
 
 
@@ -402,7 +412,7 @@ class LaciCloud {
 
      
 		if (!$result) {
-			$lacicloud_errors_api -> msgLogger("SEVERE", "Could not send email when creating account... Error:\n".$logger->dump()." Exception error:\n".$response,10);
+			$lacicloud_errors_api -> msgLogger("SEVERE", "Could not send email when creating account... Error:\n".$logger->dump()." Exception error:\n".$response,18);
 
 			//revert changes
 			$query = "SELECT id FROM users WHERE password=?";
@@ -416,10 +426,10 @@ class LaciCloud {
 
 			$this -> deleteUser($id, $dbc);
 			
-			return 10;
+			return 18;
 		}
 
-		return 57;
+		return 19;
 
 
 	}
@@ -436,7 +446,7 @@ class LaciCloud {
 		mysqli_stmt_bind_param($stmt, "i", $id);
 		mysqli_stmt_execute($stmt);
 
-		return true;
+		return 20;
 	}
 
 
@@ -445,9 +455,11 @@ class LaciCloud {
 	public function forgotLoginStep1($email, $captcha, $dbc) {
 		$lacicloud_errors_api = new Errors();
 
-		if ($this -> checkCaptcha($captcha) !== true) {
-			return 4;
+		//captcha required	  	
+		if ($lacicloud_errors_api -> getSuccessOrErrorFromID($this -> checkCaptcha($captcha)) !== "success") {
+						return 10;
 		}
+
 
 		$query = "SELECT email FROM users WHERE email=?";
 		$stmt = mysqli_prepare($dbc, $query);
@@ -455,8 +467,8 @@ class LaciCloud {
 		$result = mysqli_stmt_execute($stmt);
 
 		if (!$result) {
-			$lacicloud_errors_api -> msgLogger("SEVERE", "SQL error while resetting account... Error: ".mysqli_error($dbc), 15);
-			return 15;
+			$lacicloud_errors_api -> msgLogger("SEVERE", "SQL error while resetting account... Error: ".mysqli_error($dbc), 1);
+			return 1;
 		}
 
 		$stmt->bind_result($mysql_email);
@@ -465,8 +477,8 @@ class LaciCloud {
 		}
 
 		if (empty($email_in_database)) {
-			$lacicloud_errors_api -> msgLogger("LOW", "Email not in database when resetting account... Email: ".$email, 15);
-			return 15;
+			$lacicloud_errors_api -> msgLogger("LOW", "Email not in database when resetting account... Email: ".$email, 1);
+			return 1;
 		}
 
 		$reset_key = bin2hex(openssl_random_pseudo_bytes(32));
@@ -478,8 +490,8 @@ class LaciCloud {
 		$affected_rows = mysqli_stmt_affected_rows($stmt);
 
 		if (!$result or $affected_rows !== 1) {
-				  $lacicloud_errors_api -> msgLogger("SEVERE", "SQL error while resetting account... Error: ".mysqli_error($dbc), 15);
-		      	 return 15;
+				  $lacicloud_errors_api -> msgLogger("SEVERE", "SQL error while resetting account... Error: ".mysqli_error($dbc), 1);
+		      	 return 1;
 		}
 
 	
@@ -513,17 +525,17 @@ class LaciCloud {
 
 
 		if (!$result) {
-			$lacicloud_errors_api -> msgLogger("SEVERE", "Could not send email when resetting account... Error:\n".$logger->dump()." Exception error:\n".$response,15);
-			return 15;
+			$lacicloud_errors_api -> msgLogger("SEVERE", "Could not send email when resetting account... Error:\n".$logger->dump()." Exception error:\n".$response,18);
+			return 18;
 		}
 
 		$_SESSION["reset"] = true;
 		$_SESSION["email"] = $email;
 
 		//reset post array
-		$_POST = array();
+		//$_POST = array();
 
-		return 18;
+		return 21;
 
 
 	}
@@ -532,17 +544,14 @@ class LaciCloud {
 	public function forgotLoginStep2($email, $password, $password_retyped, $reset_key, $captcha, $dbc) {
 		$lacicloud_errors_api = new Errors();
 
-		if ($this -> checkCaptcha($captcha) !== true) {
-						return 4;
+			//captcha required	  	
+		if ($lacicloud_errors_api -> getSuccessOrErrorFromID($this -> checkCaptcha($captcha)) !== "success") {
+						return 10;
 		}
 
-		if (empty($reset_key)) {
-			$lacicloud_errors_api -> msgLogger("LOW", "Empty reset key when updating account details...", 13);
-			return 13;
-		}
 
-		if ($this -> validateUserInfo($email, $password, $password_retyped) !== true) {
-			return 13;
+		if ($lacicloud_errors_api -> getSuccessOrErrorFromID($this -> validateUserInfo($email, $password, $password_retyped)) !== "success") {
+			return 4;
 		}
 
 		$reset_key = preg_replace('/\s+/', '', $reset_key);
@@ -553,8 +562,8 @@ class LaciCloud {
 		$result = mysqli_stmt_execute($stmt);
         
 		if (!$result) {
-			$lacicloud_errors_api -> msgLogger("SEVERE", "SQL error while resetting password... Error: ".mysqli_error($dbc), 13);
-			return 13;
+			$lacicloud_errors_api -> msgLogger("SEVERE", "SQL error while resetting password... Error: ".mysqli_error($dbc), 1);
+			return 1;
 		}
 
         $stmt->bind_result($mysql_reset_key, $mysql_old_user_password);
@@ -564,13 +573,13 @@ class LaciCloud {
 		}
 
 		if(empty($reset_key)) {
-			$lacicloud_errors_api -> msgLogger("LOW", "User reset key incorrect when resetting password...", 13);
-			return 13;
+			$lacicloud_errors_api -> msgLogger("LOW", "User reset key incorrect when resetting password...", 22);
+			return 22;
 		}
 
 		if (\password_verify($password, $old_user_password)) {
-			$lacicloud_errors_api -> msgLogger("LOW", "Old password/new password same when resetting password...", 14);
-			return 14; 
+			$lacicloud_errors_api -> msgLogger("LOW", "Old password/new password same when resetting password...", 23);
+			return 23; 
 		}
 
 		$password =  password_hash($password, PASSWORD_DEFAULT, $this->bcrypt_options);
@@ -582,8 +591,8 @@ class LaciCloud {
 		
 
 		if (!$result) {
-			$lacicloud_errors_api -> msgLogger("SEVERE", "SQL error while updating user information... Error:".mysqli_error($dbc), 13);
-			return 13;
+			$lacicloud_errors_api -> msgLogger("SEVERE", "SQL error while updating user information... Error:".mysqli_error($dbc), 1);
+			return 1;
 		}
 
 		try{
@@ -614,12 +623,13 @@ class LaciCloud {
 
 
 		if (!$result) {
-			$lacicloud_errors_api -> msgLogger("SEVERE", "Could not send email when resetting account (step 2)... Error:\n".$logger->dump()." Exception error:\n".$response,40);
+			$lacicloud_errors_api -> msgLogger("SEVERE", "Could not send email when resetting account (step 2)... Error:\n".$logger->dump()." Exception error:\n".$response,18);
+			return 18;
 		}
 
-		$_POST = array();
+		//$_POST = array();
 
-		return 19; 
+		return 24; 
 
 	}
 
@@ -629,7 +639,7 @@ class LaciCloud {
 		if (isset($_SESSION['HTTP_USER_AGENT'])) {
 		    if ($_SESSION['HTTP_USER_AGENT'] != md5($_SERVER['HTTP_USER_AGENT']))
 		    {
-		        return 16;
+		        return 25;
 		    } 
 
 		} else {
@@ -639,22 +649,22 @@ class LaciCloud {
 		//check IP
 		if (isset($_SESSION["REMOTE_ADDR"])) {
 			if ($_SESSION["REMOTE_ADDR"] != md5($_SERVER["REMOTE_ADDR"])) {
-				return 16;
+				return 25;
 			}
 		} else {
 			$_SESSION['REMOTE_ADDR'] = md5($_SERVER['REMOTE_ADDR']);
 		}
 
-		return true;
+		return 3;
 
 	}
 
 	public function verifyCSRF($token) {
 		if ($_SESSION["csrf_token"] !== $token) {
-			return 16;
+			return 25;
 		}
 
-		return true;
+		return 3;
 	}
 
 	public function blowUpSession() {
@@ -741,7 +751,7 @@ class LaciCloud {
         mysqli_stmt_bind_param($stmt,"ii", $id, $ftpactions_type);
         $result = mysqli_stmt_execute($stmt);
 
-        return true;
+        return 26;
 	}
 
 	public function checkCaptcha($captcha) {
@@ -755,11 +765,11 @@ class LaciCloud {
 
 		$correct_code = $securimage->getCode(false, true);
 	    if ($securimage->check($captcha) == false) {
-	        $lacicloud_errors_api -> msgLogger("LOW", "Captcha code incorrect... User-inputted Captcha: ".$captcha." Correct captca: ".$correct_code, 4);
-	        return 4;
+	        $lacicloud_errors_api -> msgLogger("LOW", "Captcha code incorrect... User-inputted Captcha: ".$captcha." Correct captca: ".$correct_code, 10);
+	        return 10;
 	    }
 
-	    return true;
+	    return 11;
 	}
 
 	public function canChangeToTier($tier, $id, $dbc, $dbc_ftp) {
@@ -770,10 +780,10 @@ class LaciCloud {
 		$ftp_space_virtual = $this -> getTierData($tier)[0] - $lacicloud_ftp_api -> getFTPUsersVirtuallyUsedSpace($id, $dbc_ftp);
 		
 		if ($ftp_space < 0.0 or $ftp_space_virtual < 0.0 or (int)$tier == (int)$lacicloud_ftp_api -> getUserValues($id, $dbc)["tier"]) {
-				return 49;
+				return 27;
 		}
 
-		return true;
+		return 28;
 	}
 
 	public function upgradeToTier($tier, $orderID, $id, $dbc) {
@@ -790,11 +800,11 @@ class LaciCloud {
         $result = mysqli_stmt_execute($stmt);
 
         if (!$result) {
-			$lacicloud_errors_api -> msgLogger("SEVERE", "SQL error while upgrading to tier ".$tier." for orderID ".$orderID."... Error:\n".mysqli_error($dbc), 51);
-			return 51; 
+			$lacicloud_errors_api -> msgLogger("SEVERE", "SQL error while upgrading to tier ".$tier." for orderID ".$orderID."... Error:\n".mysqli_error($dbc), 1);
+			return 1; 
 		}
 
-        return true;
+        return 29;
 	}
 
 	public function getTierData($tier) {
@@ -807,9 +817,11 @@ class LaciCloud {
 	public function sendContactEmail($contact_reason, $subject, $body, $reply_to_address, $captcha) {
 		$lacicloud_errors_api = new Errors();
 
-		if ($this -> checkCaptcha($captcha) !== true) {
-			return 4;
+		//captcha required	  	
+		if ($lacicloud_errors_api -> getSuccessOrErrorFromID($this -> checkCaptcha($captcha)) !== "success") {
+						return 10;
 		}
+
 
 		//spent 15 mins debugging why the object was sending its own headers, turns out i named the $body variable $message at first... :P
 		try{
@@ -840,11 +852,11 @@ class LaciCloud {
 
 
 		if (!$result) {
-			$lacicloud_errors_api -> msgLogger("SEVERE", "Could not send contact email... Error:\n".$logger->dump()." Exception error:\n".$response,53);
-			return 53;
+			$lacicloud_errors_api -> msgLogger("SEVERE", "Could not send contact email... Error:\n".$logger->dump()." Exception error:\n".$response, 18);
+			return 18;
 		}
 
-		return 54;
+		return 30;
 
 	}
 
@@ -858,18 +870,18 @@ class FTPActions extends LaciCloud {
 		$lacicloud_errors_api = new Errors();
 
 		if (empty($ftp_username) or empty($ftp_space_specified) or empty($starting_directory)) {
-			$lacicloud_errors_api -> msgLogger("LOW", "Values empty when creating FTP user...", 21);
-			return 21;
+			$lacicloud_errors_api -> msgLogger("LOW", "Values empty when creating FTP user...", 31);
+			return 31;
 		}
 
 		if (strlen($ftp_username) < 3 or !ctype_alnum($ftp_username)) {
-			$lacicloud_errors_api -> msgLogger("LOW", "FTP username invalid when creating FTP user... Username: ".$ftp_username, 21);
-			return 21;
+			$lacicloud_errors_api -> msgLogger("LOW", "FTP username invalid when creating FTP user... Username: ".$ftp_username, 31);
+			return 31;
 		} 
 
 		if (!is_numeric($ftp_space_specified) or (float)$ftp_space_specified <= 0) {
-			$lacicloud_errors_api -> msgLogger("LOW", "FTP space specified invalid... Specified: ".$ftp_space_specified, 21);
-			return 21;
+			$lacicloud_errors_api -> msgLogger("LOW", "FTP space specified invalid... Specified: ".$ftp_space_specified, 31);
+			return 31;
 		}
 
 		//Directory traversal attack check 
@@ -877,37 +889,37 @@ class FTPActions extends LaciCloud {
 
 		
 		if (!preg_match('/^[\p{L}0-9\s-]+$/u', str_replace("/", "" ,$starting_directory)) and $starting_directory != "/") {
-			$lacicloud_errors_api -> msgLogger("LOW", "Starting directory not in valid format... Specified: ".$starting_directory, 21);
-			return 21;
+			$lacicloud_errors_api -> msgLogger("LOW", "Starting directory not in valid format... Specified: ".$starting_directory, 31);
+			return 31;
 		}
 		
 
 		if ($starting_directory[0] !== "/" or strpos($starting_directory, "../") !== FALSE or strpos($starting_directory, "..\\\\") !== FALSE) {
-			$lacicloud_errors_api -> msgLogger("SEVERE", "Directory traversal attempt... Specified: ".$starting_directory, 21);
-			return 21;
+			$lacicloud_errors_api -> msgLogger("SEVERE", "Directory traversal attempt... Specified: ".$starting_directory, 31);
+			return 31;
 		}
 
 		if ($starting_directory == "/" and empty($ftp_password)) {
-			$lacicloud_errors_api -> msgLogger("LOW", "Master account without FTP user password attempted...", 21);
-			return 21;
+			$lacicloud_errors_api -> msgLogger("LOW", "Master account without FTP user password attempted...", 31);
+			return 31;
 		}
 
 		if (!empty($ftp_password)) {
 			if (strlen($ftp_password) < 8 or !preg_match("#[0-9]+#", $ftp_password) or !preg_match("#[a-zA-Z]+#", $ftp_password)) {
-				$lacicloud_errors_api -> msgLogger("LOW", "FTP account password strenght too weak...", 21);
-				return 21;
+				$lacicloud_errors_api -> msgLogger("LOW", "FTP account password strenght too weak...", 31);
+				return 31;
 			}
 		}
 
-		return true; 
+		return 32; 
 	}
 
 	public function addFTPUser($ftp_username, $ftp_password, $ftp_space_specified, $starting_directory, $ftp_space_currency, $id, $dbc, $dbc_ftp) {
 		$lacicloud_api = new LaciCloud();
 		$lacicloud_errors_api = new Errors();
 		
-		if ($this->validateFTPUserInfo($ftp_username, $ftp_password, $ftp_space_currency, $ftp_space_specified, $starting_directory) !== true) {
-			return 21;
+		if ($lacicloud_errors_api -> getSuccessOrErrorFromID($this->validateFTPUserInfo($ftp_username, $ftp_password, $ftp_space_currency, $ftp_space_specified, $starting_directory)) !== "success") {
+			return 31;
 		} 
 
 
@@ -927,16 +939,16 @@ class FTPActions extends LaciCloud {
 
 
 		if ((float)$ftp_space_specified > $ftp_space_user_has or (float)$ftp_space_specified > $ftp_space_user_has_virtual) {
-			$lacicloud_errors_api -> msgLogger("LOW", "User doesn't have enough FTP space for FTP user: ".$ftp_username." with FTP space: ".$ftp_space_specified." User's max: ".$ftp_space_user_has, 21);
-			return 21;
+			$lacicloud_errors_api -> msgLogger("LOW", "User doesn't have enough FTP space for FTP user: ".$ftp_username." with FTP space: ".$ftp_space_specified." User's max: ".$ftp_space_user_has, 31);
+			return 31;
 		}
 
 		$users_array = $this->getFTPUsersList($id, $dbc_ftp);
 		$active_users = count($users_array);
 
 		if ($active_users == $users_limit) {
-			$lacicloud_errors_api -> msgLogger("LOW", "User hit FTP user's limit '".$users_limit."' Active users: '".$active_users."'...", 21);
-			return 21;
+			$lacicloud_errors_api -> msgLogger("LOW", "User hit FTP user's limit '".$users_limit."' Active users: '".$active_users."'...", 31);
+			return 31;
 		}
 
 		//this also checks if FTP user already exists
@@ -953,11 +965,11 @@ class FTPActions extends LaciCloud {
 		$result = mysqli_stmt_execute($stmt);
 
 		if (!$result) {
-			$lacicloud_errors_api -> msgLogger("SEVERE", "SQL error while adding FTP user with info; FTP Username: '".$ftp_username."' with Starting directory '".$ftp_starting_directory."' and FTP space '".$ftp_space_specified."' for ID '".$id."'... Error: ".mysqli_error($dbc_ftp), 21);
-			return 21;
+			$lacicloud_errors_api -> msgLogger("SEVERE", "SQL error while adding FTP user with info; FTP Username: '".$ftp_username."' with Starting directory '".$ftp_starting_directory."' and FTP space '".$ftp_space_specified."' for ID '".$id."'... Error: ".mysqli_error($dbc_ftp), 1);
+			return 1;
 		}
 
-		return true;
+		return 32;
 
 	}
 
@@ -966,8 +978,8 @@ class FTPActions extends LaciCloud {
 		$lacicloud_errors_api = new Errors();
 
 		//validate with dummy data, except for the username
-		if ($this->validateFTPUserInfo($ftp_username, bin2hex(openssl_random_pseudo_bytes(16)), "mb", "100", "/dummy") !== true) {
-			return 22;
+		if ($lacicloud_errors_api->getSuccessOrErrorFromID($this->validateFTPUserInfo($ftp_username, bin2hex(openssl_random_pseudo_bytes(16)), "mb", "100", "/dummy")) !== "success") {
+			return 33;
 		} 
 
 		$query = "SELECT realID,home FROM ftp_users WHERE user = ?";
@@ -976,8 +988,8 @@ class FTPActions extends LaciCloud {
 		$result = mysqli_stmt_execute($stmt);
 
 		if (!$result) {
-			$lacicloud_errors_api -> msgLogger("SEVERE", "SQL error while removing FTP user '".$ftp_username."'... Error: ".mysqli_error($dbc_ftp), 22);
-			return 22;
+			$lacicloud_errors_api -> msgLogger("SEVERE", "SQL error while removing FTP user '".$ftp_username."'... Error: ".mysqli_error($dbc_ftp), 1);
+			return 1;
 		}
 
 		$stmt->bind_result($mysql_ftp_user_real_id,$mysql_ftp_starting_directory);
@@ -989,8 +1001,8 @@ class FTPActions extends LaciCloud {
 		
 
 		if ($id !== $ftp_user_real_id) {
-			$lacicloud_errors_api -> msgLogger("LOW", "FTP user '".$ftp_username."' not his for user ID: ".$id." Real ID: ".$ftp_user_real_id, 22);
-			return 22;
+			$lacicloud_errors_api -> msgLogger("LOW", "FTP user '".$ftp_username."' not his for user ID: ".$id." Real ID: ".$ftp_user_real_id, 33);
+			return 33;
 		}
 
 		$query = "DELETE FROM ftp_users WHERE user = ?";
@@ -999,8 +1011,8 @@ class FTPActions extends LaciCloud {
 		$result = mysqli_stmt_execute($stmt);
 
 		if (!$result) {
-			$lacicloud_errors_api -> msgLogger("SEVERE", "SQL error while removing FTP user '".$ftp_username."'... Error: ".mysqli_error($dbc_ftp), 22);
-			return 22;
+			$lacicloud_errors_api -> msgLogger("SEVERE", "SQL error while removing FTP user '".$ftp_username."'... Error: ".mysqli_error($dbc_ftp), 1);
+			return 1;
 		}
 
 		$query = "INSERT INTO ftpactions (value, type) VALUES (?, ?)";
@@ -1014,11 +1026,11 @@ class FTPActions extends LaciCloud {
 		$result = mysqli_stmt_execute($stmt);
 
 		if (!$result) {
-			$lacicloud_errors_api -> msgLogger("SEVERE", "SQL error while registering new ftpactions.py action; type: '".$type."' Starting directory: '".$ftpactions_starting_directory."'... Error: ".mysqli_error($dbc), 22);
-			return 22;
+			$lacicloud_errors_api -> msgLogger("SEVERE", "SQL error while registering new ftpactions.py action; type: '".$type."' Starting directory: '".$ftpactions_starting_directory."'... Error: ".mysqli_error($dbc), 1);
+			return 1;
 		}
 
-		return true;
+		return 34;
 
 	}
 
@@ -1032,8 +1044,8 @@ class FTPActions extends LaciCloud {
 	    $result = mysqli_stmt_execute($stmt);
 
 	    if (!$result) {
-	    	$lacicloud_errors_api -> msgLogger("SEVERE", "SQL error while getting User's values... Error: ".mysqli_error($dbc), 25);
-	    	return 25;
+	    	$lacicloud_errors_api -> msgLogger("SEVERE", "SQL error while getting User's values... Error: ".mysqli_error($dbc), 1);
+	    	return 1;
 	    }
 
 	    $stmt->bind_result($mysql_tier, $mysql_first_time, $mysql_api_key,  $mysql_email, $mysql_lastpayment, $mysql_id);
@@ -1069,8 +1081,8 @@ class FTPActions extends LaciCloud {
 	    $result = mysqli_stmt_execute($stmt);
 	    
 	    if (!$result) {
-	    	$lacicloud_errors_api -> msgLogger("SEVERE", "SQL error while getting FTP user's values... Error: ".mysqli_error($dbc_ftp), 25);
-	    	return 25;
+	    	$lacicloud_errors_api -> msgLogger("SEVERE", "SQL error while getting FTP user's values... Error: ".mysqli_error($dbc_ftp), 1);
+	    	return 1;
 	    }
 
 	    //mysqli fetch into multi dimensional array
@@ -1096,8 +1108,8 @@ class FTPActions extends LaciCloud {
 	    $result = mysqli_stmt_execute($stmt);
 
 	    if (!$result) {
-	    	$lacicloud_errors_api -> msgLogger("SEVERE", "SQL error while getting FTP user's list... Error: ".mysqli_error($dbc_ftp), 25);
-	    	return 25;
+	    	$lacicloud_errors_api -> msgLogger("SEVERE", "SQL error while getting FTP user's list... Error: ".mysqli_error($dbc_ftp), 1);
+	    	return 1;
 	    }
 
 	    $stmt->bind_result($mysql_ftp_users_list);
@@ -1122,8 +1134,8 @@ class FTPActions extends LaciCloud {
 	    $result = mysqli_stmt_execute($stmt);
 
 	    if (!$result) {
-	    	$lacicloud_errors_api -> msgLogger("SEVERE", "SQL error while getting FTP user's real used space... Error: ".mysqli_error($dbc), 25);
-	    	return 25;
+	    	$lacicloud_errors_api -> msgLogger("SEVERE", "SQL error while getting FTP user's real used space... Error: ".mysqli_error($dbc), 1);
+	    	return 1;
 	    }
 
 	    $stmt->bind_result($mysql_ftp_used_space);
@@ -1149,8 +1161,8 @@ class FTPActions extends LaciCloud {
 	    $result = mysqli_stmt_execute($stmt);
 
 	    if (!$result) {
-	    	$lacicloud_errors_api -> msgLogger("SEVERE", "SQL error while getting FTP user's virtually used space... Error: ".mysqli_error($dbc_ftp), 25);
-	    	return 25;
+	    	$lacicloud_errors_api -> msgLogger("SEVERE", "SQL error while getting FTP user's virtually used space... Error: ".mysqli_error($dbc_ftp), 1);
+	    	return 1;
 	    }
 
 	    $stmt->bind_result($mysql_ftp_used_space);
@@ -1177,11 +1189,11 @@ class FTPActions extends LaciCloud {
 		$result = mysqli_stmt_execute($stmt);
 
 		if (!$result) {
-			$lacicloud_errors_api -> msgLogger("SEVERE", "SQL Error regenerating API key... Error: ".mysqli_error($dbc), 26);
-			return 26;
+			$lacicloud_errors_api -> msgLogger("SEVERE", "SQL Error regenerating API key... Error: ".mysqli_error($dbc), 1);
+			return 1;
 		}
 
-		return true;
+		return 39;
 	}
 
 }
@@ -1209,25 +1221,25 @@ class Payments extends LaciCloud {
 		$amountUSD = $this->paymentPriceArray[$tier];
 
 		if (!isset($amountUSD)) {
-			$lacicloud_errors_api -> msgLogger("LOW", "amountUSD is not set when paying... amountUSD: ".$amountUSD." Tier: ".$tier." orderID: ".$orderID, 24);
-			return 24;
+			$lacicloud_errors_api -> msgLogger("LOW", "amountUSD is not set when paying... amountUSD: ".$amountUSD." Tier: ".$tier." orderID: ".$orderID, 35);
+			return 35;
 		}
 		
 		$orderID = "tier_".$tier."_".$id."_".date('n');
 
 		//check if user can change to said tier
-		if ($lacicloud_api -> canChangeToTier($tier, $id, $dbc, $dbc_ftp) !== true) {
-			$lacicloud_errors_api -> msgLogger("LOW", "User is not allowed to upgrade/downgrade to tier: ".$tier." for orderID: ".$orderID, 51);
-			return 49;
+		if ($lacicloud_errors_api -> getSuccessOrErrorFromID($lacicloud_api -> canChangeToTier($tier, $id, $dbc, $dbc_ftp)) !== "success") {
+			$lacicloud_errors_api -> msgLogger("LOW", "User is not allowed to upgrade/downgrade to tier: ".$tier." for orderID: ".$orderID, 27);
+			return 27;
 		}
 
 		//no payment is required for tier 1
 		if ($tier == "1") {
-			if ($lacicloud_api->upgradeToTier($tier, $orderID, $id, $dbc) !== true) {
-				return 51;
+			if ($lacicloud_errors_api -> getSuccessOrErrorFromID($lacicloud_api->upgradeToTier($tier, $orderID, $id, $dbc)) !== "success") {
+				return 35;
 			}
 
-			return true;
+			return 36;
 		}
 
 
@@ -1270,8 +1282,8 @@ class Payments extends LaciCloud {
 
 		if ($box->is_paid()) {
 
-			if ($lacicloud_api->upgradeToTier($tier, $orderID, $id, $dbc) !== true) {
-					return 51;
+			if ($lacicloud_errors_api -> getSuccessOrErrorFromID($lacicloud_api->upgradeToTier($tier, $orderID, $id, $dbc)) !== "success") {
+					return 35;
 			}
 
 
@@ -1281,9 +1293,9 @@ class Payments extends LaciCloud {
 				// Set Payment Status to Processed
 
 				$box->set_status_processed();
-				return true;
+				return 36;
 			} else {
-				return true;
+				return 36;
 			} 
 		} else {
 			echo "<br><br>";
@@ -1330,10 +1342,10 @@ class Payments extends LaciCloud {
 
 
 		if (!$result) {
-			@$lacicloud_errors_api -> msgLogger("SEVERE", "Could not send payment email for orderID ".$orderID."... Error:\n".$logger->dump()." Exception error:\n".$response, 37);
+			@$lacicloud_errors_api -> msgLogger("SEVERE", "Could not send payment email for orderID ".$orderID."... Error:\n".$logger->dump()." Exception error:\n".$response, 18);
 		}
 
-		return true;
+		return 37;
 
 	}
 
@@ -1371,10 +1383,10 @@ class Payments extends LaciCloud {
 
 
 		if (!$result) {
-			$lacicloud_errors_api -> msgLogger("SEVERE", "Could not send payment confirmation email for orderID: ".$orderID." (Callback IPN)... Error:\n".$logger->dump()." Exception error:\n".$response, 37);
+			$lacicloud_errors_api -> msgLogger("SEVERE", "Could not send payment confirmation email for orderID: ".$orderID." (Callback IPN)... Error:\n".$logger->dump()." Exception error:\n".$response, 18);
 		}
 
-		return true;
+		return 37;
 
 	}
 
@@ -1394,28 +1406,28 @@ class Payments extends LaciCloud {
 
 
 		if ((int)$payment_details["confirmed"] != 1) {
-			return 52;
+			return 35;
 		}
 
 		if ($tier == 1 and $amountUSD > 10 and $amountUSD > 13 or $tier == 2 and $amountUSD > 20 and $amountUSD < 25) {
 			$this->sendGoUrlConfirmationEmail($email, $orderID, $paymentID);
 
 
-			if ($lacicloud_api -> canChangeToTier($tier, $id, $dbc, $dbc_ftp) !== true) {
-				$lacicloud_errors_api -> msgLogger("LOW", "User is not allowed to upgrade/downgrade to tier: ".$tier." orderID: ".$orderID." (Callback IPN, probably already on tier)", 49);
-				return 49;
+			if ($lacicloud_errors_api -> getSuccessOrErrorFromID($lacicloud_api -> canChangeToTier($tier, $id, $dbc, $dbc_ftp)) !== "success") {
+				$lacicloud_errors_api -> msgLogger("LOW", "User is not allowed to upgrade/downgrade to tier: ".$tier." orderID: ".$orderID." (Callback IPN, probably already on tier)", 27);
+				return 27;
 			}
 
-			if ($lacicloud_api->upgradeToTier($tier, $payment_details["order"], $id, $dbc) !== true) {
-				return 51;
+			if ($lacicloud_errors_api -> getSuccessOrErrorFromID($lacicloud_api->upgradeToTier($tier, $payment_details["order"], $id, $dbc)) !== "success") {
+				return 35;
 			}
 
 		} else {
-			$lacicloud_errors_api -> msgLogger("LOW", "Incorrectly paid sum when upgrading to tier: ".$tier." orderID: ".$orderID." (Callback IPN)", 52);
-			return 52;
+			$lacicloud_errors_api -> msgLogger("LOW", "Incorrectly paid sum when upgrading to tier: ".$tier." orderID: ".$orderID." (Callback IPN)", 35);
+			return 35;
 		}
 
-		return true; 		
+		return 36; 		
 	}
 
 
@@ -1426,84 +1438,96 @@ class Errors extends LaciCloud {
 
 	//most of the error codes and their messages
 	private $messages = array(
-		true => "Everything okay!",
-		1 => "Database connection error!",
-		2 => "FTP Database connection error!",
-		3 => "Could not start session, please try again later!",
-		4 => "Captcha code incorrect!",
-		5 => "Email or Password is incorrect!", //also validation error 
-		6 => "Login successfull, but account not confirmed! Please check your email!",
-		7 => "Failed incrementing login counter!",
-		8 => "Failed incrementing index page counter!",
-		9 => "Could not confirm account with key!",
-		10 => "Could not create account with specified information!",
-		11 => "Could not send confirmation email during account creation!",
-		12 => "Email already exists!",
-		13 => "Could not update login details!",
-		14 => "Old password can't be the same as the new one!", //this is seperate error as this one can't be validate using JS
-		15 => "Couldn not find email in database! Are you sure you typed your email correctly?",
-		16 => "Could not verify the authenticity of action!",
-		//whoops forgot success messages
-		17 => "Account successfully registered! Please check your inbox for confirmation!",
-		18 => "Successfully sent reset email... Please check your inbox!",
-		19 => "Account successfully reset!",
-		//FTPActions class
-		20 => "Unexpected error occured!", //nice to have
-		21 => "Could not create FTP user with specified data, maybe FTP user already exists?",
-		22 => "Could not remove FTP user! Are you sure you typed his name correctly?",
-		24 => "Could not create invoice!",
-		25 => "Error while getting values!", //for FTP users list, FTP users values, and user values
-		26 => "Error while regenerating API key!",
-		28 => "Please log-in to continue!",
-		31 => "Successfully created FTP user!",
-		32 => "Successfully removed FTP user!",
-		35 => "Successfully regenerated API key!",
-		37 => "Could not send payment email!",
-		38 => "Could not update password!",
-		39 => "Password successfully updated!",
-		40 => "Error while sending Step 2 reset email!",
-		//API
-		41 => "Error! No API key found!",
-		42 => "Error! API key wrong!", //the answer to life the universe and everything
-		43 => "Error! Not enough parameters!",
-		44 => "Successfully confirmed account!",
-		//qftp
-		45 => "Could not create qFTP user!",
-		46 => "Successfully created qFTP user!", //in js with username/password
-		48 => "Successfully brought tier!",
-		49 => "Error! You can't change to this tier because you have more FTP space used than this tier allows you to! Please delete a few FTP users before continuing...",
-		50 => "Please create an account before continuing!",
-		51 => "Internal server error while changing to this tier! We are working on it...",
-		52 => "IPN Error!",
-		53 => "An internal error occured while sending your email! Please try again...",
-		54 => "Successfully sent email! Thank you...",
-		55 => "Successfully logged in...",
-		56 => "Account successfully confirmed, please log-in!",
-		57 => "Successfully registered, please check your xXxemailxXx for confirmation!",
-		58 => "Session started successfully!"
+		1 => "An internal error occured... Damn!",
+		2 => "Session could not be started.. Sorry!",
+		3 => "Session started successfully... Yay!",
+		4 => "An error occured while validating your user information... Please try again!",
+		5 => "User info validated successfully... Yay!",
+		6 => "An error occured while increasing page visit counter... Damn!",
+		7 => "Page visit counter increased successfully... Yay!",
+		8 => "",
+		9 => "",
+		10 => "The captcha was entered incorrectly... Please try again!",
+		11 => "Captcha validated successfully... Yay!",
+		12 => "Account has not been confirmed yet... Please confirm and try again!",
+		13 => "Successfully logged in... Yay!",
+		14 => "An error occured while confirming your account with key... Please try again!",
+		15 => "Account confirmed successfully... Yay!",
+		16 => "",
+		17 => "Email already exists in database... Please try again or reset your password!",
+		18 => "An unfortunate error occured while sending the email... Sorry!",
+		19 => "Account has been successfully created... Please confirm now from your xXxemailxXx!",
+		20 => "The user account has been successfully deleted... Yay, but sad to see you go!", //RIP user
+		21 => "Email accepted... Please check your inbox for further instructions!",
+		22 => "Reset key could not be validated... Please try again!",
+		23 => "Your new password can not be the same as the old one... Please try again!",
+		24 => "successfully reset account! You can log in now!",
+		25 => "Session timed-out... Please log-in again if you wish to continue!",
+		26 => "First-time setup completed successfully... Yay!",
+		27 => "Due to space issues, you can not change to this tier at this time... Check tier limits and delete some stuff accordingly!",
+		28 => "You can change to this tier if you wish... Yay!",
+		29 => "Successfully upgraded tier... Yay!", //func
+		30 => "You\"r email has been successfully sent... Yay!",
+		31 => "An error occured while validating FTP user information... Please try again!",
+		32 => "FTP user successfully created... Yay!",
+		33 => "FTP username incorrect; no such FTP user exists under your account... Please try again!",
+		34 => "FTP user successfully removed... Yay!",
+		35 => "Internal error occured while chaning to this tier... Sorry!",
+		36 => "successfully accepted payment and upgrade to tier... Yay!", //from payments
+		37 => "Email successfully sent... Yay!",
+		38 => "QFTP user successfully created with username xXxusernamexXx and password xXxpasswordxXx!",
+		39 => "API key successfully regenerated!",
+		40 => "Username or password incorrect... Please try again!",
+		41 => "Beta code incorrect... Please contact Laci for beta access!",
+		42 => "Beta code successfully validated... Yay!", //the answer to life, the universe, and everything
+		43 => "API key incorrect... Please try again!",
+		44 => "Not enough parameters supplied for API... Please try again!"
 	);
 
 	private $result_messages_map = array(
 		1 => "error",
 		2 => "error",
-		3 => "error",
+		3 => "success",
 		4 => "error",
-		5 => "error",
-		6 => "warning",
-		11 => "error",
-		13 => "error",
-		14 => "error",
-		15 => "error",
-		18 => "success",
-		19 => "success",
+		5 => "success",
+		6 => "error",
+		7 => "success",
+		8 => "error",
+		9 => "success",
 		10 => "error",
-		53 => "error",
-		54 => "success",
-		55 => "login",
-		56 => "success",
-		57 => "success",
-		58 => "success",
-		9 => "error"
+		11 => "success",
+		12 => "warning",
+		13 => "login",
+		14 => "error",
+		16 => "error",
+		17 => "warning",
+		18 => "error",
+		19 => "success",
+		20 => "success",
+		21 => "success",
+		22 => "error",
+		23 => "error",
+		24 => "warning",
+		25 => "warning",
+		26 => "success",
+		27 => "warning",
+		28 => "success",
+		29 => "success",
+		30 => "success",
+		31 => "error",
+		32 => "success",
+		33 => "error",
+		34 => "success",
+		35 => "error",
+		36 => "success",
+		37 => "success",
+		38 => "success",
+		39 => "success",
+		40 => "error",
+		41 => "error",
+		42 => "success",
+		43 => "error",
+		44 => "error"
 		);
 
 	public function getSuccessOrErrorFromID($id) {
@@ -1542,7 +1566,7 @@ class API extends LaciCloud {
 	public function verifyAPIKey($api_key, $dbc) {
 
 		if (!isset($api_key)) {
-			return 41;
+			return 43;
 		}
 
 		$query = "SELECT api_key,id FROM users WHERE api_key = ?";
@@ -1564,11 +1588,16 @@ class API extends LaciCloud {
 		}
 
 		if (!$result or empty($id)) {
-			return 42;
+			return 43;
 		}
 
 		return array("id" => $id, "api_key" => $api_key);
 
+	}
+
+	//a very useful function
+	public function getNotEnoughParametersSuppliedErrorID() {
+		return 44;
 	}
 
 	//id as in error id
@@ -1617,18 +1646,25 @@ class qFTP extends LaciCloud {
 		srand ((double)microtime()*1000000);
 		$max = $length/2;
 		for($i=1; $i<=$max; $i++){
-			$password.=$conso[rand(0,19)];
-			$password.=$vocal[rand(0,4)];
+			$username.=$conso[rand(0,19)];
+			$username.=$vocal[rand(0,4)];
 		}
-		$password.=rand(10,99);
-		$newpass = $password;
-		return $newpass;
+		$username.=rand(10,99);
+		return $username;
 
 	}
 
-	public function addQFTPUser($username, $password, $dbc_ftp) {
+	public function addQFTPUser($username, $password, $captcha, $beta_code, $dbc_ftp) {
 		$lacicloud_api = new LaciCloud();
 		$lacicloud_errors_api = new Errors();
+
+		if ($lacicloud_errors_api->getSuccessOrErrorFromID($lacicloud_api -> checkCaptcha($captcha)) !== "success") {
+    		return 10;
+  		}
+
+  		if ($lacicloud_errors_api -> getSuccessOrErrorFromID($lacicloud_api -> verifyBetaCode($beta_code)) !== "success") {
+			return 41;
+		}
 
 		$ftp_starting_directory = $lacicloud_api->document_root."/users/qftp/".$username;
 		$expiration = strtotime('+1 day', time());
@@ -1642,12 +1678,12 @@ class qFTP extends LaciCloud {
 		$result = mysqli_stmt_execute($stmt);
 
 		if (!$result) {
-			$lacicloud_errors_api -> msgLogger("SEVERE", "SQL error while adding QFTP user... Error: ".mysqli_error($dbc_ftp), 21);
-			return 21;
+			$lacicloud_errors_api -> msgLogger("SEVERE", "SQL error while adding QFTP user... Error: ".mysqli_error($dbc_ftp), 1);
+			return 1;
 		}
 
 
-		return true;
+		return 38;
 
 	}
 
