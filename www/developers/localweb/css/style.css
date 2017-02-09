@@ -436,7 +436,7 @@ ul.topnav li.icon {
     width: 50%;
     height: 100%;
     float: left;
-    background-image: url('../resources/about_us-team.jpg');
+    background: white;
     background-repeat: no-repeat;
     background-size: cover;
 }
@@ -1107,6 +1107,16 @@ ul.topnav li.icon {
         .footer-wrapper {
             margin-top: 23%;
         }
+
+        .social-icons-large {
+            margin-left: 37%;
+
+        }
+
+        .youtube-embed-container {
+            padding-left: 15%;
+        }
+
     }
 
     @media screen and (max-width:360px) {
@@ -1130,6 +1140,7 @@ ul.topnav li.icon {
         .footer-wrapper {
             margin-top: 50%;
         }
+
     }
 }
 

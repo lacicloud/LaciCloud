@@ -1,10 +1,12 @@
 TODO for LaciCloud:
 
 *Fix the user manager page of interface on mobile
-*Fix confirming API key regenerate and user remove in some mobile browsers 
 *Make an email design
-*Make a proper 404 page 
-*Update docs; help, api doc, legal with current information and fix spelling mistakes 
-*Explain to user that $login credentials !== $ftp credentials more clearly
+
+
+
 *Publish facebook profile for LaciCloud
+*Update social media pics
+*Contact page social section icons/YouTube video responsivness
 *And of course the shop page  
+

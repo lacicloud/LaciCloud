@@ -154,7 +154,7 @@ if (empty($_GET["id"]) or !in_array($_GET["id"], $lacicloud_api->valid_pages_arr
 
 <body>
 
-<div id="layout" class="">
+<div id="layout">
 <!-- Menu toggle -->
     <a href="#menu" id="menuLink" class="menu-link">
         <span></span>

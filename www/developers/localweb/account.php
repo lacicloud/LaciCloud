@@ -78,13 +78,11 @@ if (isset($_POST["reset_email_address"]) and isset($_POST["captcha_code"]) and !
 </head>
 
 <body style="
-  background: #76b852; /* fallback for old browsers */
-  background: -webkit-linear-gradient(right, #76b852, #8DC26F);
-  background: -moz-linear-gradient(right, #76b852, #8DC26F);
-  background: -o-linear-gradient(right, #76b852, #8DC26F);
-  background: linear-gradient(to left, #76b852, #8DC26F);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;  ">
+background-image:url('/resources/ui_bg.jpg');
+background-repeat: no-repeat;
+background-position: center center;
+background-attachment: fixed;
+background-size: cover;">
 
 <div class="login-page">
   <div class="form">

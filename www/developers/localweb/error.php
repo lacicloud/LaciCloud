@@ -1,18 +1,32 @@
-<!DOCTYPE html>
+<!--
+Author: W3layouts
+Author URL: http://w3layouts.com
+License: Creative Commons Attribution 3.0 Unported
+License URL: http://creativecommons.org/licenses/by/3.0/
+-->
+<!DOCTYPE HTML>
 <html>
 <head>
-
-<title>404 Not Found</title>
-
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>404 - That page cannout be found!</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta charset="utf-8">
-
+<link rel="stylesheet" href="/css/error.css">
 </head>
-
 <body>
-
-
-<img src="/resources/404.jpg" style="width:100%;height:100%;position:absolute;top:0;left:0;" alt="404 Not Found">
+<div class="wrap">
+	<img style="padding-top: 3%; padding-left: 2%; -webkit-transform: scale(1.5); -moz-transform: scale(1.5); -o-transform: scale(1.5);" src="/resources/logo.png" alt="" />
+	<div class="banner">
+		<img src="/resources/404_banner.png" alt="" />
+	</div>
+	<div class="page">
+		<h2>We cannot find that page... Damn!</h2>
+		<h3>Press any key to continue...</h3>
+		<h4>Or click <a style="text-decoration: underline;" onClick="history.go(-1);" href="#">here</a> to go back!</h4>
+	</div>
+	<div class="footer">
+		<p>Design by <a href="http://w3layouts.com">w3layouts</a></p>
+	</div>
+</div>
 
 <script>
 
@@ -25,3 +39,4 @@ document.onkeypress = function (e) {
 
 </body>
 </html>
+

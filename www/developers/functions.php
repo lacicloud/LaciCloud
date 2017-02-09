@@ -400,7 +400,7 @@ class LaciCloud {
 				->setFrom(array("bot@lacicloud.net" => "LaciCloud"))
 				->setTo(array("$email"))
 				->setCharset('utf-8') 
-				->setBody("<html><body><img src='".$cid."' alt='LaciCloud Logo'><br>Hi ".$email."!<br>Please confirm your account here: <br>"."<a href='https://lacicloud.net/login/?unique_key=".$user_unique_key."'>Click this link to confirm your account</a>"."<br><br>Have a great day, <br>The LaciCloud Team</body></html>",'text/html');
+				->setBody("<html><body><img src='".$cid."' alt='LaciCloud Logo'><br>Hi ".$email."!<br>Please confirm your account here: <br>"."<a href='https://lacicloud.net/account/?unique_key=".$user_unique_key."'>Click this link to confirm your account</a>"."<br><br>Have a great day, <br>The LaciCloud Team</body></html>",'text/html');
 			$result = $mailer->send($message, $errors);
 	    } catch(\Swift_TransportException $e){
 	        $response = $e->getMessage();
@@ -1148,7 +1148,7 @@ class FTPActions extends LaciCloud {
 	    	$ftp_used_space = 0;
 	    }
 
-	    return $ftp_used_space;
+	    return (int)$ftp_used_space;
 
 	}
 	
@@ -1175,7 +1175,7 @@ class FTPActions extends LaciCloud {
 	    	$ftp_used_space = 0;
 	    }
 
-	    return $ftp_used_space;
+	    return (int)$ftp_used_space;
 	}
 
 	public function regenerateAPIKey($id, $dbc) {
@@ -1452,7 +1452,7 @@ class Errors extends LaciCloud {
 		12 => "Account has not been confirmed yet... Please confirm and try again!",
 		13 => "Successfully logged in... Yay!",
 		14 => "An error occured while confirming your account with key... Please try again!",
-		15 => "Account confirmed successfully... Yay!",
+		15 => "Account confirmed successfully... Yay! BUT, please do not attempt logging into FTP yet, rather login to the interface page and add a new FTP User first!",
 		16 => "",
 		17 => "Email already exists in database... Please try again or reset your password!",
 		18 => "An unfortunate error occured while sending the email... Sorry!",
@@ -1464,7 +1464,7 @@ class Errors extends LaciCloud {
 		24 => "successfully reset account! You can log in now!",
 		25 => "Session timed-out... Please log-in again if you wish to continue!",
 		26 => "First-time setup completed successfully... Yay!",
-		27 => "Due to space issues, you can not change to this tier at this time... Check tier limits and delete some stuff accordingly!",
+		27 => "Due to space issues, or the fact that you may be already on this tier, you can not change to this tier at this time... Check tier limits and delete some stuff accordingly!",
 		28 => "You can change to this tier if you wish... Yay!",
 		29 => "Successfully upgraded tier... Yay!", //func
 		30 => "You\"r email has been successfully sent... Yay!",
@@ -1472,8 +1472,8 @@ class Errors extends LaciCloud {
 		32 => "FTP user successfully created... Yay!",
 		33 => "FTP username incorrect; no such FTP user exists under your account... Please try again!",
 		34 => "FTP user successfully removed... Yay!",
-		35 => "Internal error occured while chaning to this tier... Sorry!",
-		36 => "successfully accepted payment and upgrade to tier... Yay!", //from payments
+		35 => "Internal error occured while changing to this tier... Sorry!",
+		36 => "Successfully accepted payment and upgrade to tier... Yay!", //from payments
 		37 => "Email successfully sent... Yay!",
 		38 => "QFTP user successfully created with username xXxusernamexXx and password xXxpasswordxXx!",
 		39 => "API key successfully regenerated!",
@@ -1499,6 +1499,7 @@ class Errors extends LaciCloud {
 		12 => "warning",
 		13 => "login",
 		14 => "error",
+		15 => "success",
 		16 => "error",
 		17 => "warning",
 		18 => "error",
@@ -1642,7 +1643,7 @@ class qFTP extends LaciCloud {
 		$length=$len-2; // Makes room for the two-digit number on the end
 		$conso=array('b','c','d','f','g','h','j','k','l','m','n','p','r','s','t','v','w','x','y','z');
 		$vocal=array('a','e','i','o','u');
-		$password='';
+		$username='';
 		srand ((double)microtime()*1000000);
 		$max = $length/2;
 		for($i=1; $i<=$max; $i++){
