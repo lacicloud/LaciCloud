@@ -4,10 +4,17 @@ Author URL: http://w3layouts.com
 License: Creative Commons Attribution 3.0 Unported
 License URL: http://creativecommons.org/licenses/by/3.0/
 -->
+<?php 
+require("../functions.php");
+
+$lacicloud_api = new LaciCloud();
+$lacicloud_api -> isPageCached();
+
+?>
 <!DOCTYPE HTML>
 <html>
 <head>
-<title>404 - That page cannout be found!</title>
+<title>404 - That page cannot be found!</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta charset="utf-8">
 <link rel="stylesheet" href="/css/error.css">

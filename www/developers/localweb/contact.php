@@ -89,7 +89,7 @@ if (isset($_POST["contact_reason"]) and isset($_POST["subject"]) and isset($_POS
             <div class="social-icons-large">
                 <!-- base64: empty image, css fills it -->
                 <img onclick="location.href = 'https://twitter.com/lacicloud';" id="sprite-twitter" src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" /><br/><br />
-                <img id="sprite-facebook" src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" /><br /><br />
+                <img onclick="location.href = 'https://www.facebook.com/lacicloudhosting/';" id="sprite-facebook" src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" /><br /><br />
                 <img onclick="location.href = 'https://www.youtube.com/channel/UC6cwh-kIj7aq4XoiRkzVSug';" id="sprite-youtube" src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" /><br /><br />
             </div>
             <div class="youtube-embed-container">

@@ -1,4 +1,11 @@
-﻿<!DOCTYPE html>
+﻿<?php 
+require("../functions.php");
+
+$lacicloud_api = new LaciCloud();
+
+$lacicloud_api -> isPageCached();
+?>
+<!DOCTYPE html>
 <html>
 <head>
     <title>LaciCloud</title>
@@ -68,7 +75,7 @@
         </div>
         <div class="footer-social">
             <a href="https://twitter.com/lacicloud" class="icon tw"><img src="/resources/social-twitter.png" /></a>
-            <a href="#" class="icon fb"><img src="/resources/social-facebook.png" /></a>
+            <a href="https://www.facebook.com/lacicloudhosting/" class="icon fb"><img src="/resources/social-facebook.png" /></a>
             <a href="https://www.youtube.com/channel/UC6cwh-kIj7aq4XoiRkzVSug" class="icon yt"><img src="/resources/social-youtube.png" /></a>
         </div>
     </footer>
