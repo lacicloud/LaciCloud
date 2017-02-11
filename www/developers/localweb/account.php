@@ -37,13 +37,7 @@ if (isset($_POST["email"]) and isset($_POST["password"]) and !isset($_POST["pass
   $dbc = $lacicloud_api -> getMysqlConn();
 
   $result = $lacicloud_api -> loginUser($_POST["email"], $_POST["password"], $_POST["captcha_code"], $dbc);
-  
-} elseif (isset($_GET["unique_key"])) {
-   $dbc = $lacicloud_api -> getMysqlConn();
-
-   $result = $lacicloud_api -> confirmAccount($_GET["unique_key"], $dbc);
-
-}
+} 
 
 //forgot
 
@@ -62,6 +56,13 @@ if (isset($_POST["reset_email_address"]) and isset($_POST["captcha_code"]) and !
   //reset session
   $lacicloud_api -> blowUpSession();
    
+}
+
+//account confirm 
+if (isset($_GET["unique_key"])) {
+   $dbc = $lacicloud_api -> getMysqlConn();
+
+   $result = $lacicloud_api -> confirmAccount($_GET["unique_key"], $dbc);
 
 }
 
@@ -125,12 +126,12 @@ background-size: cover;">
     </form>
     <form class="forgot-form-2" action="/account/#forgot_step_2" onsubmit="return ValidateForgotStep2(this);" method="POST" accept-charset="UTF-8">
       
-      <input type="hidden" disabled="disabled" name="email" value="<?php echo $_SESSION["email"]; ?>">
+      <input type="hidden" disabled="disabled" name="email" <?php echo (isset($_SESSION["email"]) == true) ? "value='".$_SESSION["email"]."'" : "" ?>>
 
       <input required type="password" name="new_password" placeholder="new password"/>
       <input required type="password" name="new_password_retyped" placeholder="retype new password"/>
 
-      <input required type="text" <?php if (isset($_GET["reset_key"])) { echo 'value='.'"'.$_GET["reset_key"].'"'; } ?> name="reset_key" placeholder="reset key"/>
+      <input required type="text" <?php echo (isset($_GET["reset_key"]) == true) ? "value='".$_GET["reset_key"]."'" : "" ?> name="reset_key" placeholder="reset key"/>
 
       <img src="/securimage_captcha/securimage_show.php?no_cache=" alt="CAPTCHA Image"/>
       <br><br>

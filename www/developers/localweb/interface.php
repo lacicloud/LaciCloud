@@ -192,6 +192,13 @@ if (empty($_GET["id"]) or !in_array($_GET["id"], $lacicloud_api->valid_pages_arr
 
 		    	<div class="panel-body"> 
 			    	<h2>Main</h2>
+
+                    <div style="display: block;" class="warning" id="noscript">For optimal experience please enable JavaScript! Disabled JS is not supported and may lead to bad experience!</div>
+
+                    <?php if ($first_time_boolean == 0) {
+                            echo "<div class='info' style='display: block;'>Hi! We have detected it's your first time logging in. It is <strong>REALLY</strong> recommended you read the <strong><a rel='canonical' target='_blank' href='/resources/lacicloud_help.pdf'>help</a></strong>!</div>";
+                    } ?>
+                   
 			    
 			        <p>Tier: <span class="green"><?php echo $tier;?></span> </p>
 
@@ -203,16 +210,6 @@ if (empty($_GET["id"]) or !in_array($_GET["id"], $lacicloud_api->valid_pages_arr
                     <br>
 
 			        <p>Connection details: <span class="green">Secure (HTTPS)</span></p>
-
-
-			        <p><span id="noscript" class="yellow">For optimal experience please enable JavaScript! Disabled JS is not supported and may lead to bad experience.</span></p>
-			        <?php if ($first_time_boolean == 0) {
-
-			        
-
-			            echo "<p class='yellow'>Hi! We have detected it's your first time logging in. It is <strong>REALLY</strong> recommended you read the <a rel='canonical' target='_blank' href='/resources/lacicloud_help.pdf'>help</a>!</p>";
-
-			        } ?>
 
 			        <?php echo "<p>Your user ID is: <span class='green'>".$id."</span></p>" ?>
 
