@@ -1490,7 +1490,8 @@ class Errors extends LaciCloud {
 		41 => "Beta code incorrect... Please contact Laci for beta access!",
 		42 => "Beta code successfully validated... Yay!", //the answer to life, the universe, and everything
 		43 => "API key incorrect... Please try again!",
-		44 => "Not enough parameters supplied for API... Please try again!"
+		44 => "Not enough parameters supplied for API... Please try again!",
+		45 => "API call received OK... Yay!"
 	);
 
 	private $result_messages_map = array(
@@ -1537,7 +1538,8 @@ class Errors extends LaciCloud {
 		41 => "error",
 		42 => "success",
 		43 => "error",
-		44 => "error"
+		44 => "error",
+		45 => "success"
 		);
 
 	public function getSuccessOrErrorFromID($id) {
@@ -1554,7 +1556,7 @@ class Errors extends LaciCloud {
 		 $bt = debug_backtrace();
   		 $caller = array_shift($bt);
 
-  		 if ($severity == "CRIT" or $severity == "SEVERE") {
+  		 if ($severity == "CRIT" or $severity == "SEVERE" or $severity == "API") {
   		 	@$POST = print_r($_POST, true);
   			@$GET = print_r($_GET, true);
   		 	@$SERVER = print_r($_SERVER, true);
@@ -1605,9 +1607,13 @@ class API extends LaciCloud {
 
 	}
 
-	//a very useful function
+	//two very useful functions
 	public function getNotEnoughParametersSuppliedErrorID() {
 		return 44;
+	}
+
+	public function getAPIRequestOKSuccessID() {
+		return 45;
 	}
 
 	//id as in error id

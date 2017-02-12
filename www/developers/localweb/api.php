@@ -28,10 +28,12 @@ if (!is_array($result)) {
 }
 
 $id = $result["id"];
+
+//log API request
+
+$lacicloud_errors_api -> msgLogger("API", "API request received...", $lacicloud_api_api->getAPIRequestOKSuccessID());
+
 //API 
-
-//success msg ID values are hardcoded!
-
 if(isset($_POST["action"]) and $_POST["action"] == "addftpuser" and isset($_POST["ftp_username"]) and isset($_POST["ftp_password"]) and isset($_POST["ftp_space"]) and isset($_POST["ftp_space_currency"]) and isset($_POST["starting_directory"])) {
 
     $result = $lacicloud_ftp_api -> addFTPUser($_POST["ftp_username"], $_POST["ftp_password"], $_POST["ftp_space"], $_POST["starting_directory"] ,$_POST["ftp_space_currency"] , $id, $dbc, $dbc_ftp); 
@@ -85,7 +87,7 @@ if(isset($_POST["action"]) and $_POST["action"] == "addftpuser" and isset($_POST
     }
 
 } elseif (isset($_POST["action"]) and $_POST["action"] == "getftpusersvirtuallyusedspace") {
-    $result = $lacicloud_ftp_api -> getFTPUsersVirtuallyUsedSpace($id, $dbc);
+    $result = $lacicloud_ftp_api -> getFTPUsersVirtuallyUsedSpace($id, $dbc_ftp);
 
     if (is_int($result)) {
         echo json_encode($result);
@@ -98,7 +100,7 @@ if(isset($_POST["action"]) and $_POST["action"] == "addftpuser" and isset($_POST
 
     echo $lacicloud_api_api -> returnJSONObject($result, ($lacicloud_errors_api->getSuccessOrErrorFromID($result) == "success") ? true: false );
 
-} elseif (isset($_POST["action"]) and $_POST["action"] == "getierinfo" and isset($_POST["tier"])) {
+} elseif (isset($_POST["action"]) and $_POST["action"] == "gettierinfo" and isset($_POST["tier"])) {
     echo json_encode($lacicloud_api -> getTierData($_POST["tier"])); //just return array of current LaciCloud tiers
 } else {
     //a very useful function

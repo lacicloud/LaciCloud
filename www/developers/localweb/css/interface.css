@@ -5,7 +5,9 @@ body {
     background-repeat: no-repeat;
     background-position: center center;
     background-attachment: fixed;
-    background-size: cover;
+    background-size: cover; 
+    filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='.myBackground.jpg', sizingMethod='scale');
+    -ms-filter: "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='myBackground.jpg', sizingMethod='scale')";
 }
 
 .red {
@@ -40,10 +42,21 @@ body {
 }
 
 .users_list {
-  width: 35%;
+  width: 75%;
   position: relative;
   margin-left: auto;
   margin-right: auto;
+}
+
+/* fix for panel not being scrollable */
+.users_page {
+    height: 450px; 
+    overflow: auto;
+}
+
+.add_users_page {
+    height: 510px;
+    overflow: auto;
 }
 
 @-ms-viewport{

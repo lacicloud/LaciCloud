@@ -18,8 +18,8 @@ if ($lacicloud_errors_api -> getSuccessOrErrorFromID($lacicloud_api -> startSess
 }
 
 
-//checks if user is logged in at all and verifies UA, IP
-if ($_SESSION["logged_in"] != 1) {
+//checks if user is logged in at all and then verifies UA, IP
+if (!isset($_SESSION["logged_in"]) or $_SESSION["logged_in"] != 1) {
     $lacicloud_errors_api -> msgLogger("LOW", "Not-logged in access on /interface.php...", 2);
     header("Location: /account");
     die(1);
@@ -64,12 +64,13 @@ if(isset($_POST["action"]) and $_POST["action"] == "addftpuser" and isset($_POST
 } elseif (isset($_GET["action"]) and $_GET["action"] == "logout") {
     $lacicloud_api -> blowUpSession();
     header("Location: /account");
+    die(1);
 }
 
 
 //load vars into session array so that a mysql query doesn't have to be opened every time a user clicks a link
-//if action done (result), update user values
-if (@!$_SESSION["user_values_set"] or isset($result)) {
+//if action done (result), update user values, or if the refresh GET parameter is set
+if (@!$_SESSION["user_values_set"] or isset($result) or isset($_GET["refresh"])) {
     $user_values = $lacicloud_ftp_api->getUserValues($id, $dbc);
     $ftp_users_list = $lacicloud_ftp_api->getFTPUsersList($id, $dbc_ftp);
     $ftp_users_values = $lacicloud_ftp_api->getFTPUsersValues($id, $dbc_ftp);
@@ -231,7 +232,7 @@ if (empty($_GET["id"]) or !in_array($_GET["id"], $lacicloud_api->valid_pages_arr
 
 	    	</div>
 
-		    	<div class="panel-body"> 
+		    	<div class="panel-body users_page"> 
 		    		 <h2>User Manager</h2>
 
                     <div class="success"></div>
@@ -241,9 +242,10 @@ if (empty($_GET["id"]) or !in_array($_GET["id"], $lacicloud_api->valid_pages_arr
 		          
                      <p>Active Users: <span class="green"><?php echo count($ftp_users_list);?></span> Out of <span class="green"><?php echo $limit; ?></span></p>
 
-                      <p>Space available: <span class="green"><?php echo $ftp_space_user_has;?>MB</span> Out of <span class="green"><?php echo $ftp_space ?>MB</span></p>
-                      <p>Virtual space available: <span class="green"><?php echo $ftp_space_user_has_virtual;?>MB</span> Out of <span class="green"><?php echo $ftp_space ?>MB</span></p> </p>
+                      <p>Space available: <span class="green"><?php echo $ftp_space_user_has;?>MB</span> Out of <span class="green"><?php echo $ftp_space ?>MB</span></p> </p>
 
+                      <p>Virtual space available: <span class="green"><?php echo $ftp_space_user_has_virtual;?>MB</span> Out of <span class="green"><?php echo $ftp_space ?>MB</span> </p>  <a href="?id=1&refresh=">Refresh Space</a>  </p>
+                     
                      <div class="panel panel-default users_list">
                      <div class="panel-body">
                     <?php
@@ -323,7 +325,7 @@ if (empty($_GET["id"]) or !in_array($_GET["id"], $lacicloud_api->valid_pages_arr
 
             </div>
 
-                <div class="panel-body"> 
+                <div class="panel-body add_users_page"> 
 
                     <h2>Add FTP User</h2>
 

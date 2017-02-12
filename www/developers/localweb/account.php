@@ -83,7 +83,10 @@ background-image:url('/resources/ui_bg.jpg');
 background-repeat: no-repeat;
 background-position: center center;
 background-attachment: fixed;
-background-size: cover;">
+background-size: cover;
+filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='.myBackground.jpg', sizingMethod='scale');
+-ms-filter: "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='myBackground.jpg', sizingMethod='scale')";
+">
 
 <div class="login-page">
   <div class="form">
@@ -171,7 +174,7 @@ if (isset($result)) {
     } 
 
     //for create
-    $message = str_replace("xXxemailxXx",'<a href="'.$link.'">email</a>',$message);
+    $message = str_replace("xXxemailxXx",'<a href="'.$link.'" target="_blank">email</a>',$message);
     
     echo "".$result.".innerHTML='".$message."';";
     echo "\n";
