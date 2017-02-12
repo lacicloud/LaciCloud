@@ -15,12 +15,12 @@
     <nav>
         <ul class="topnav" id="mainNav">
             <li><a class="menu-link" href="/">Home</a><span class="menu-dot">.</span></li>
-            <li><a class="menu-link active" href="/about_us">About Us</a><span class="menu-dot">.</span></li>
+            <li><a class="menu-link" href="/about_us">About Us</a><span class="menu-dot">.</span></li>
             <li><a class="menu-link" href="/docs">Help &amp; Others</a></li>
             <li class="logo-li">
                 <img class="logo-img" src="/resources/laci-logo.png">
             </li>
-            <li><a class="menu-link" href="/shop">Shop</a><span class="menu-dot">.</span></li>
+            <li><a class="menu-link active" href="/shop">Shop</a><span class="menu-dot">.</span></li>
             <li><a class="menu-link" href="/contact">Contact</a><span class="menu-dot">.</span></li>
             <li><a class="menu-link" href="/login">Log in/Sign up</a></li>
             <li class="icon">
@@ -55,7 +55,7 @@
     <section class="row h-features meettheteam">
         <div class="team-wrapper">
             <div class="team-row team-row-1">
-                <div class="team-image"><img style="height:100%; width:100%" src="/resources/laci.jpg"></div>
+                <div class="team-image"></div>
                 <div class="team-user user-1">
                     <div class="team-name">Free - For First Timers</div>
                     <span class="team-end">.</span>
@@ -85,10 +85,10 @@
                         </ul>
                     </div>
                 </div>
-                <div class="team-image"><img style="height:100%; width:100%" src="/resources/tristan.jpg"></div>
+                <div class="team-image"></div>
             </div>
             <div class="team-row team-row-3">
-                <div class="team-image"><img style="height:100%; width:100%" src="/resources/fabio_profile_pic.png"></div>
+                <div class="team-image"></div>
                 <div class="team-user user-3">
                     <div class="team-name">40€/Month - For experts</div>
                     <span class="team-end">.</span>
@@ -119,7 +119,7 @@
                         </ul>
                     </div>
                 </div>
-                <div class="team-image"><img style="height:100%; width:100%" src="/resources/fabio_profile_pic.png"></div>
+                <div class="team-image"></div>
             </div>
     </section>
 
