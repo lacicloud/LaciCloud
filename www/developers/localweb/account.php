@@ -182,7 +182,6 @@ if (isset($result)) {
 
 }
 ?>
-
 </script>
 
 </body>

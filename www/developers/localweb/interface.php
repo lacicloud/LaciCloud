@@ -154,7 +154,7 @@ if (empty($_GET["id"]) or !in_array($_GET["id"], $lacicloud_api->valid_pages_arr
 
 
 <body>
-
+<img src="/resources/ui_bg.jpg" style="width:100%;height:100%;position:absolute;top:0;left:0;z-index:-5000;" alt=""> 
 <div id="layout">
 <!-- Menu toggle -->
     <a href="#menu" id="menuLink" class="menu-link">
@@ -280,12 +280,12 @@ if (empty($_GET["id"]) or !in_array($_GET["id"], $lacicloud_api->valid_pages_arr
                               $not_set_position++;
 
                               if ($start_at + $not_set_position > $limit) {
-                                echo "<a class='btn btn-default btn_previous_page' href='/interface?id=1&li=".($start_at - 5)."'>Previous Page</a>";
+                                echo "<br><a class='btn btn-default btn_previous_page' href='/interface?id=1&li=".($start_at - 5)."'>Previous Page</a>";
                                 break;
                               }
 
                               if ($position - 1 + $not_set_position >= 5) {
-                                echo "<a class='btn btn-default btn_next_page' href='/interface?id=1&li=".($start_at + 5)."'>Next Page</a>";
+                                echo "<br><a class='btn btn-default btn_next_page' href='/interface?id=1&li=".($start_at + 5)."'>Next Page</a>";
                                 if ($start_at !== 0) {
                                      echo "<a class='btn btn-default btn_previous_page' href='/interface?id=1&li=".($start_at - 5)."'>Previous Page</a>";
                                 }

@@ -376,7 +376,7 @@ ul.topnav li.icon {
     display: block;
 }
 
-.team-end {
+.team-end, .shop-end {
     font-size: 0;
     padding-top: 3px;
     height: 5px;
@@ -401,14 +401,14 @@ ul.topnav li.icon {
         padding-top: 48px;
     }
 
-.team-row {
+.team-row, .shop-row {
     width: 100%;
     float: left;
     height: 469px;
     color: #363c3b;
 }
 
-.team-user {
+.team-user, .shop-user {
     width: 50%;
     height: auto;
     float: left;
@@ -416,13 +416,13 @@ ul.topnav li.icon {
     top: 32%;
 }
 
-.team-name {
+.team-name, .shop-name {
     text-transform: uppercase;
     text-align: center;
     font-size: 24px;
 }
 
-.team-description {
+.team-description, .shop-description {
     width: 88%;
     height: 100%;
     float: left;
@@ -432,7 +432,11 @@ ul.topnav li.icon {
     padding-left: 5%;
 }
 
-.team-image {
+ul {
+    display: inline-block;
+}
+
+.team-image, .shop-image {
     width: 50%;
     height: 100%;
     float: left;
@@ -1006,12 +1010,12 @@ ul.topnav li.icon {
             font-size: 26px;
         }
 
-        .team-user {
+        .team-user, .shop-user {
             width: 100%;
             position: relative;
         }
 
-        .team-image {
+        .team-image, .shop-image {
             width: 100%;
             height: 20%;
             float: none;
@@ -1019,7 +1023,7 @@ ul.topnav li.icon {
             background-image: none;
         }
 
-            .team-image img {
+            .team-image img,  .shop-image img {
                 position: absolute;
                 left: 0;
                 width: 36% !important;
@@ -1031,11 +1035,11 @@ ul.topnav li.icon {
             height: 100%;
         }
 
-        .team-row-2 {
+        .team-row-2, .shop-row-2 {
             margin-top: 50px;
         }
 
-        .user-2 {
+        .user-2, .shop-user-2 {
             margin-top: -90px;
         }
     }

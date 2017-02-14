@@ -1,15 +1,5 @@
 /* Interface + Tooltips CSS starts here */
 
-body {
-    background-image:url('/resources/ui_bg.jpg');
-    background-repeat: no-repeat;
-    background-position: center center;
-    background-attachment: fixed;
-    background-size: cover; 
-    filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='.myBackground.jpg', sizingMethod='scale');
-    -ms-filter: "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='myBackground.jpg', sizingMethod='scale')";
-}
-
 .red {
     color: red;
 }
@@ -50,7 +40,7 @@ body {
 
 /* fix for panel not being scrollable */
 .users_page {
-    height: 450px; 
+    height: 473px; 
     overflow: auto;
 }
 
@@ -80,16 +70,14 @@ body {
     color: #551A8B;
 }
 
-/* TODO: media queries here */
 .btn_next_page {
-    position: absolute;
-    right: 0;
+    float: right;
 }
 
 .btn_previous_page {
-    position: absolute;
-    left: 0;
+    float: left;
 }
+
 
 .invisible {
     display: none

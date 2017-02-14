@@ -22,7 +22,7 @@
             </li>
             <li><a class="menu-link active" href="/shop">Shop</a><span class="menu-dot">.</span></li>
             <li><a class="menu-link" href="/contact">Contact</a><span class="menu-dot">.</span></li>
-            <li><a class="menu-link" href="/login">Log in/Sign up</a></li>
+            <li><a class="menu-link" href="/account">Log in/Sign up</a></li>
             <li class="icon">
                 <a href="javascript:void(0);" onclick="navFunction()">☰</a>
             </li>
@@ -36,30 +36,29 @@
     </section>
 
     <!--start - about-->
-    <section class="row h-shop shop" id="shop">
+    <section class="row h-shop shop" id="shop" style="max-height: 300px;">
         <div class="col-3 text-center">
             <div class="section-icon"><img src="/resources/icon-whylaci.png"></div>
             <div class="section-heading"><h1>We believe in choice.</h1></div>
             <div class="section-text about-text">
-                We think it's always better to have something that suits you anmd just you.
-                That's why we bring you a range of choice. Whoever you are, whatever your needs are, we have something for tou!
-                If you don't feel that the plans we offer suit you, contact us and we'll try to tailor something to you.
-                blah blah blah blah blah blah blah blah blah
+                We think it's always better to have something that suits you and just you.
+                That's why we bring you a range of choice. Whoever you are, whatever your needs are, we have something for you!
+                If you don't feel that the plans we offer suit you, contact us and we'll try to tailor something to you. See below for options!
             </div>
         </div>
     </section>
 
     <div class="clear"></div>
 
-    <!--start - meet the team-->
-    <section class="row h-features meettheteam">
-        <div class="team-wrapper">
-            <div class="team-row team-row-1">
-                <div class="team-image"></div>
-                <div class="team-user user-1">
-                    <div class="team-name">Free - For First Timers</div>
-                    <span class="team-end">.</span>
-                    <div class="team-description">
+    <!--start - meet the shop-->
+    <section class="row h-features meettheshop">
+        <div class="shop-wrapper">
+            <div class="shop-row shop-row-1">
+                <div class="shop-image"><img style="height:100%; width:100%" src="/resources/lacicloud_1_cat.jpg"></div>
+                <div class="shop-user shop-user-1">
+                    <div class="shop-name">Free - For First Timers</div>
+                    <span class="shop-end">.</span>
+                    <div class="shop-description">
                         <ul>
                             <li>250 mb storage</li>
                             <li>One user</li>
@@ -70,11 +69,11 @@
                     </div>
                 </div>
             </div>
-            <div class="team-row team-row-2">
-                <div class="team-user user-2">
-                    <div class="team-name">10€/Month - For regulars</div>
-                    <span class="team-end">.</span>
-                    <div class="team-description">
+            <div class="shop-row">
+                <div class="shop-user">
+                    <div class="shop-name">10€/Month - For regulars</div>
+                    <span class="shop-end">.</span>
+                    <div class="shop-description">
                         <ul>
                             <li>15 gb storage</li>
                             <li>Unlimited users</li>
@@ -85,14 +84,14 @@
                         </ul>
                     </div>
                 </div>
-                <div class="team-image"></div>
+                <div class="shop-image"><img style="height:100%; width:100%" src="/resources/lacicloud_2_cats.jpg"></div>
             </div>
-            <div class="team-row team-row-3">
-                <div class="team-image"></div>
-                <div class="team-user user-3">
-                    <div class="team-name">40€/Month - For experts</div>
-                    <span class="team-end">.</span>
-                    <div class="team-description">
+            <div class="shop-row shop-row-3">
+                <div class="shop-image"><img style="height:100%; width:100%" src="/resources/lacicloud_3_cats.jpg"></div>
+                <div class="shop-user shop-user-3">
+                    <div class="shop-name">40€/Month - For experts</div>
+                    <span class="shop-end">.</span>
+                    <div class="shop-description">
                         <ul>
                             <li>100 gb storage</li>
                             <li>Unlimited users</li>
@@ -104,11 +103,11 @@
                     </div>
                 </div>
             </div>
-            <div class="team-row team-row-4">   
-                <div class="team-user user-4">
-                    <div class="team-name">Customise it</div>
-                    <span class="team-end">.</span>
-                    <div class="team-description">
+            <div class="shop-row shop-row-4">   
+                <div class="shop-user shop-user-4">
+                    <div class="shop-name">Customise it</div>
+                    <span class="shop-end">.</span>
+                    <div class="shop-description">
                         <ul>
                             <li>Up to 1Tb storage</li>
                             <li>Unlimited users</li>
@@ -119,7 +118,7 @@
                         </ul>
                     </div>
                 </div>
-                <div class="team-image"></div>
+                <div class="shop-image"><img style="height:100%; width:100%" src="/resources/lacicloud_4_cats.jpg"></div>
             </div>
     </section>
 
