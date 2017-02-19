@@ -1212,8 +1212,9 @@ class Payments extends LaciCloud {
 	//12 = 10 euro, 22 = 20 euro
 	private $paymentPriceArray = array("1" => 0.0,"2" => 7, "3" => 12); 
 
-	//Stripe payment vars
-	//...
+	public function getNotLoggedInErrorID() {
+		return 46;
+	}
 
 	public function payWithGoUrl($tier, $id, $dbc, $dbc_ftp) {
 		$lacicloud_api = new LaciCloud();
@@ -1305,7 +1306,7 @@ class Payments extends LaciCloud {
 			echo($box->display_cryptobox(true, 550, 250, "padding:3px 6px;margin:10px;border:10px solid #f7f5f2;"));
 		}
 
-	 return "inprogress"; //payment in progress
+	 return 47; //payment in progress
 
 	}
 
@@ -1475,14 +1476,14 @@ class Errors extends LaciCloud {
 		26 => "First-time setup completed successfully... Yay!",
 		27 => "Due to space issues, or the fact that you may be already on this tier, you can not change to this tier at this time... Check tier limits and delete some stuff accordingly!",
 		28 => "You can change to this tier if you wish... Yay!",
-		29 => "Successfully upgraded tier... Yay!", //func
+		29 => "Successfully upgraded tier... Yay!", //function of upgrading tiers
 		30 => "You\"r email has been successfully sent... Yay!",
 		31 => "An error occured while validating FTP user information... Please try again!",
 		32 => "FTP user successfully created... Yay!",
 		33 => "FTP username incorrect; no such FTP user exists under your account... Please try again!",
 		34 => "FTP user successfully removed... Yay!",
 		35 => "Internal error occured while changing to this tier... Sorry!",
-		36 => "Successfully accepted payment and upgrade to tier... Yay!", //from payments
+		36 => "Successfully accepted payment and upgrade to tier... Yay! Click xXxherexXx to return to the shop page!", //from payments
 		37 => "Email successfully sent... Yay!",
 		38 => "QFTP user successfully created with username xXxusernamexXx and password xXxpasswordxXx!",
 		39 => "API key successfully regenerated!",
@@ -1491,7 +1492,9 @@ class Errors extends LaciCloud {
 		42 => "Beta code successfully validated... Yay!", //the answer to life, the universe, and everything
 		43 => "API key incorrect... Please try again!",
 		44 => "Not enough parameters supplied for API... Please try again!",
-		45 => "API call received OK... Yay!"
+		45 => "API call received OK... Yay!",
+		46 => "You need to log-in or create an account to use the shop page... Please log-in!",
+		47 => "Payment in progress... Yay!"
 	);
 
 	private $result_messages_map = array(
@@ -1539,7 +1542,9 @@ class Errors extends LaciCloud {
 		42 => "success",
 		43 => "error",
 		44 => "error",
-		45 => "success"
+		45 => "success",
+		46 => "warning",
+		47 => "info"
 		);
 
 	public function getSuccessOrErrorFromID($id) {

@@ -9,16 +9,17 @@
 	Designer & Beta tester: Fabio Barbero
 	Contact: fbarbe@keemail.me
 
+/* THANKS */ 
+
 	Designer & Beta tester: Dyosoft
 	Contact: https://steamcommunity.com/id/dyosoft
 
 	PSD To HTML: geostima 
 	Contact: https://www.xbtfreelancer.com/user/1593  
 
-/* THANKS */ 
-
 	Tixati Chat: HBCD, that_man, others
 	Bitcoin testnet faucet: https://testnet.manu.backend.hamburg/faucet
+
 
 /* SITE */
 	Last Update: 2016/9/11 
@@ -42,8 +43,10 @@
 	Basis for the account page: https://colorlib.com/wp/html5-and-css3-login-forms/
 	CSS message boxes: http://www.jankoatwarpspeed.com/css-message-boxes-for-different-message-types/
 	Knob buttons by itweek: http://itweek.deviantart.com/art/Knob-Buttons-Toolbar-icons-73463960
+	404/Other errror page basis: https://w3layouts.com/poses-404-page-not-found-mobile-web-template/
+	Email template: https://github.com/leemunroe/responsive-html-email-template
 
-	
+	LaciCloud: https://github.com/lacicloud/LaciCloud
 
 	Please tell me if i've missed anything.
 
