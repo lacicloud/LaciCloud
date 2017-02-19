@@ -66,15 +66,25 @@ if (isset($_GET["unique_key"])) {
 
 }
 
+//if a login was succesful, redirect up here to avoid header already sent errors down there
+if (isset($result)) {
+    $result =  $lacicloud_errors_api -> getSuccessOrErrorFromID($result);
+
+    if ($result == "login") {
+        header("Location: /interface");
+    } 
+}
+
+
 ?>
 <html>
 <head>
 
+<title>LaciCloud - Account</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
 <script src="/js/main.js"></script>
 <link href="/css/style.css" rel="stylesheet" />
-
-<title>LaciCloud Account</title>
-<meta name="viewport" content="width=device-width, initial-scale=1" />
 
 </head>
 
@@ -167,11 +177,6 @@ $('input, textarea').placeholder();
 if (isset($result)) {
     $message = $lacicloud_errors_api -> getErrorMsgFromID($result);
     $result =  $lacicloud_errors_api -> getSuccessOrErrorFromID($result);
-
-    if ($result == "login") {
-      //prevent header errors...
-      echo 'window.location = "/interface";';
-    } 
 
     //for create
     $message = str_replace("xXxemailxXx",'<a href="'.$link.'" target="_blank">email</a>',$message);

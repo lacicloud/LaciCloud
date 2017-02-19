@@ -14,7 +14,7 @@ $lacicloud_api -> isPageCached();
 <!DOCTYPE HTML>
 <html>
 <head>
-<title>404 - That page cannot be found!</title>
+<title>LaciCloud - 404 - That page cannot be found!</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta charset="utf-8">
 <link rel="stylesheet" href="/css/error.css">

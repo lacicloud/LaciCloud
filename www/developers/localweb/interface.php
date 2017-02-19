@@ -143,7 +143,7 @@ if (empty($_GET["id"]) or !in_array($_GET["id"], $lacicloud_api->valid_pages_arr
 
 <meta charset="utf-8">
 
-<title>Interface</title>
+<title>LaciCloud - Interface</title>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 
 <link rel="stylesheet" type="text/css" href="/css/interface.css">

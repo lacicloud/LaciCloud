@@ -7,7 +7,7 @@ $lacicloud_api -> isPageCached();
 ?>
 <html>
 <head>
-    <title>LaciCloud</title>
+    <title>LaciCloud - About Us</title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -129,10 +129,10 @@ $lacicloud_api -> isPageCached();
         <div class="team-wrapper">
             <div class="team-row team-row-1">
                 <div class="team-user user-1">
-                    <div class="team-name">Molnarfi Laszlo</div>
+                    <div class="team-name">Laszlo Molnarfi</div>
                     <span class="team-end">.</span>
                     <div class="team-description">
-                        <strong>Head Of ICT</strong><br />
+                        <strong>CEO of LaciCloud</strong><br />
                         Laci is our excellent programmer. He is an aspiring young computer scientist with the
                         desire to create software that makes people happy. He has experience in web development,
                         web app and network security, computer forensics and system administration. He has been

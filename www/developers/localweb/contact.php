@@ -11,7 +11,7 @@ if (isset($_POST["contact_reason"]) and isset($_POST["subject"]) and isset($_POS
 <!DOCTYPE html>
 <html>
 <head>
-    <title>LaciCloud</title>
+    <title>LaciCloud - Contact</title>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -63,6 +63,8 @@ if (isset($_POST["contact_reason"]) and isset($_POST["subject"]) and isset($_POS
                         <option>Technical Support</option>
                         <option>Question</option>
                         <option>Sales</option>
+                        <option>Bug Report</option>
+                        <option>Abuse</option>
                     </select>
                 </div>
                 <div class="form-field">

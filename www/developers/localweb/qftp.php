@@ -27,7 +27,7 @@ if (isset($_POST["captcha_code"]) and isset($_POST["beta_code"])) {
 <script src="/js/main.js"></script>
 <link href="/css/style.css" rel="stylesheet" />
 
-<title>LaciCloud qFTP</title>
+<title>LaciCloud - qFTP</title>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 
 </head>
