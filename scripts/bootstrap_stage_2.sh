@@ -161,9 +161,6 @@ modprobe ip_nat_ftp
 #set total process limit
 ulimit -n 4096
 
-#no need for tor atm
-service tor stop
-
 #pureftpd; add -b for compatibility with ftp_ssl_connect in php
 #pureftpd; removed  -O clf:/var/ftp/logs/pureftpd_clf.txt 
 #pureftpd; removed -l puredb:/var/ftp/users/accounts.pdb 
