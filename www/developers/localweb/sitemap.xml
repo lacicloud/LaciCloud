@@ -9,19 +9,28 @@
   <loc>https://lacicloud.net/</loc>
 </url>
 <url>
-  <loc>https://lacicloud.net/ftp</loc>
+  <loc>https://lacicloud.net/about_us</loc>
+</url>
+<url>
+  <loc>https://lacicloud.net/docs</loc>
+</url>
+<url>
+  <loc>https://lacicloud.net/shop</loc>
+</url>
+<url>
+  <loc>https://lacicloud.net/contact</loc>
+</url>
+<url>
+  <loc>https://lacicloud.net/account</loc>
 </url>
 <url>
   <loc>https://lacicloud.net/interface</loc>
 </url>
 <url>
-  <loc>https://lacicloud.net/login</loc>
+  <loc>https://lacicloud.net/ftp</loc>
 </url>
 <url>
-  <loc>https://lacicloud.net/create</loc>
-</url>
-<url>
-  <loc>https://lacicloud.net/forgot</loc>
+  <loc>https://lacicloud.net/qftp</loc>
 </url>
 <url>
   <loc>https://lacicloud.net/resources/lacicloud_api_documentation.pdf</loc>
@@ -31,5 +40,8 @@
 </url>
 <url>
   <loc>https://lacicloud.net/resources/lacicloud_legal.pdf</loc>
+</url>
+<url>
+  <loc>https://lacicloud.net/humans.txt</loc>
 </url>
 </urlset>

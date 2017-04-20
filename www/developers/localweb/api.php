@@ -31,7 +31,10 @@ $id = $result["id"];
 
 //log API request
 
-$lacicloud_errors_api -> msgLogger("API", "API request received...", $lacicloud_api_api->getAPIRequestOKSuccessID());
+if ($api_key !== $lacicloud_api->grabSecret("monitoring_app_api_key")) {
+    $lacicloud_errors_api -> msgLogger("API", "API request received...", $lacicloud_api_api->getAPIRequestOKSuccessID());
+}
+
 
 //API 
 if(isset($_POST["action"]) and $_POST["action"] == "addftpuser" and isset($_POST["ftp_username"]) and isset($_POST["ftp_password"]) and isset($_POST["ftp_space"]) and isset($_POST["ftp_space_currency"]) and isset($_POST["starting_directory"])) {

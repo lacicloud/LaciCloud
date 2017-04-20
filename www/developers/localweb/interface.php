@@ -120,7 +120,7 @@ if ($first_time_boolean == 0) {
 
 
 //session expiration
-if (isset($_SESSION['FIRST_ACTIVITY']) && (time() - $_SESSION['FIRST_ACTIVITY'] > 900)) {
+if (isset($_SESSION['FIRST_ACTIVITY']) && (time() - $_SESSION['FIRST_ACTIVITY'] > 1800)) {
     $lacicloud_api -> blowUpSession();
     header("Location: /account");
     die(0);
@@ -144,17 +144,20 @@ if (empty($_GET["id"]) or !in_array($_GET["id"], $lacicloud_api->valid_pages_arr
 <meta charset="utf-8">
 
 <title>LaciCloud - Interface</title>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 
+<!-- we don't need more meta tags here as this page will redirect to the account page in case it is linked -->
+
+<link rel="icon" type="image/png" href="/resources/favicon-32x32.png">
+
 <link rel="stylesheet" type="text/css" href="/css/interface.css">
-
-<script type="text/javascript" src="/js/main.js"></script>
-
 </head>
 
 
 <body>
-<img src="/resources/ui_bg.jpg" style="width:100%;height:100%;position:absolute;top:0;left:0;z-index:-5000;" alt=""> 
+<img src="/resources/ui_bg.jpg" style="width:100%;height:100%;position:absolute;top:0;left:0;z-index:-5000;" alt="Background image of the interface page, a famous building on Brussel's Grand Place, in blue/violet colors"> 
 <div id="layout">
 <!-- Menu toggle -->
     <a href="#menu" id="menuLink" class="menu-link">
@@ -169,6 +172,9 @@ if (empty($_GET["id"]) or !in_array($_GET["id"], $lacicloud_api->valid_pages_arr
                 <li class="pure-menu-item"><a rel="canonical" href="/interface?id=1" class="pure-menu-link">User Manager</a></li>
                 <li class="pure-menu-item"><a rel="canonical" href="/interface?id=2" class="pure-menu-link">Payment Manager</a></li>
                 <li class="pure-menu-item"><a rel="canonical" href="/interface?id=3" class="pure-menu-link">API Manager</a></li>
+                <li class="pure-menu-item"><a rel="canonical" href="/ftp" target="_blank" class="pure-menu-link">Monsta FTP</a></li>
+                <li class="pure-menu-item"><a rel="canonical" href=<?php echo "/files/".$id ?> target="_blank" class="pure-menu-link">My Public Files</a></li>
+                <li class="pure-menu-item"><a rel="canonical" href="https://stats.uptimerobot.com/r8N9QIrq1" class="pure-menu-link">Status Page</a></li>
                 <li class="pure-menu-item"><a rel="canonical" href="/resources/lacicloud_help.pdf" target="_blank" class="pure-menu-link">Help</a></li>
                 <li class="pure-menu-item"><a rel="canonical" href="#" class="pure-menu-link"></a></li>
                 <li class="pure-menu-item"><a rel="canonical" href="#" class="pure-menu-link"></a></li>
@@ -455,8 +461,36 @@ if (empty($_GET["id"]) or !in_array($_GET["id"], $lacicloud_api->valid_pages_arr
 <?php } ?>
 </div>
 
+<!-- scripts -->
+<script type="text/javascript" src="/js/main.js"></script>
+
 <script>
 
+
+<?php 
+//bugfix for landscape orientation on the User Manager and Add FTP user page 
+
+if ($_GET["id"] == "1" or $_GET["id"] == "1_1") {
+    echo '
+//run once when site loads
+if (/Mobi/.test(navigator.userAgent)) {
+    if(window.innerWidth > window.innerHeight){
+        alert("This site is best viewed in Portrait mode... Please turn your device!");
+    }
+}
+
+//run when orientation changes
+$(window).on("orientationchange",function(event){
+  if(window.orientation !== 0) {
+    alert("This site is best viewed in Portrait mode... Please turn your device!");
+  }
+});
+';
+
+}
+
+
+?>
 
 function ui_load() {
     HideNoScript();

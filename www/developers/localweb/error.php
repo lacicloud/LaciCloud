@@ -17,13 +17,13 @@ $lacicloud_api -> isPageCached();
 <title>LaciCloud - 404 - That page cannot be found!</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta charset="utf-8">
-<link rel="stylesheet" href="/css/error.css">
+<link rel="stylesheet" type="text/css" href="/css/error.css">
 </head>
 <body>
 <div class="wrap">
-	<img style="padding-top: 3%; padding-left: 2%; -webkit-transform: scale(1.5); -moz-transform: scale(1.5); -o-transform: scale(1.5);" src="/resources/logo.png" alt="" />
+	<img style="padding-top: 3%; padding-left: 2%; -webkit-transform: scale(1.5); -moz-transform: scale(1.5); -o-transform: scale(1.5);" src="/resources/logo.png"  alt="LaciCloud full logo with rocket" />
 	<div class="banner">
-		<img src="/resources/404_banner.png" alt="" />
+		<img src="/resources/404_banner.png" alt="404 - Not Found image of a man holding up a sign that says 404" />
 	</div>
 	<div class="page">
 		<h2>We cannot find that page... Damn!</h2>

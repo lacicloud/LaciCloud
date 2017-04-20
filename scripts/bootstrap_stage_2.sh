@@ -55,6 +55,9 @@ ln -sf /var/ftp/config/misc/hosts.deny /etc/hosts.deny
 ln -sf /var/ftp/config/denyhosts/denyhosts.conf /etc/denyhosts.conf
 /etc/init.d/denyhosts restart
 
+#start lm-sensors
+service lm-sensors start
+
 #set-up logrotate
 ln -sf /var/ftp/config/logrotate/custom /etc/logrotate.d/custom
 
@@ -180,6 +183,9 @@ sleep 3
 #start maltral
 python /root/maltrail/sensor.py & 
 python /root/maltrail/server.py & 
+
+#start mosquitto server
+service mosquitto start
 
 exit 0
 

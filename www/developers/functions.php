@@ -224,8 +224,11 @@ class LaciCloud {
 
 	}
 
-	public function confirmAccount($unique_key, $dbc) {
+	public function confirmAccount($unique_key, $ftp_password, $dbc, $dbc_ftp) {
+		$lacicloud_api = new LaciCloud();
 		$lacicloud_errors_api = new Errors();
+		$lacicloud_ftp_api = new FTPActions();
+		$lacicloud_utils_api = new Utils();
 
 		if (empty($unique_key)) {
 			$lacicloud_errors_api -> msgLogger("LOW", "Unique key empty when confirming account...", 14);
@@ -235,7 +238,7 @@ class LaciCloud {
 		$unique_key = preg_replace('/\s+/', '', $unique_key); //strip whitespace
 
 
-		$query = "SELECT unique_id FROM users WHERE unique_id=?";
+		$query = "SELECT unique_id, id FROM users WHERE unique_id=?";
         $stmt = mysqli_prepare($dbc, $query);
 		mysqli_stmt_bind_param($stmt, "s", $unique_key);
         $result = mysqli_stmt_execute($stmt);
@@ -245,11 +248,12 @@ class LaciCloud {
         	return 1;
         }
 
-        $stmt->bind_result($mysql_database_user_unique_key);
+        $stmt->bind_result($mysql_database_user_unique_key, $mysql_user_id);
 
         while ($stmt->fetch()) {
 
         	$database_user_unique_key = $mysql_database_user_unique_key;
+        	$id = $mysql_user_id;
 
 		}
 
@@ -269,9 +273,17 @@ class LaciCloud {
         	return 1;
         }
 
+        //create user by default; get email address, don't trust user inputted one
+        $email = $lacicloud_ftp_api->getUserValues($id, $dbc)["email"];
+        
+        //75% of tier space
+        $ftp_space = 0.75 * $lacicloud_api->getTierData($lacicloud_ftp_api->getUserValues($id, $dbc)["tier"])[0];
+        $ftp_username = $lacicloud_utils_api->getEmailUserName($email);
+        
+        //add default FTP user (master)
+        $lacicloud_ftp_api->addFTPUser($ftp_username, $ftp_password, $ftp_space, "/", "mb", $id, $dbc, $dbc_ftp);
+
         return 15;
-
-
 	}
 
 	public function verifyBetaCode($beta_code) {
@@ -383,7 +395,7 @@ class LaciCloud {
 
 
         //construct email
-        $body = str_replace(array("[TITLE_EMAIL]", "[PREHEADER_EMAIL]", "[FIRST_TEXT_EMAIL]", "[BUTTON_EMAIL]", "[END_TEXT_EMAIL]"), array("LaciCloud - Confirm your account!", "LaciCloud - Confirm your account!", "<p>To confirm your LaciCloud account, please click here:</p>", "<a href='https://lacicloud.net/account/?unique_key=".$user_unique_key."' target='_blank'>Confirm now!</a>", "<p>Enjoy LaciCloud! We hope it works for you.</p>"), $lacicloud_emails_api -> getEmailTemplate());
+        $body = str_replace(array("[TITLE_EMAIL]", "[PREHEADER_EMAIL]", "[FIRST_TEXT_EMAIL]", "[BUTTON_EMAIL]", "[END_TEXT_EMAIL]"), array("LaciCloud - Confirm your account!", "LaciCloud - Confirm your account!", "<p>To confirm your LaciCloud account, please click here:</p>", "<a href='https://lacicloud.net/account/?unique_key=".$user_unique_key."&email=".urlencode($email)."' target='_blank'>Confirm now!</a>", "<p>Enjoy LaciCloud! We hope it works for you.</p>"), $lacicloud_emails_api -> getEmailTemplate());
 
         //send email
         
@@ -600,7 +612,7 @@ class LaciCloud {
 		}
 
 		 //construct email
-        $body = str_replace(array("[TITLE_EMAIL]", "[PREHEADER_EMAIL]", "[FIRST_TEXT_EMAIL]", "[BUTTON_EMAIL]", "[END_TEXT_EMAIL]"), array("LaciCloud - Account has been reset!", "LaciCloud - Account has been reset!", " <p>You have successfully reset your account.</p>", "", "<p>The IP of the person who reset your account: ".$_SERVER["REMOTE_ADDR"]."! If this wasn\'t you, please email us using our contact page, or try resetting your account again.</p>"), $lacicloud_emails_api -> getEmailTemplate());
+        $body = str_replace(array("[TITLE_EMAIL]", "[PREHEADER_EMAIL]", "[FIRST_TEXT_EMAIL]", "[BUTTON_EMAIL]", "[END_TEXT_EMAIL]"), array("LaciCloud - Account has been reset!", "LaciCloud - Account has been reset!", " <p>You have successfully reset your account.</p>", "", "<p>The IP of the person who reset your account: ".$_SERVER["REMOTE_ADDR"]."! If this wasn't you, please email us using our contact page, or try resetting your account again.</p>"), $lacicloud_emails_api -> getEmailTemplate());
 
 
 		try{
@@ -810,7 +822,10 @@ class LaciCloud {
 	}
 
 	public function getTierData($tier) {
-		$data = array(1 => array(75000, 25, 256, 600, "- Free - For Occasional Users"), 2 => array(250000, 250, 512, 2000, " - 5€ / Month - For regular Users"), 3 => array(525000, 500, 1000, 5000, " - 10€ / Month - For advanced Users"));
+
+		//first is space in MB, then FTP userr, then upload speed in KBits, then download speed in KBits, then description
+		//add custom tiers to end, like 4_1, 4_2 each with their own custom contracts
+		$data = array(1 => array(25000, 25, 16384, 2048, "- Free - For Occasional Users"), 2 => array(250000, 125, 32768, 4096, " - 10€ / Month - For Regular Users"), 3 => array(525000, 250, 65536, 8192, " - 20€ / Month - For Expert Users"));
 
 		return $data[$tier];
 
@@ -876,12 +891,13 @@ class FTPActions extends LaciCloud {
 			return 31;
 		}
 
-		if (strlen($ftp_username) < 3 or !ctype_alnum($ftp_username)) {
+		//allow @, -, _, !, and alphanumeric characters in FTP usernames
+		if (strlen($ftp_username) < 3 or !ctype_alnum(str_replace(array("@","-","_","!", "."), "", $ftp_username))) {
 			$lacicloud_errors_api -> msgLogger("LOW", "FTP username invalid when creating FTP user... Username: ".$ftp_username, 31);
 			return 31;
 		} 
 
-		if (!is_numeric($ftp_space_specified) or (float)$ftp_space_specified <= 0) {
+		if (!is_numeric($ftp_space_specified) or (float)$ftp_space_specified <= 1.0) {
 			$lacicloud_errors_api -> msgLogger("LOW", "FTP space specified invalid... Specified: ".$ftp_space_specified, 31);
 			return 31;
 		}
@@ -907,8 +923,8 @@ class FTPActions extends LaciCloud {
 		}
 
 		if (!empty($ftp_password)) {
-			if (strlen($ftp_password) < 8 or !preg_match("#[0-9]+#", $ftp_password) or !preg_match("#[a-zA-Z]+#", $ftp_password)) {
-				$lacicloud_errors_api -> msgLogger("LOW", "FTP account password strenght too weak...", 31);
+			if (strlen($ftp_password) < 8 or !preg_match("#[0-9]+#", $ftp_password) or !preg_match("#[a-zA-Z]+#", $ftp_password) or $ftp_username == $ftp_password) {
+				$lacicloud_errors_api -> msgLogger("LOW", "FTP account password strength too weak...", 31);
 				return 31;
 			}
 		}
@@ -927,9 +943,9 @@ class FTPActions extends LaciCloud {
 
 		//convert to MB
 		if ($ftp_space_currency == "gb") {
-			$ftp_space_specified = ($ftp_space_specified * 1024);
+			$ftp_space_specified = ($ftp_space_specified * 1000);
 		} elseif ($ftp_space_currency == "tb") {
-			$ftp_space_specified = ($ftp_space_specified * 1024) * 1024;
+			$ftp_space_specified = ($ftp_space_specified * 1000) * 1000;
 		}
 		
 		$tier = $this->getUserValues($id, $dbc)["tier"];
@@ -1210,7 +1226,7 @@ class Payments extends LaciCloud {
 	private $period = "1 MONTH";
 
 	//12 = 10 euro, 22 = 20 euro
-	private $paymentPriceArray = array("1" => 0.0,"2" => 7, "3" => 12); 
+	private $paymentPriceArray = array("1" => 0.0,"2" => 12, "3" => 22); 
 
 	public function getNotLoggedInErrorID() {
 		return 46;
@@ -1317,7 +1333,7 @@ class Payments extends LaciCloud {
 		$lacicloud_emails_api = New Emails();
 
 		//construct email
-        $body = str_replace(array("[TITLE_EMAIL]", "[PREHEADER_EMAIL]", "[FIRST_TEXT_EMAIL]", "[BUTTON_EMAIL]", "[END_TEXT_EMAIL]"), array("LaciCloud - Tier Upgraded!", "LaciCloud - Tier Upgraded!", "<p>Your account has been successfully upgraded to tier ".$tier."! User ID: ".$id.", For value: ".$amountUSD.", Order ID: ".$orderID.", Payment ID: ".$paymentID."!</p>", "", "<p>We thank you for choosing LaciCloud!</p>"), $lacicloud_emails_api -> getEmailTemplate());
+        $body = str_replace(array("[TITLE_EMAIL]", "[PREHEADER_EMAIL]", "[FIRST_TEXT_EMAIL]", "[BUTTON_EMAIL]", "[END_TEXT_EMAIL]"), array("LaciCloud - Tier Upgraded!", "LaciCloud - Tier Upgrade!", "<p>Your account will be upgraded to tier ".$tier." momentarily! User ID: ".$id.", For value: ".$amountUSD."$, Order ID: ".$orderID.", Payment ID: ".$paymentID."!</p>", "", "<p>We thank you for choosing LaciCloud!</p>"), $lacicloud_emails_api -> getEmailTemplate());
 
 		
 		try {
@@ -1362,7 +1378,7 @@ class Payments extends LaciCloud {
 		$lacicloud_emails_api = new Emails();
 
 		//construct email
-        $body = str_replace(array("[TITLE_EMAIL]", "[PREHEADER_EMAIL]", "[FIRST_TEXT_EMAIL]", "[BUTTON_EMAIL]", "[END_TEXT_EMAIL]"), array("LaciCloud - Payment confirmed!", "LaciCloud - Payment confirmed!", "<p>Payment for ID ".$paymentID." and orderID ".$orderID." has been successfully confirmed!</p>", "", "<p>We thank you for choosing LaciCloud!</p>"), $lacicloud_emails_api -> getEmailTemplate());
+        $body = str_replace(array("[TITLE_EMAIL]", "[PREHEADER_EMAIL]", "[FIRST_TEXT_EMAIL]", "[BUTTON_EMAIL]", "[END_TEXT_EMAIL]"), array("LaciCloud - Payment confirmed!", "LaciCloud - Payment confirmed!", "<p>Payment for ID ".$paymentID." and orderID ".$orderID." has been successfully confirmed! Tier upgrade has been made permanent.</p>", "", "<p>We thank you for choosing LaciCloud!</p>"), $lacicloud_emails_api -> getEmailTemplate());
 		
 		try {
 			//sends email to user & me about payment
@@ -1419,7 +1435,8 @@ class Payments extends LaciCloud {
 			return 35;
 		}
 
-		if ($tier == 1 and $amountUSD > 10 and $amountUSD > 13 or $tier == 2 and $amountUSD > 20 and $amountUSD < 25) {
+		//allow 10$ to 13$ for tier 2, and 20$ to 25$ for tier 3
+		if ($tier == 2 and $amountUSD > 10 and $amountUSD > 13 or $tier == 3 and $amountUSD > 20 and $amountUSD < 25) {
 			$this->sendGoUrlConfirmationEmail($email, $orderID, $paymentID);
 
 
@@ -1462,16 +1479,16 @@ class Errors extends LaciCloud {
 		12 => "Account has not been confirmed yet... Please confirm and try again!",
 		13 => "Successfully logged in... Yay!",
 		14 => "An error occured while confirming your account with key... Please try again!",
-		15 => "Account confirmed successfully... Yay! BUT, please do not attempt logging into FTP yet, rather login to the interface page and add a new FTP User first!",
+		15 => "Account confirmed successfully... Yay! A default FTP account has been created with the username xXxftp_usernamexXx and the password xXxftp_passwordxXx (Write it down!) !",
 		16 => "",
 		17 => "Email already exists in database... Please try again or reset your password!",
 		18 => "An unfortunate error occured while sending the email... Sorry!",
 		19 => "Account has been successfully created... Please confirm now from your xXxemailxXx!",
 		20 => "The user account has been successfully deleted... Yay, but sad to see you go!", //RIP user
-		21 => "Email accepted... Please check your inbox for further instructions!",
+		21 => "Email accepted... Please check your xXxemailxXx for further instructions!",
 		22 => "Reset key could not be validated... Please try again!",
 		23 => "Your new password can not be the same as the old one... Please try again!",
-		24 => "successfully reset account! You can log in now!",
+		24 => "Successfully reset account! You can log-in now!",
 		25 => "Session timed-out... Please log-in again if you wish to continue!",
 		26 => "First-time setup completed successfully... Yay!",
 		27 => "Due to space issues, or the fact that you may be already on this tier, you can not change to this tier at this time... Check tier limits and delete some stuff accordingly!",
@@ -1483,7 +1500,7 @@ class Errors extends LaciCloud {
 		33 => "FTP username incorrect; no such FTP user exists under your account... Please try again!",
 		34 => "FTP user successfully removed... Yay!",
 		35 => "Internal error occured while changing to this tier... Sorry!",
-		36 => "Successfully accepted payment and upgrade to tier... Yay! Click xXxherexXx to return to the shop page!", //from payments
+		36 => "Successfully accepted payment, tier will be upgraded shortly... Yay! Click xXxherexXx to return to the shop page!", //from payments
 		37 => "Email successfully sent... Yay!",
 		38 => "QFTP user successfully created with username xXxusernamexXx and password xXxpasswordxXx!",
 		39 => "API key successfully regenerated!",
@@ -1723,6 +1740,7 @@ class Emails extends LaciCloud {
 class Utils extends LaciCloud {
 	public function getEmailProvider($email) {
 
+		//strrpos is not misspelled
 		$email_provider = substr($email, strrpos($email, '@') + 1);
 					
 		if ($email_provider == "gmail.com") {
@@ -1758,6 +1776,13 @@ class Utils extends LaciCloud {
 					
 	}
 
+	public function getEmailUserName($email) {
+		$email_array = explode("@", $email);
+		$username = $email_array[0];
+
+		return $username;
+	}
+
 	public function getBrowserName() {
 		@$user_agent = $_SERVER['HTTP_USER_AGENT'];
 
@@ -1767,7 +1792,7 @@ class Utils extends LaciCloud {
 	    elseif (strpos($user_agent, 'Safari')) return 'Safari';
 	    elseif (strpos($user_agent, 'Firefox')) return 'Firefox';
 	    elseif (strpos($user_agent, 'MSIE') || strpos($user_agent, 'Trident/7')) return 'Internet Explorer';
-	    
+	    	
 	    return 'Other';
 	}
 

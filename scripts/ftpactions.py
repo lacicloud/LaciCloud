@@ -1,5 +1,6 @@
-#!/usr/bin/env python
+#!/usr/bin/python2
 #This script does things that PHP by it's configuration is not allowed to, such as access the /var/ftp directory and create symlinks to /var/ftp/public_files
+#Python2 only
 
 import MySQLdb
 import time

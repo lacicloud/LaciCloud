@@ -37,8 +37,29 @@ if (!isset($tier) and !isset($id) and isset($_GET["action"])) {
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
+
+    <meta name="description" content="LaciCloud's Shop. LaciCloud is the FTP(s)-based cloud storage that is very customizable and privacy-centric" />
+    <meta name="keywords" content="bitcoin, FTP, FTPS, cloud, cloud-storage, backup, privacy, private, encryption, security, customizable, secure, LaciCloud, shop, tiers" />
+    <meta name="author" content="Laci, Tristan, Fabio">
+    <meta name="language" content="english"> 
+
+    <link rel="author" href="https://plus.google.com/115512170582216368374"/>
+    <link rel="help" href="/resources/lacicloud_help.pdf">
+
+    <meta property="og:title" content="LaciCloud - Secure FTP(s) Cloud Storage - Shop"/>
+    <meta property="og:url" content="https://lacicloud.net"/>
+    <meta property="og:image" content="https://lacicloud.net/resources/logo.png"/>
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:description" content="LaciCloud's Shop. LaciCloud is the FTP-based cloud storage that is very customizable and privacy-centric"/>
+    <meta property="og:locale" content="en_US" />
+
+    <meta property="twitter:title" content="LaciCloud - Secure FTP(s) Cloud Storage - Shop"/>
+    <meta property="twitter:url" content="https://lacicloud.net"/>
+    <meta property="twitter:image" content="https://lacicloud.net/resources/logo.png"/>
+    <meta property="twitter:description" content="LaciCloud's Shop. LaciCloud is the FTP(s)-based cloud storage that is very customizable and privacy-centric"/>
+
+    <link rel="image_src" href="/resources/logo.png"/>
+
     <link rel="icon" type="image/png" href="/resources/favicon-32x32.png">
     <!--scripts-->
     <script src="/js/main.js"></script>
@@ -61,7 +82,7 @@ if (!isset($tier) and !isset($id) and isset($_GET["action"])) {
           <div class="info"></div>';
 
     //note to user saying that payment is possible via shapeshifter.io as well
-    echo "<p>Want to pay using other cryptocurrency not listed here? Try <a target='_blank' href='https://shapeshift.io/'>shapeshift.io</a>! Supports Zcash as well!</p>";
+    echo "<p>Want to pay using other cryptocurrency not listed here? Try <a target='_blank' href='https://shapeshift.io/'>shapeshift.io</a>! Supports Ethereum, Ripple and Zcash as well!</p>";
 
     echo "<script>";
 
@@ -101,7 +122,7 @@ if (!isset($tier) and !isset($id) and isset($_GET["action"])) {
             <li><a class="menu-link" href="/about_us">About Us</a><span class="menu-dot">.</span></li>
             <li><a class="menu-link" href="/docs">Help &amp; Others</a></li>
             <li class="logo-li">
-                <img class="logo-img" src="/resources/laci-logo.png">
+                <img class="logo-img" src="/resources/laci-logo.png" alt="LaciCloud rocket logo">
             </li>
             <li><a class="menu-link active" href="/shop">Shop</a><span class="menu-dot">.</span></li>
             <li><a class="menu-link" href="/contact">Contact</a><span class="menu-dot">.</span></li>
@@ -121,7 +142,7 @@ if (!isset($tier) and !isset($id) and isset($_GET["action"])) {
     <!--start - about-->
     <section class="row h-shop shop" id="shop" style="max-height: 300px">
         <div class="col-3 text-center">
-            <div class="section-icon"><img src="/resources/icon-whylaci.png"></div>
+            <div class="section-icon"><img src="/resources/icon-whylaci.png" alt="An icon image of a gear"></div>
             <div class="section-heading"><h1>We believe in choice.</h1></div>
             <div class="section-text about-text">
                 We think it's always better to have something that suits you and just you.
@@ -145,20 +166,20 @@ if (!isset($tier) and !isset($id) and isset($_GET["action"])) {
     <section class="row h-features meettheshop">
         <div class="shop-wrapper">
             <div class="shop-row shop-row-1">
-                <div class="shop-image"><img style="height:100%; width:100%" src="/resources/lacicloud_1_cat.jpg"></div>
+                <div class="shop-image"><img style="height:100%; width:100%" src="/resources/lacicloud_1_cat.jpg" alt="A picture of one cute cat"></div>
                 <div class="shop-user shop-user-1">
                     <div class="shop-name">Free - For First Timers</div>
                     <span class="shop-end">.</span>
                     <div class="shop-description">
                         <ul>
-                            <li>75 GB of storage</li>
+                            <li>25 GB of storage</li>
                             <li>25 FTP users</li>
                             <li>Free technical support</li>
-                            <li>Limited bandwidth</li>
+                            <li>Limited bandwidth (16MBit up, 2MBit down)</li>
                             <li>Host static websites</li>
                         </ul>
                     </div>
-                    <div class="shop-page-button"><a href="/shop.php?action=buy&tier=1" <?php if (isset($id) and $tier == "1") { echo 'class="disabled"'; } ?> ><span> <?php if (isset($id) and $tier == "1") { echo "Current Tier"; } elseif (isset($id)) { echo "Select Tier 1 >&nbsp;"; } else { echo "Sign up now! >&nbsp;"; } ?></span></a></div>
+                    <div class="shop-page-button"><a href="/shop/?action=buy&tier=1" <?php if (isset($id) and $tier == "1") { echo 'class="disabled"'; } ?> ><span> <?php if (isset($id) and $tier == "1") { echo "Current Tier"; } elseif (isset($id)) { echo "Select Tier 1 >&nbsp;"; } else { echo "Sign up now! >&nbsp;"; } ?></span></a></div>
                 </div>
             </div>
             <div class="shop-row">
@@ -170,29 +191,29 @@ if (!isset($tier) and !isset($id) and isset($_GET["action"])) {
                             <li>250 GB of storage</li>
                             <li>125 FTP users</li>
                             <li>Free technical support</li>
-                            <li>Bit limited bandwidth</li>
+                            <li>Bit limited bandwidth (32MBit up, 4MBit down)</li>
                             <li>Host static websites</li>
                         </ul>
                     </div>
-                     <div class="shop-page-button"><a href="/shop.php?action=buy&tier=2" <?php if (isset($id) and $tier == "2") { echo 'class="disabled"'; } ?>  > <span><?php if ($tier == "2") { echo "Current Tier"; } else { echo "Select Tier 2 >&nbsp;"; } ?></span></a></div>
+                     <div class="shop-page-button"><a href="/shop/?action=buy&tier=2" <?php if (isset($id) and $tier == "2") { echo 'class="disabled"'; } ?>  > <span><?php if ($tier == "2") { echo "Current Tier"; } else { echo "Select Tier 2 >&nbsp;"; } ?></span></a></div>
                 </div>
-                <div class="shop-image"><img style="height:100%; width:100%" src="/resources/lacicloud_2_cats.jpg"></div>
+                <div class="shop-image"><img style="height:100%; width:100%" src="/resources/lacicloud_2_cats.jpg" alt="A picture of two cute cats"></div>
             </div>
             <div class="shop-row shop-row-3">
-                <div class="shop-image"><img style="height:100%; width:100%" src="/resources/lacicloud_3_cats.jpg"></div>
+                <div class="shop-image"><img style="height:100%; width:100%" src="/resources/lacicloud_3_cats.jpg" alt="A picture of three cute cats"></div>
                 <div class="shop-user shop-user-3">
                     <div class="shop-name">20€/Month - For experts</div>
                     <span class="shop-end">.</span>
                     <div class="shop-description">
                         <ul>
                             <li>525 GB of storage</li>
-                            <li>125 FTP users</li>
+                            <li>250 FTP users</li>
                             <li>Free technical support</li>
-                            <li>Just a lil' bit limited bandwidth</li>
+                            <li>Just a lil' bit limited bandwidth (64MBit up, 8MBit down)</li>
                             <li>Host static websites</li>
                         </ul>
                     </div>
-                    <div class="shop-page-button"><a href="/shop.php?action=buy&tier=3" <?php if (isset($id) and $tier == "3") { echo 'class="disabled"'; } ?>  > <span><?php if ($tier == "3") { echo "Current Tier"; } else { echo "Select Tier 3 >&nbsp;"; } ?></span></a></div>
+                    <div class="shop-page-button"><a href="/shop/?action=buy&tier=3" <?php if (isset($id) and $tier == "3") { echo 'class="disabled"'; } ?>  > <span><?php if ($tier == "3") { echo "Current Tier"; } else { echo "Select Tier 3 >&nbsp;"; } ?></span></a></div>
                 </div>
             </div>
             <div class="shop-row shop-row-4">   
@@ -208,9 +229,9 @@ if (!isset($tier) and !isset($id) and isset($_GET["action"])) {
                             <li>Host static/dynamic websites</li>
                         </ul>
                     </div>
-                     <div class="shop-page-button"><a href="/contact.php"><span>Contact Us >&nbsp;</span></a></div>
+                     <div class="shop-page-button"><a href="/contact"><span>Contact Us >&nbsp;</span></a></div>
                 </div>
-                <div class="shop-image"><img style="height:100%; width:100%" src="/resources/lacicloud_4_cats.jpg"></div>
+                <div class="shop-image"><img style="height:100%; width:100%" src="/resources/lacicloud_4_cats.jpg" alt="A picture of four cute cats"></div>
             </div>
     </section>
 
@@ -224,9 +245,9 @@ if (!isset($tier) and !isset($id) and isset($_GET["action"])) {
             <span class="text-italic">Brussels, Belgium  - <a href="mailto:laci@lacicloud.net">laci@lacicloud.net</a></span>
         </div>
         <div class="footer-social">
-            <a href="#" class="icon tw"><img src="/resources/social-twitter.png"></a>
-            <a href="#" class="icon fb"><img src="/resources/social-facebook.png"></a>
-            <a href="#" class="icon yt"><img src="/resources/social-youtube.png"></a>
+            <a href="https://twitter.com/lacicloud" target="_blank" class="icon tw"><img src="/resources/social-twitter.png" alt="Twitter icon"></a>
+            <a href="https://www.facebook.com/lacicloudhosting/" target="_blank" class="icon fb"><img src="/resources/social-facebook.png" alt="FaceBook icon"></a>
+            <a href="https://www.youtube.com/channel/UC6cwh-kIj7aq4XoiRkzVSug" target="_blank" class="icon yt"><img src="/resources/social-youtube.png" alt="YouTube icon"></a>
         </div>
     </footer>
 

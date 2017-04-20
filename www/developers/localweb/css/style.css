@@ -327,7 +327,7 @@ ul.topnav li.icon {
 }
 
 .body-docs .topheader, .body-contact .topheader, .body-shop .topheader {
-    background-image: url(/resources/docs-topheader.jpg);
+    background-image: url(/resources/other-topheader.jpg);
     background-size: cover;
     background-repeat: no-repeat;
     background-position: 50%;
@@ -424,7 +424,7 @@ ul.topnav li.icon {
 
 .shop-page-button {
     position: relative; 
-    top: 120px; 
+    top: 145px; 
     right: 125px;
     font-size: 1.5em;
     white-space: nowrap;
@@ -433,6 +433,12 @@ ul.topnav li.icon {
 
 .shop-page-button span {
     background-color: rgb(96, 214, 162);
+    padding: 2px;
+}
+
+.shop-page-button span:hover {
+    background-color: #fff;
+    transition: background-color 0.5s ease;
 }
 
 .shop-page-button a {

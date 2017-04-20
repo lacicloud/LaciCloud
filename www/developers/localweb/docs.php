@@ -12,8 +12,29 @@ $lacicloud_api -> isPageCached();
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content="" />
-    <meta name="author" content="" />
+
+    <meta name="description" content="LaciCloud's help, API, and legal documents. LaciCloud is the FTP(s)-based cloud storage that is very customizable and privacy-centric" />
+    <meta name="keywords" content="bitcoin, FTP, FTPS, cloud, cloud-storage, backup, privacy, private, encryption, security, customizable, secure, LaciCloud, support, help, API, legal" />
+    <meta name="author" content="Laci, Tristan, Fabio">
+    <meta name="language" content="english"> 
+
+    <link rel="author" href="https://plus.google.com/115512170582216368374"/>
+    <link rel="help" href="/resources/lacicloud_help.pdf">
+
+    <meta property="og:title" content="LaciCloud - Secure FTP(s) Cloud Storage - Documents"/>
+    <meta property="og:url" content="https://lacicloud.net"/>
+    <meta property="og:image" content="https://lacicloud.net/resources/logo.png"/>
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:description" content="LaciCloud's help, API, and legal documents. LaciCloud is the FTP-based cloud storage that is very customizable and privacy-centric"/>
+    <meta property="og:locale" content="en_US" />
+
+    <meta property="twitter:title" content="LaciCloud - Secure FTP(s) Cloud Storage - Documents"/>
+    <meta property="twitter:url" content="https://lacicloud.net"/>
+    <meta property="twitter:image" content="https://lacicloud.net/resources/logo.png"/>
+    <meta property="twitter:description" content="LaciCloud's help, API, and legal documents. LaciCloud is the FTP(s)-based cloud storage that is very customizable and privacy-centric"/>
+
+    <link rel="image_src" href="/resources/logo.png"/>
+
     <link rel="icon" type="image/png" href="/resources/favicon-32x32.png">
     <!--styles-->
     <link href="/css/style.css" rel="stylesheet" />
@@ -26,7 +47,7 @@ $lacicloud_api -> isPageCached();
             <li><a class="menu-link" href="/about_us">About Us</a><span class="menu-dot">.</span></li>
             <li><a class="menu-link active" href="/docs">Help & Others</a></li>
             <li class="logo-li">
-                <img class="logo-img" src="/resources/laci-logo.png" />
+                <img class="logo-img" src="/resources/laci-logo.png" alt="LaciCloud rocket logo"/>
             </li>
             <li><a class="menu-link" href="/shop">Shop</a><span class="menu-dot">.</span></li>
             <li><a class="menu-link" href="/contact">Contact</a><span class="menu-dot">.</span></li>
@@ -46,7 +67,7 @@ $lacicloud_api -> isPageCached();
     <!--start - about-->
     <section class="row h-about about" id="about">
         <div class="col-3 text-center">
-            <div class="section-icon"><img src="/resources/about-icon.png" /></div>
+            <div class="section-icon"><img src="/resources/about-icon.png" alt="An icon of a cloud with a lock on it"/></div>
             <div class="section-heading"><h1>An ftp-based privacy-centric cloud storage solution</h1></div>
             <div class="section-text about-text">
                 LaciCloud is your private FTP(s)-cloud storage with many features, including a flexible Bitcoin payment method,
@@ -74,9 +95,9 @@ $lacicloud_api -> isPageCached();
             <span class="text-italic">Brussels, Belgium  - <a href="mailto:laci@lacicloud.net">laci@lacicloud.net</a></span>
         </div>
         <div class="footer-social">
-            <a href="https://twitter.com/lacicloud" class="icon tw"><img src="/resources/social-twitter.png" /></a>
-            <a href="https://www.facebook.com/lacicloudhosting/" class="icon fb"><img src="/resources/social-facebook.png" /></a>
-            <a href="https://www.youtube.com/channel/UC6cwh-kIj7aq4XoiRkzVSug" class="icon yt"><img src="/resources/social-youtube.png" /></a>
+            <a href="https://twitter.com/lacicloud" target="_blank" class="icon tw"><img src="/resources/social-twitter.png" alt="Twitter icon"/></a>
+            <a href="https://www.facebook.com/lacicloudhosting/" target="_blank" class="icon fb"><img src="/resources/social-facebook.png" alt="FaceBook icon"/></a>
+            <a href="https://www.youtube.com/channel/UC6cwh-kIj7aq4XoiRkzVSug" target="_blank" class="icon yt"><img src="/resources/social-youtube.png" alt="YouTube icon"/></a>
         </div>
     </footer>
     <!--scripts-->

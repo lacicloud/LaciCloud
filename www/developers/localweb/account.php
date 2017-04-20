@@ -6,7 +6,10 @@ $lacicloud_api = new LaciCloud();
 $lacicloud_errors_api = new Errors();
 $lacicloud_utils_api = new Utils();
 
+//supress errors
 $link = "";
+$ftp_username = "";
+$ftp_password = "";
 
 $session = $lacicloud_api -> startSession();
 if ($lacicloud_errors_api -> getSuccessOrErrorFromID($session) !== "success") {
@@ -47,43 +50,77 @@ if (isset($_POST["reset_email_address"]) and isset($_POST["captcha_code"]) and !
 
   $result = $lacicloud_api -> forgotLoginStep1($_POST["reset_email_address"], $_POST["captcha_code"], $dbc);
 
+  $link = $lacicloud_utils_api->getEmailProvider($_POST["reset_email_address"])[1]; //email link for message
+
+  $reset_step_1 = true;
+
 } elseif (isset($_SESSION["reset"]) and isset($_POST["new_password"]) and isset($_POST["new_password_retyped"]) and isset($_POST["reset_key"]) and isset($_POST["captcha_code"])  and !isset($result)) {
   
   $dbc = $lacicloud_api -> getMysqlConn();
 
   $result = $lacicloud_api -> forgotLoginStep2($_SESSION["email"], $_POST["new_password"], $_POST["new_password_retyped"], $_POST["reset_key"], $_POST["captcha_code"], $dbc);
 
-  //reset session
-  $lacicloud_api -> blowUpSession();
+  $reset_step_2 = true;
    
 }
 
 //account confirm 
-if (isset($_GET["unique_key"])) {
+if (isset($_GET["unique_key"]) and isset($_GET["email"])) {
    $dbc = $lacicloud_api -> getMysqlConn();
+   $dbc_ftp = $lacicloud_api -> getFtpMysqlConn();
 
-   $result = $lacicloud_api -> confirmAccount($_GET["unique_key"], $dbc);
-
+   $ftp_username = $lacicloud_utils_api->getEmailUserName(strip_tags($_GET["email"]));
+   $ftp_password = bin2hex(openssl_random_pseudo_bytes(8));
+  
+   $result = $lacicloud_api -> confirmAccount($_GET["unique_key"], $ftp_password, $dbc, $dbc_ftp);   
 }
 
 //if a login was succesful, redirect up here to avoid header already sent errors down there
 if (isset($result)) {
-    $result =  $lacicloud_errors_api -> getSuccessOrErrorFromID($result);
+    $result_login_check =  $lacicloud_errors_api -> getSuccessOrErrorFromID($result);
 
-    if ($result == "login") {
+    if ($result_login_check == "login") {
         header("Location: /interface");
     } 
 }
 
 
 ?>
+<!DOCTYPE html>
 <html>
 <head>
 
 <title>LaciCloud - Account</title>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-<script src="/js/main.js"></script>
+  
+<meta name="description" content="Log-in or sign up here to LaciCloud, the FTP(s)-based cloud storage that is very customizable and privacy-centric" />
+<meta name="keywords" content="bitcoin, FTP, FTPS, cloud, cloud-storage, backup, privacy, private, encryption, security, customizable, secure, LaciCloud, signup, login, reset" />
+<meta name="author" content="Laci, Tristan, Fabio">
+<meta name="language" content="english"> 
+
+<link rel="author" href="https://plus.google.com/115512170582216368374"/>
+<link rel="help" href="/resources/lacicloud_help.pdf">
+
+<meta property="og:title" content="LaciCloud - Secure FTP(s) Cloud Storage - Account"/>
+<meta property="og:url" content="https://lacicloud.net"/>
+<meta property="og:image" content="https://lacicloud.net/resources/logo.png"/>
+<meta property="og:image:type" content="image/png">
+<meta property="og:description" content="Log-in or sign up here to LaciCloud, the FTP-based cloud storage that is very customizable and privacy-centric"/>
+<meta property="og:locale" content="en_US" />
+
+<meta property="twitter:title" content="LaciCloud - Secure FTP(s) Cloud Storage - Account"/>
+<meta property="twitter:url" content="https://lacicloud.net"/>
+<meta property="twitter:image" content="https://lacicloud.net/resources/logo.png"/>
+<meta property="twitter:description" content="Log-in or sign up here to LaciCloud, the FTP(s)-based cloud storage that is very customizable and privacy-centric"/>
+
+<link rel="image_src" href="/resources/logo.png"/>
+    
+<link rel="icon" type="image/png" href="/resources/favicon-32x32.png">
+
+<!-- stylesheet -->
 <link href="/css/style.css" rel="stylesheet" />
 
 </head>
@@ -100,7 +137,7 @@ filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='.myBackground.jp
 
 <div class="login-page">
   <div class="form">
-    <img src="/resources/logo.png"></img>
+    <img src="/resources/logo.png" alt="LaciCloud full logo with rocket"></img>
     <br><br>
     <div class="success"></div>
     <div class="warning"></div>
@@ -155,7 +192,11 @@ filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='.myBackground.jp
   </div>
 </div>
 
+<!-- scripts -->
+<script src="/js/main.js"></script>
+
 <script>
+
 var success = document.getElementsByClassName("success")[0];
 var error = document.getElementsByClassName("error")[0];
 var info = document.getElementsByClassName("info")[0];
@@ -178,8 +219,27 @@ if (isset($result)) {
     $message = $lacicloud_errors_api -> getErrorMsgFromID($result);
     $result =  $lacicloud_errors_api -> getSuccessOrErrorFromID($result);
 
-    //for create
-    $message = str_replace("xXxemailxXx",'<a href="'.$link.'" target="_blank">email</a>',$message);
+    //for create and reset
+    $message = str_replace("xXxemailxXx",'<a href="'.$link.'" target="_blank">email</a>', $message);
+
+    //for confirm
+    $message = str_replace("xXxftp_usernamexXx", $ftp_username, $message);
+    $message = str_replace("xXxftp_passwordxXx", $ftp_password, $message);
+  
+    //bugfix for reset (else the forgot-form-2 would show even on error)
+    if (isset($reset_step_1) and $reset_step_1 and $result == "error") {
+      echo "
+      $('.forgot-form-2').toggle();
+      $('.forgot-form').toggle();
+      ";
+    } elseif (isset($reset_step_2) and $reset_step_2 and $result == "success" or $result == "warning")  {
+      //reset session, and show login form (another bugfix for the reset function)
+      @$lacicloud_api -> blowUpSession();
+      echo "
+      $('.forgot-form-2').toggle();
+      $('.login-form').toggle();
+      ";
+    }
     
     echo "".$result.".innerHTML='".$message."';";
     echo "\n";

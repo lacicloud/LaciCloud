@@ -24,11 +24,37 @@ if (isset($_POST["captcha_code"]) and isset($_POST["beta_code"])) {
 <html>
 <head>
 
-<script src="/js/main.js"></script>
-<link href="/css/style.css" rel="stylesheet" />
-
 <title>LaciCloud - qFTP</title>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+<meta name="description" content="qFTP is LaciCloud's special feature that allows you to create anonymous and temporary FTP(s) accounts without creating a LaciCloud account!" />
+<meta name="keywords" content="bitcoin, FTP, FTPS, cloud, cloud-storage, backup, privacy, private, encryption, security, customizable, secure, LaciCloud, anonymous, temporary, qFTP" />
+<meta name="author" content="Laci, Tristan, Fabio">
+<meta name="language" content="english"> 
+
+<link rel="author" href="https://plus.google.com/115512170582216368374"/>
+<link rel="help" href="/resources/lacicloud_help.pdf">
+
+<meta property="og:title" content="LaciCloud - Secure FTP(s) Cloud Storage - qFTP"/>
+<meta property="og:url" content="https://lacicloud.net"/>
+<meta property="og:image" content="https://lacicloud.net/resources/logo.png"/>
+<meta property="og:image:type" content="image/png">
+<meta property="og:description" content="qFTP is LaciCloud's special feature that allows you to create anonymous and temporary FTP(s) accounts without creating a LaciCloud account!"/>
+<meta property="og:locale" content="en_US" />
+
+<meta property="twitter:title" content="LaciCloud - Secure FTP(s) Cloud Storage - qFTP"/>
+<meta property="twitter:url" content="https://lacicloud.net"/>
+<meta property="twitter:image" content="https://lacicloud.net/resources/logo.png"/>
+<meta property="twitter:description" content="qFTP is LaciCloud's special feature that allows you to create anonymous and temporary FTP(s) accounts without creating a LaciCloud account!"/>
+
+<link rel="image_src" href="/resources/logo.png"/>
+
+<link rel="icon" type="image/png" href="/resources/favicon-32x32.png">
+
+<link href="/css/style.css" rel="stylesheet" />
 
 </head>
 
@@ -41,7 +67,7 @@ background-size: cover;">
 
 <div class="login-page">
   <div class="form">
-    <img src="/resources/logo.png"></img>
+    <img src="/resources/logo.png" alt="LaciCloud full logo with rocket"></img>
     <br><br>
     <div class="success"></div>
     <div class="warning"></div>
@@ -60,6 +86,9 @@ background-size: cover;">
     </form>
   </div>
 </div>
+
+<!-- scripts -->
+<script src="/js/main.js"></script>
 
 <script>
 var success = document.getElementsByClassName("success")[0];

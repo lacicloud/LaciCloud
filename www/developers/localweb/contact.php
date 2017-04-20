@@ -15,8 +15,29 @@ if (isset($_POST["contact_reason"]) and isset($_POST["subject"]) and isset($_POS
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content="" />
-    <meta name="author" content="" />
+
+    <meta name="description" content="Contact LaciCloud, the FTP(s)-based cloud storage that is very customizable and privacy-centric" />
+    <meta name="keywords" content="bitcoin, FTP, FTPS, cloud, cloud-storage, backup, privacy, private, encryption, security, customizable, secure, LaciCloud, contact, support" />
+    <meta name="author" content="Laci, Tristan, Fabio">
+    <meta name="language" content="english"> 
+
+    <link rel="author" href="https://plus.google.com/115512170582216368374"/>
+    <link rel="help" href="/resources/lacicloud_help.pdf">
+
+    <meta property="og:title" content="LaciCloud - Secure FTP(s) Cloud Storage - Contact"/>
+    <meta property="og:url" content="https://lacicloud.net"/>
+    <meta property="og:image" content="https://lacicloud.net/resources/logo.png"/>
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:description" content="Contact LaciCloud, the FTP-based cloud storage that is very customizable and privacy-centric"/>
+    <meta property="og:locale" content="en_US" />
+
+    <meta property="twitter:title" content="LaciCloud - Secure FTP(s) Cloud Storage - Contact"/>
+    <meta property="twitter:url" content="https://lacicloud.net"/>
+    <meta property="twitter:image" content="https://lacicloud.net/resources/logo.png"/>
+    <meta property="twitter:description" content="Contact LaciCloud, FTP(s)-based cloud storage that is very customizable and privacy-centric"/>
+
+    <link rel="image_src" href="/resources/logo.png"/>
+
     <link rel="icon" type="image/png" href="/resources/favicon-32x32.png">
     <!--styles-->
     <link href="/css/style.css" rel="stylesheet" />
@@ -29,7 +50,7 @@ if (isset($_POST["contact_reason"]) and isset($_POST["subject"]) and isset($_POS
             <li><a class="menu-link" href="/about_us">About Us</a><span class="menu-dot">.</span></li>
             <li><a class="menu-link" href="/docs">Help & Others</a></li>
             <li class="logo-li">
-                <img class="logo-img" src="/resources/laci-logo.png" />
+                <img class="logo-img" src="/resources/laci-logo.png" alt="LaciCloud rocket logo"/>
             </li>
             <li><a class="menu-link" href="/shop">Shop</a><span class="menu-dot">.</span></li>
             <li><a class="menu-link active" href="/contact">Contact</a><span class="menu-dot">.</span></li>
@@ -49,7 +70,7 @@ if (isset($_POST["contact_reason"]) and isset($_POST["subject"]) and isset($_POS
     <!--start - contact-->
     <section class="row h-contact contact" id="contact">
         <div class="col-half">
-            <div class="section-heading"><h3>Having trouble? Send us an e-mail</h3></div>
+            <div class="section-heading"><h1>Having trouble? Send us an e-mail</h1></div>
 
             <div class="success"></div>
             <div class="error"></div>
@@ -63,8 +84,10 @@ if (isset($_POST["contact_reason"]) and isset($_POST["subject"]) and isset($_POS
                         <option>Technical Support</option>
                         <option>Question</option>
                         <option>Sales</option>
-                        <option>Bug Report</option>
+                        <option>Feedback</option>
                         <option>Abuse</option>
+                        <option>Beta Access</option>
+                        <option>Other</option>
                     </select>
                 </div>
                 <div class="form-field">
@@ -78,7 +101,7 @@ if (isset($_POST["contact_reason"]) and isset($_POST["subject"]) and isset($_POS
                 </div>
                 <div class="form-field">
                      <?php echo '<img src="/securimage_captcha/securimage_show.php?no_cache='.bin2hex(openssl_random_pseudo_bytes(4)).'"'.' alt="CAPTCHA Image"/>'; ?>
-                     <input type="text" class="form-control" autocomplete="off" name="captcha_code" size="10" maxlength="6" placeholder="Captcha: " required/>
+                     <input type="text" class="form-control" autocomplete="off" name="captcha_code" size="10" maxlength="6" placeholder="Captcha :" required/>
                 </div>
                 <div class="form-button">
                     <input type="submit" value="Send >"/>
@@ -90,13 +113,13 @@ if (isset($_POST["contact_reason"]) and isset($_POST["subject"]) and isset($_POS
             <div class="section-heading"><h3>Or follow us on:</h3></div>
             <div class="social-icons-large">
                 <!-- base64: empty image, css fills it -->
-                <img onclick="location.href = 'https://twitter.com/lacicloud';" id="sprite-twitter" src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" /><br/><br />
-                <img onclick="location.href = 'https://www.facebook.com/lacicloudhosting/';" id="sprite-facebook" src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" /><br /><br />
-                <img onclick="location.href = 'https://www.youtube.com/channel/UC6cwh-kIj7aq4XoiRkzVSug';" id="sprite-youtube" src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" /><br /><br />
+                <img onclick="window.open('https://twitter.com/lacicloud', '_blank');" id="sprite-twitter" src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" alt="Twitter icon"/><br/><br />
+                <img onclick="window.open('https://www.facebook.com/lacicloudhosting/', '_blank');" id="sprite-facebook" src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" alt="Facebook icon"/><br /><br />
+                <img onclick="window.open('https://www.youtube.com/channel/UC6cwh-kIj7aq4XoiRkzVSug', '_blank');" id="sprite-youtube" src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" alt="YouTube icon"/><br /><br />
             </div>
             <div class="youtube-embed-container">
                 <div class="youtube-embed-inner">
-                    <iframe width="535" height="397" src="https://www.youtube.com/embed/FrG4TEcSuRg" frameborder="0" allowfullscreen></iframe>
+                    <iframe width="535" height="397" src="https://www.youtube.com/embed/dtTJgc6Vroo" frameborder="0" allowfullscreen></iframe>
                 </div>
             </div>
         </div>
@@ -111,9 +134,9 @@ if (isset($_POST["contact_reason"]) and isset($_POST["subject"]) and isset($_POS
             <span class="text-italic">Brussels, Belgium  - <a href="mailto:laci@lacicloud.net">laci@lacicloud.net</a></span>
         </div>
         <div class="footer-social">
-            <a href="https://twitter.com/lacicloud" class="icon tw"><img src="/resources/social-twitter.png" /></a>
-            <a href="#" class="icon fb"><img src="/resources/social-facebook.png" /></a>
-            <a href="https://www.youtube.com/channel/UC6cwh-kIj7aq4XoiRkzVSug" class="icon yt"><img src="/resources/social-youtube.png" /></a>
+            <a href="https://twitter.com/lacicloud" target="_blank" class="icon tw"><img src="/resources/social-twitter.png" alt="Twitter icon"/></a>
+            <a href="https://www.facebook.com/lacicloudhosting/" target="_blank" class="icon fb"><img src="/resources/social-facebook.png" alt="FaceBook icon"/></a>
+            <a href="https://www.youtube.com/channel/UC6cwh-kIj7aq4XoiRkzVSug" target="_blank" class="icon yt"><img src="/resources/social-youtube.png" alt="FaceBook icon"/></a>
         </div>
     </footer>
     <!--scripts-->

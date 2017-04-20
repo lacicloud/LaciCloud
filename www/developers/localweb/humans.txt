@@ -17,9 +17,10 @@
 	PSD To HTML: geostima 
 	Contact: https://www.xbtfreelancer.com/user/1593  
 
-	Tixati Chat: HBCD, that_man, others
+	Tixati Chat: HBCD, that_man, kosshi, others
 	Bitcoin testnet faucet: https://testnet.manu.backend.hamburg/faucet
 
+	From Reddit: cheechwizard
 
 /* SITE */
 	Last Update: 2016/9/11 
@@ -45,10 +46,18 @@
 	Knob buttons by itweek: http://itweek.deviantart.com/art/Knob-Buttons-Toolbar-icons-73463960
 	404/Other errror page basis: https://w3layouts.com/poses-404-page-not-found-mobile-web-template/
 	Email template: https://github.com/leemunroe/responsive-html-email-template
+	What is FTP video from GoDaddy: https://www.youtube.com/watch?v=dtTJgc6Vroo
 
 	LaciCloud: https://github.com/lacicloud/LaciCloud
 
 	Please tell me if i've missed anything.
 
-	 
-	
+/* DONATIONS */
+        BTC: 13hf1YUgkbRKfcbxs3uRnHzaTxHmHUs2Q9
+        LTC: LQ4A9gK5tGJFm5NNJoScSuTc14eUcBt3Lp
+        ETH: 0xf5bfed9b7baf84a3ddb62375f421089e90b0d923        
+        Zcash: t1TB6s1snxv85Z2gigiXWpn5T4m6KmYA2DG 
+        DOGE: DUUC9kJ7c8q5H3h7zJVHGKNT98jCDS2Qi8 
+        Dash: XonR8Bjfa5adGpbPA31CsM6UUxpBxnq9qu	 
+        
+		Thanks!
