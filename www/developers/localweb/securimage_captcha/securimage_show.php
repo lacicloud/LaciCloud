@@ -53,8 +53,9 @@ $img->charset = 'MOLNARFILASZLO';
 $img->ttf_file = '/var/ftp/www/developers/localweb/securimage_captcha/AHGBold.ttf';
 $img->database_user = parse_ini_file("../../secrets.ini")["db_user_captcha"];
 $img->database_pass = parse_ini_file("../../secrets.ini")["db_password_captcha"];
-$img->database_name = 'laci_corporations_users';
-$img->database_table = 'captcha_codes';
+$img->database_name = parse_ini_file("../../secrets.ini")["db_name"];
+$img->database_host = parse_ini_file("../../secrets.ini")["db_host"];
+$img->database_table = parse_ini_file("../../secrets.ini")["db_table_captcha"];
 
 
 // You can customize the image by making changes below, some examples are included - remove the "//" to uncomment
@@ -76,13 +77,8 @@ $img->database_table = 'captcha_codes';
 
 // see securimage.php for more options that can be set
 
-
-
-
 // set namespace if supplied to script via HTTP GET
 //if (!empty($_GET['namespace'])) $img->setNamespace($_GET['namespace']);
-
-
 
 $img->show('/var/ftp/www/developers/localweb/securimage_captcha/bg3.jpg');  // outputs the image and content headers to the browser
 // alternate use:

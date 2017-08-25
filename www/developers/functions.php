@@ -2,12 +2,15 @@
 //API & Functions
 
 //captcha
-require_once('localweb/securimage_captcha/securimage.php');
+require_once(__DIR__.'/localweb/securimage_captcha/securimage.php');
+
 //swiftmailer for sending emails
-require_once('SwiftMailer/lib/swift_required.php');
+require_once(__DIR__.'/SwiftMailer/lib/swift_required.php');
 
 //payments
-require_once("GoUrl/cryptobox.class.php");
+require_once(__DIR__."/MineSQL/CoinPayments.php");
+require_once(__DIR__."/PayPal/PaypalIPN.php");
+require_once(__DIR__."/Stripe/init.php");
 
 //LaciCloud core functions that directly interact with the database or the server in any way
 class LaciCloud {
@@ -16,7 +19,7 @@ class LaciCloud {
   		  'cost' => 12, //should be good for a few more years
 	];
 
-	private $secrets_file = "secrets.ini";
+	private $secrets_file = __DIR__."/secrets.ini";
 
 	//default values to use when creating account
 
@@ -26,18 +29,16 @@ class LaciCloud {
 
 	protected $document_root = "/var/ftp";
 
-	public $login_throttle_settings = [
-			5 => 'captcha'	//captcha
-	];
-
-	public $unix_time_1_month = 2629743;
+	public $unix_time_1_year = 31556916;
 
 	protected $usedSpaceDefault = 0;
+
+	protected $usedBandwidthDefault = 0.0;
 	
 	public $valid_pages_array = ["0","1","1_1","1_2","2","2_1","2_2","3","4"];
 
 	public function grabSecret($name) {
-		$secrets = parse_ini_file($this->document_root."/www/developers/".$this->secrets_file);
+		$secrets = parse_ini_file($this->secrets_file);
 		return $secrets[$name];
 
 	} 
@@ -229,6 +230,7 @@ class LaciCloud {
 		$lacicloud_errors_api = new Errors();
 		$lacicloud_ftp_api = new FTPActions();
 		$lacicloud_utils_api = new Utils();
+		$lacicloud_webhosting_api = new Webhosting();
 
 		if (empty($unique_key)) {
 			$lacicloud_errors_api -> msgLogger("LOW", "Unique key empty when confirming account...", 14);
@@ -273,6 +275,7 @@ class LaciCloud {
         	return 1;
         }
 
+        /*
         //create user by default; get email address, don't trust user inputted one
         $email = $lacicloud_ftp_api->getUserValues($id, $dbc)["email"];
         
@@ -282,6 +285,7 @@ class LaciCloud {
         
         //add default FTP user (master)
         $lacicloud_ftp_api->addFTPUser($ftp_username, $ftp_password, $ftp_space, "/", "mb", $id, $dbc, $dbc_ftp);
+		*/
 
         return 15;
 	}
@@ -298,6 +302,7 @@ class LaciCloud {
 	public function registerUser($email, $password, $password_retyped, $captcha, $beta_code, $dbc) {
 		$lacicloud_errors_api = new Errors();
 		$lacicloud_emails_api = New Emails();
+		$lacicloud_webhosting_api = new Webhosting();
 		
 		if ($lacicloud_errors_api -> getSuccessOrErrorFromID($this -> verifyBetaCode($beta_code)) !== "success") {
 			return 41;
@@ -307,7 +312,6 @@ class LaciCloud {
 		if ($lacicloud_errors_api -> getSuccessOrErrorFromID($this -> checkCaptcha($captcha)) !== "success") {
 			return 10;
 		}
-
 
 		if ($lacicloud_errors_api -> getSuccessOrErrorFromID($this -> validateUserInfo($email, $password, $password_retyped)) !== "success") {
 			$lacicloud_errors_api -> msgLogger("LOW", "Email/Password not valid when creating acocunt... Email: ".$email, 4);
@@ -388,6 +392,19 @@ class LaciCloud {
 		mysqli_stmt_bind_param($stmt, "ii", $this->usedSpaceDefault, $id);
         $result = mysqli_stmt_execute($stmt);
 
+        
+        if (!$result) {
+        	$lacicloud_errors_api -> msgLogger("SEVERE", "SQL error while creating account... Error: ".mysqli_error($dbc), 1);
+        	return 1;
+        } 
+
+
+        //and into truebandwidthcounter (which only really counts FTP uploads)
+        $query = "INSERT INTO truebandwidthcounter (used_bandwidth, id) VALUES (?, ?)";
+		$stmt = mysqli_prepare($dbc, $query);
+		mysqli_stmt_bind_param($stmt, "di", $this->usedBandwidthDefault, $id);
+        $result = mysqli_stmt_execute($stmt);
+
         if (!$result) {
         	$lacicloud_errors_api -> msgLogger("SEVERE", "SQL error while creating account... Error: ".mysqli_error($dbc), 1);
         	return 1;
@@ -456,6 +473,11 @@ class LaciCloud {
 		mysqli_stmt_execute($stmt);
 
 		$query = "DELETE FROM truespacecounter WHERE id = ?";
+		$stmt = mysqli_prepare($dbc, $query);
+		mysqli_stmt_bind_param($stmt, "i", $id);
+		mysqli_stmt_execute($stmt);
+
+		$query = "DELETE FROM truebandwidthcounter WHERE id = ?";
 		$stmt = mysqli_prepare($dbc, $query);
 		mysqli_stmt_bind_param($stmt, "i", $id);
 		mysqli_stmt_execute($stmt);
@@ -750,11 +772,13 @@ class LaciCloud {
 
 
 	public function firstTimeSetUp($id, $dbc) {
+		$lacicloud_ftp_api = new FTPActions();
+		$lacicloud_webhosting_api = new Webhosting();
+
 		$query = "UPDATE users SET first_time_boolean='1' WHERE id=?";
         $stmt = mysqli_prepare($dbc, $query);
         mysqli_stmt_bind_param($stmt, "i", $id);
         $result = mysqli_stmt_execute($stmt);
-
 
 
         $query = "INSERT INTO ftpactions (value, type) VALUES (?, ?)";
@@ -764,7 +788,7 @@ class LaciCloud {
         $ftpactions_type = 0; 
         mysqli_stmt_bind_param($stmt,"ii", $id, $ftpactions_type);
         $result = mysqli_stmt_execute($stmt);
-
+		
         return 26;
 	}
 
@@ -774,8 +798,9 @@ class LaciCloud {
 		$securimage = new Securimage();
 		$securimage->database_user = $this -> grabSecret("db_user_captcha");
 		$securimage->database_pass = $this -> grabSecret("db_password_captcha");
-		$securimage->database_name = 'laci_corporations_users';
-		$securimage->database_table = 'captcha_codes';
+		$securimage->database_name = $this -> grabSecret("db_name");
+		$securimage->database_host = $this->grabSecret("db_host");
+		$securimage->database_table = $this -> grabSecret("db_table_captcha");
 
 		$correct_code = $securimage->getCode(false, true);
 	    if ($securimage->check($captcha) == false) {
@@ -787,24 +812,29 @@ class LaciCloud {
 	}
 
 	public function canChangeToTier($tier, $id, $dbc, $dbc_ftp) {
+		$lacicloud_api = new LaciCloud();
 		$lacicloud_errors_api = new Errors();
 		$lacicloud_ftp_api = new FTPActions();
 
-	    $ftp_space = $this -> getTierData($tier)[0] - $lacicloud_ftp_api -> getFTPUsersUsedSpace($id, $dbc);
-		$ftp_space_virtual = $this -> getTierData($tier)[0] - $lacicloud_ftp_api -> getFTPUsersVirtuallyUsedSpace($id, $dbc_ftp);
-		
-		if ($ftp_space < 0.0 or $ftp_space_virtual < 0.0 or (int)$tier == (int)$lacicloud_ftp_api -> getUserValues($id, $dbc)["tier"]) {
+		//downgrade is tricky, so it will be done manually if needed
+		$user_tier = (int)$lacicloud_ftp_api -> getUserValues($id, $dbc)["tier"];
+		$lastpayment = (int)$lacicloud_ftp_api -> getUserValues($id, $dbc)["lastpayment"];
+
+		//if equal tier and tier wanted or downgrade trip detector
+		//if equal tier but payment is NOT OK for this year, don't trip detector as both tier equal and payment need to be true
+		if ($user_tier == $tier and (time() - $lastpayment) < $lacicloud_api->unix_time_1_year or $user_tier > $tier) {
 				return 27;
 		}
-
+		
+		
 		return 28;
 	}
 
-	public function upgradeToTier($tier, $orderID, $id, $dbc) {
+	public function upgradeToTier($tier, $orderID, $id, $dbc, $dbc_ftp) {
 		$lacicloud_errors_api = new Errors();
 
-		$ftp_space = $this -> getTierData($tier)[0];
-		$limit = $this -> getTierData($tier)[1];
+		$upload_speed = $this -> getTierData($tier)[2];
+		$download_speed = $this -> getTierData($tier)[3];
 
 		$time = time();
 	
@@ -818,16 +848,94 @@ class LaciCloud {
 			return 1; 
 		}
 
+		$query = "UPDATE ftp_users SET uploadspeed=?, downloadspeed=? WHERE realID=?";
+		$stmt = mysqli_prepare($dbc_ftp, $query);
+        mysqli_stmt_bind_param($stmt, "iii", $upload_speed, $download_speed, $id);
+        $result = mysqli_stmt_execute($stmt);
+
+        if (!$result) {
+			$lacicloud_errors_api -> msgLogger("SEVERE", "SQL error (2) while upgrading to tier ".$tier." for orderID ".$orderID."... Error:\n".mysqli_error($dbc_ftp), 1);
+			return 1; 
+		}
+
+
         return 29;
 	}
 
 	public function getTierData($tier) {
 
-		//first is space in MB, then FTP userr, then upload speed in KBits, then download speed in KBits, then description
+		//first is space in MB, then FTP users, then upload speed in KBits, then download speed in KBits, then description, then bandwidth in MB, then webhosting functions
 		//add custom tiers to end, like 4_1, 4_2 each with their own custom contracts
-		$data = array(1 => array(25000, 25, 16384, 2048, "- Free - For Occasional Users"), 2 => array(250000, 125, 32768, 4096, " - 10€ / Month - For Regular Users"), 3 => array(525000, 250, 65536, 8192, " - 20€ / Month - For Expert Users"));
+		$data = array(1 => array(5000, 10, 8192, 1024, "- Free - For Occasional Users", 10000, false), 2 => array(125000, 50, 16384, 2048, " - 15€ / Year - For Regular Users", 1000000, true), 3 => array(250000, 125, 32768, 4096, " - 25€ / Year - For Expert Users", 2000000, true));
 
 		return $data[$tier];
+
+	}	
+
+	public function sendOverUseEmail($id, $email, $tier, $type, $over_use, $additional_information) {
+		$lacicloud_errors_api = new Errors();
+		$lacicloud_emails_api = new Emails();
+
+
+		if ($type == "spacecounter") {
+			$subject = "LaciCloud - Space overused!";
+			$title_email = "LaciCloud - Space overused!";
+			$preheader_email = "LaciCloud - Space overused!";
+			$first_text_email = "<p>You are over-using your space for tier ".$tier." for user ID ".$id." by ".$over_use."MB. Maximum allowed  is ".$this->getTierData($tier)[0]." and you are using ".($over_use + $this->getTierData($tier)[0]).". Please delete some files to rectify the situation!</p>";
+			$button_email = "<a href='https://lacicloud.net/ftp'>Rectify now!</a>";
+			$end_text_email = "<p>Thank you.</p>";
+		} elseif ($type == "bandwidthcounter") {
+			$subject = "LaciCloud - Bandwidth overused!";
+			$title_email = "LaciCloud - Bandwidth overused!";
+			$preheader_email = "LaciCloud - Bandwidth overused!";
+			$first_text_email = "<p>You are over-using your bandwidth for tier ".$tier." for user ID ".$id." by ".$over_use."MB. Maximum allowed  is ".$this->getTierData($tier)[5]."MB and you are using ".($over_use + $this->getTierData($tier)[5])."MB. Please slow your transfers or upgrade to a bigger tier!</p>";
+			$button_email = "<a href='https://lacicloud.net/shop'>Upgrade now!</a>";
+			$end_text_email = "<p>Thank you.</p>";
+		} elseif ($type == "paymentchecker") {
+			$subject = "LaciCloud - Payment overdue!";
+			$title_email = "LaciCloud - Payment overdue!";
+			$preheader_email = "LaciCloud - Payment overdue!";
+			$first_text_email = "<p>Your payment for tier ".$tier." for user ID ".$id." is overdue by ".$over_use." days. You should have already paid by ".$additional_information.". Please log-in to the interface and make a payment!</p>";
+			$button_email = "<a href='https://lacicloud.net/interface'>Pay now!</a>";
+			$end_text_email = "<p>Thank you.</p>";
+		}
+
+		//construct email
+        $body = str_replace(array("[TITLE_EMAIL]", "[PREHEADER_EMAIL]", "[FIRST_TEXT_EMAIL]", "[BUTTON_EMAIL]", "[END_TEXT_EMAIL]"), array($title_email, $preheader_email, $first_text_email, $button_email, $end_text_email), $lacicloud_emails_api -> getEmailTemplate());
+
+		
+		try {
+			//sends email to user & me about overdue payment or overused space
+			$title = "LaciCloud_OverUsed_Email";
+		    $transport = Swift_SmtpTransport::newInstance(gethostbyname("mail.gandi.net"), 465, "ssl") 
+				->setUsername($this -> grabSecret("email"))
+				->setPassword($this -> grabSecret("email_password"))
+				->setSourceIp("0.0.0.0");
+			$mailer = Swift_Mailer::newInstance($transport);
+			$logger = new \Swift_Plugins_Loggers_ArrayLogger();
+			$mailer->registerPlugin(new \Swift_Plugins_LoggerPlugin($logger));
+			$message = Swift_Message::newInstance("$title");
+			$message 
+				->setSubject($subject)
+				->setFrom(array("bot@lacicloud.net" => "LaciCloud"))
+				->setTo(array("$email"))
+				->setBcc(array("laci@lacicloud.net" => "Laci"))
+				->setCharset('utf-8') 
+				->setBody($body, 'text/html');
+			$result = $mailer->send($message, $errors);
+	    } catch(\Swift_TransportException $e){
+	        $response = $e->getMessage();
+	        $result = false;
+	    } catch (Exception $e) {
+	    	$response = $e->getMessage();
+	    	$result = false; 
+	    }
+
+
+		if (!$result) {
+			@$lacicloud_errors_api -> msgLogger("SEVERE", "Could not send overdue email for user ID ".$id."... Error:\n".$logger->dump()." Exception error:\n".$response, 18);
+		}
+
 
 	}
 
@@ -1056,7 +1164,7 @@ class FTPActions extends LaciCloud {
 	public function getUserValues($id, $dbc) {
 		$lacicloud_errors_api = new Errors();
 
-		$query = "SELECT tier,first_time_boolean,api_key,email,lastpayment,id FROM users WHERE id = ?";
+		$query = "SELECT tier,first_time_boolean,api_key,email,lastpayment,id,sitename FROM users WHERE id = ?";
 	    $stmt = mysqli_prepare($dbc, $query);
 	    mysqli_stmt_bind_param($stmt, "i", $id);
 	    $result = mysqli_stmt_execute($stmt);
@@ -1066,7 +1174,7 @@ class FTPActions extends LaciCloud {
 	    	return 1;
 	    }
 
-	    $stmt->bind_result($mysql_tier, $mysql_first_time, $mysql_api_key,  $mysql_email, $mysql_lastpayment, $mysql_id);
+	    $stmt->bind_result($mysql_tier, $mysql_first_time, $mysql_api_key,  $mysql_email, $mysql_lastpayment, $mysql_id, $mysql_sitename);
 
 	    $values_array = array();
 	    while ($stmt->fetch()) {
@@ -1082,6 +1190,8 @@ class FTPActions extends LaciCloud {
 	            $values_array["lastpayment"] = (int)$mysql_lastpayment;
 
 	            $values_array["id"] = (int)$mysql_id;
+
+	            $values_array["sitename"] = $mysql_sitename;
 
 	    }
 
@@ -1141,6 +1251,32 @@ class FTPActions extends LaciCloud {
 
 	    return $users_array;
 
+	}
+
+	public function getUsedBandwidth($id, $dbc) {
+			$lacicloud_errors_api = new Errors();
+
+			$query = "SELECT used_bandwidth FROM truebandwidthcounter WHERE id = ?";
+		    $stmt = mysqli_prepare($dbc, $query);
+		    mysqli_stmt_bind_param($stmt, "i", $id);
+		    $result = mysqli_stmt_execute($stmt);
+
+		    if (!$result) {
+		    	$lacicloud_errors_api -> msgLogger("SEVERE", "SQL error while getting user's bandwidth... Error: ".mysqli_error($dbc), 1);
+		    	return 1;
+		    }
+
+		    $stmt->bind_result($mysql_ftp_used_bandwidth);
+
+		    while ($stmt->fetch()) {
+		            $ftp_used_bandwidth = $mysql_ftp_used_bandwidth;
+		    }
+
+		    if ($ftp_used_bandwidth == NULL) {
+		    	$ftp_used_bandwidth = 0;
+		    }
+
+		    return (int)$ftp_used_bandwidth;
 	}
 	
 	public function getFTPUsersUsedSpace($id, $dbc) { 
@@ -1216,125 +1352,39 @@ class FTPActions extends LaciCloud {
 
 }
 
-//anything related to Bitcoin payments and normal payments, such as creating invoice, callback function 
+
 class Payments extends LaciCloud {
 
-	//GoUrl payment vars
-	private $available_cryptocurrency_payments = array('bitcoin', 'litecoin', 'dogecoin', 'potcoin', 'dash', 'speedcoin');
-	private $def_payment = "bitcoin";
-	private $def_language = "en";
-	private $period = "1 MONTH";
+	//tiers that can be paid for
+	public $valid_tiers = [2, 3];
 
-	//12 = 10 euro, 22 = 20 euro
-	private $paymentPriceArray = array("1" => 0.0,"2" => 12, "3" => 22); 
+	public function getChangeDisallowedCode() {
+		return 27;
+	}
+
+	public function getSuccessCode() {
+		return 36;
+	}
+
+	public function getCancelCode() {
+		return 47;
+	}
 
 	public function getNotLoggedInErrorID() {
 		return 46;
 	}
 
-	public function payWithGoUrl($tier, $id, $dbc, $dbc_ftp) {
+	public function sendPaymentEmail($amount, $order_info, $orderID, $paymentID) {
 		$lacicloud_api = new LaciCloud();
-		$lacicloud_ftp_api = new FTPActions();
-		$lacicloud_errors_api = new Errors();
-
-		$amountUSD = $this->paymentPriceArray[$tier];
-
-		if (!isset($amountUSD)) {
-			$lacicloud_errors_api -> msgLogger("LOW", "amountUSD is not set when paying... amountUSD: ".$amountUSD." Tier: ".$tier." orderID: ".$orderID, 35);
-			return 35;
-		}
-		
-		$orderID = "tier_".$tier."_".$id."_".date('n');
-
-		//check if user can change to said tier
-		if ($lacicloud_errors_api -> getSuccessOrErrorFromID($lacicloud_api -> canChangeToTier($tier, $id, $dbc, $dbc_ftp)) !== "success") {
-			$lacicloud_errors_api -> msgLogger("LOW", "User is not allowed to upgrade/downgrade to tier: ".$tier." for orderID: ".$orderID, 27);
-			return 27;
-		}
-
-		//no payment is required for tier 1
-		if ($tier == "1") {
-			if ($lacicloud_errors_api -> getSuccessOrErrorFromID($lacicloud_api->upgradeToTier($tier, $orderID, $id, $dbc)) !== "success") {
-				return 35;
-			}
-
-			return 36;
-		}
-
-
-		$all_keys = array(  
-        "bitcoin"  => array("public_key" => $lacicloud_api->grabSecret("gourl_public_key_bitcoin"),  "private_key" => $lacicloud_api->grabSecret("gourl_private_key_bitcoin")),
-        "litecoin"  => array("public_key" => $lacicloud_api->grabSecret("gourl_public_key_litecoin"),  "private_key" => $lacicloud_api->grabSecret("gourl_private_key_litecoin")),
-        "dogecoin"  => array("public_key" => $lacicloud_api->grabSecret("gourl_public_key_dogecoin"),  "private_key" => $lacicloud_api->grabSecret("gourl_private_key_dogecoin")),
-        "potcoin"  => array("public_key" => $lacicloud_api->grabSecret("gourl_public_key_potcoin"),  "private_key" => $lacicloud_api->grabSecret("gourl_private_key_potcoin")),  
-        "dash"  => array("public_key" => $lacicloud_api->grabSecret("gourl_public_key_dashcoin"),  "private_key" => $lacicloud_api->grabSecret("gourl_private_key_dashcoin")),
-        "speedcoin"  => array("public_key" => $lacicloud_api->grabSecret("gourl_public_key_speedcoin"),  "private_key" => $lacicloud_api->grabSecret("gourl_private_key_speedcoin")),
-        // etc.
-    	);   
-
-    	// Optional - Coin selection list (html code)
-    	$coins_list = display_currency_box($this->available_cryptocurrency_payments, $this->def_payment, $this->def_language, 70, "margin: 5px 0 0 20px", "/resources/gourl"); 
-
-    	if (isset($_GET["gourlcryptocoin"])) {
-       		$coinName = $_GET["gourlcryptocoin"];
-    	} else {
-    		$coinName = $this->def_payment;
-    	}
-    	
-    	$public_key  = $all_keys[$coinName]["public_key"];
-    	$private_key = $all_keys[$coinName]["private_key"];
-
-    	    /** PAYMENT BOX **/
-   		$options = array(
-            "public_key"  => $public_key,   // your public key from gourl.io
-            "private_key" => $private_key,  // your private key from gourl.io
-            "webdev_key"  => "",            // optional, gourl affiliate key
-            "orderID"     => $orderID,      // order id
-            "userID"      => $id,       // unique identifier for every user
-            "userFormat"  => "SESSION",   // save userID in COOKIE, IPADDRESS or SESSION
-            "amountUSD"   => $amountUSD,    // we use price in USD
-            "period"      => $this->period,       // payment valid period
-            "language"    => "EN"  // text on EN - english, FR - french, etc
-    	);
-
-    	$box = new Cryptobox($options);
-
-		if ($box->is_paid()) {
-
-			if ($lacicloud_errors_api -> getSuccessOrErrorFromID($lacicloud_api->upgradeToTier($tier, $orderID, $id, $dbc)) !== "success") {
-					return 35;
-			}
-
-
-			if (!$box->is_processed()) {
-
-				$this->sendGoUrlPaymentEmail($orderID, $box->payment_id(), $amountUSD, $id, $tier, $lacicloud_ftp_api->getUserValues($id, $dbc)["email"]);
-				// Set Payment Status to Processed
-
-				$box->set_status_processed();
-				return 36;
-			} else {
-				return 36;
-			} 
-		} else {
-			echo "<br><br>";
-			echo $coins_list;
-			echo($box->display_cryptobox(true, 550, 250, "padding:3px 6px;margin:10px;border:10px solid #f7f5f2;"));
-		}
-
-	 return 47; //payment in progress
-
-	}
-
-
-	public function sendGoUrlPaymentEmail($orderID, $paymentID, $amountUSD, $id, $tier, $email) {
-		$lacicloud_api = new LaciCloud();
-		$lacicloud_errors_api = new Errors();
 		$lacicloud_emails_api = New Emails();
+		$lacicloud_errors_api = new Errors();
+
+		$tier = $order_info[0];
+		$id = $order_info[1];
+		$email = $order_info[5];
 
 		//construct email
-        $body = str_replace(array("[TITLE_EMAIL]", "[PREHEADER_EMAIL]", "[FIRST_TEXT_EMAIL]", "[BUTTON_EMAIL]", "[END_TEXT_EMAIL]"), array("LaciCloud - Tier Upgraded!", "LaciCloud - Tier Upgrade!", "<p>Your account will be upgraded to tier ".$tier." momentarily! User ID: ".$id.", For value: ".$amountUSD."$, Order ID: ".$orderID.", Payment ID: ".$paymentID."!</p>", "", "<p>We thank you for choosing LaciCloud!</p>"), $lacicloud_emails_api -> getEmailTemplate());
-
+        $body = str_replace(array("[TITLE_EMAIL]", "[PREHEADER_EMAIL]", "[FIRST_TEXT_EMAIL]", "[BUTTON_EMAIL]", "[END_TEXT_EMAIL]"), array("LaciCloud - Tier Upgraded!", "LaciCloud - Tier Upgrade!", "<p>Your account will be upgraded to tier ".$tier." momentarily! User ID: ".$id.", For value: ".$amount."€, Order ID: ".$orderID.", Payment ID: ".$paymentID."!</p>", "", "<p>We thank you for choosing LaciCloud!</p>"), $lacicloud_emails_api -> getEmailTemplate());
 		
 		try {
 			//sends email to user & me about payment
@@ -1362,101 +1412,226 @@ class Payments extends LaciCloud {
 	    	$response = $e->getMessage();
 	    	$result = false; 
 	    }
-
-
 		if (!$result) {
 			@$lacicloud_errors_api -> msgLogger("SEVERE", "Could not send payment email for orderID ".$orderID."... Error:\n".$logger->dump()." Exception error:\n".$response, 18);
 		}
 
-		return 37;
 
 	}
 
-	public function sendGoUrlConfirmationEmail($email, $orderID, $paymentID) {
-		$lacicloud_api = new LaciCloud();
-		$lacicloud_errors_api = new Errors();
-		$lacicloud_emails_api = new Emails();
 
-		//construct email
-        $body = str_replace(array("[TITLE_EMAIL]", "[PREHEADER_EMAIL]", "[FIRST_TEXT_EMAIL]", "[BUTTON_EMAIL]", "[END_TEXT_EMAIL]"), array("LaciCloud - Payment confirmed!", "LaciCloud - Payment confirmed!", "<p>Payment for ID ".$paymentID." and orderID ".$orderID." has been successfully confirmed! Tier upgrade has been made permanent.</p>", "", "<p>We thank you for choosing LaciCloud!</p>"), $lacicloud_emails_api -> getEmailTemplate());
+}
+
+//used for coinpayments form encryption
+class Encryption extends LaciCloud {
+
+	public function encryptString($data, $key) {
+		 $iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length("AES-256-CBC"));
+		 $encrypted = openssl_encrypt($data, "AES-256-CBC", $key, 0, $iv);
+		 return base64_encode($encrypted . ':' . base64_encode($iv));
+	}
+
+	public function decryptString($data, $key) {
+		$data = explode(':', base64_decode($data));
+
+		$decrypted = openssl_decrypt($data[0], "AES-256-CBC", $key, 0, base64_decode($data[1]));
+
+		return $decrypted;
+	}
+
+}
+
+class Webhosting extends LaciCloud {
+
+	//blacklisted subdomains that are used or may be
+	public $blacklist = ["blog", "api", "ns", "mail", "www", "ftp", "ns1", "ns2", "web", "shop", "cdn", "dev", "test", "admin", "forum", "m"];
+	
+	public function validateSitename($sitename, $dbc) {
 		
-		try {
-			//sends email to user & me about payment
-			$title = "LaciCloud_Payment_Confirmation_Email";
-		    $transport = Swift_SmtpTransport::newInstance(gethostbyname("mail.gandi.net"), 465, "ssl") 
-				->setUsername($lacicloud_api -> grabSecret("email"))
-				->setPassword($lacicloud_api -> grabSecret("email_password"))
-				->setSourceIp("0.0.0.0");
-			$mailer = Swift_Mailer::newInstance($transport);
-			$logger = new \Swift_Plugins_Loggers_ArrayLogger();
-			$mailer->registerPlugin(new \Swift_Plugins_LoggerPlugin($logger));
-			$message = Swift_Message::newInstance("$title");
-			$message 
-				->setSubject("LaciCloud - Payment confirmed!")
-				->setFrom(array("bot@lacicloud.net" => "LaciCloud"))
-				->setTo(array("$email"))
-				->setBcc(array("laci@lacicloud.net" => "Laci"))
-				->setCharset('utf-8') 
-				->setBody($body, 'text/html');
-			$result = $mailer->send($message, $errors);
-	    } catch(\Swift_TransportException $e){
-	        $response = $e->getMessage();
-	        $result = false;
-	    } catch (Exception $e) {
-	    	$response = $e->getMessage();
-	    	$result = false; 
-	    }
+		//make it lowercase
+		$sitename = strtolower($sitename);		
 
+		//check if alphanumeric
+		if (!ctype_alnum($sitename)) {
+			return 48;
+		} 
 
-		if (!$result) {
-			$lacicloud_errors_api -> msgLogger("SEVERE", "Could not send payment confirmation email for orderID: ".$orderID." (Callback IPN)... Error:\n".$logger->dump()." Exception error:\n".$response, 18);
+		//must be between 4 to 32 characters
+		if (strlen($sitename) < 4 or strlen($sitename) > 32) {
+ 	   		return 48;
 		}
 
-		return 37;
+		if (in_array($sitename, $this->blacklist)) {
+			return 48;
+		}
 
+		//check whether subdomain already taken
+		$query = "SELECT sitename FROM users WHERE sitename = ?";
+		$stmt = mysqli_prepare($dbc, $query);
+		mysqli_stmt_bind_param($stmt, "s", $sitename);
+        $result = mysqli_stmt_execute($stmt);
+
+        if (!$result) {
+        	$lacicloud_errors_api -> msgLogger("SEVERE", "SQL error while checking sitename... Error: ".mysqli_error($dbc), 1);
+        	return 1;
+        }
+
+        $stmt->bind_result($mysql_sitename);
+
+        while ($stmt->fetch()) {
+        	$sitename_in_database = $mysql_sitename;
+		}
+
+		if (!empty($sitename_in_database)) {
+			return 48;
+		}
+
+		return 49;
+		
 	}
 
-	//sort of 're-verifies' that the tier has been changed (changes it again)
-	public function callbackIPN($paymentID, $payment_details, $box_status, $dbc, $dbc_ftp) {
-		$lacicloud_api = new LaciCloud();
+	public function addWebhostingEnv($id, $sitename, $mysql_username, $mysql_password, $dbc) {
 		$lacicloud_errors_api = new Errors();
 		$lacicloud_ftp_api = new FTPActions();
 
-		$orderID = $payment_details["order"];
-
-		$tier = (int)$orderID[5];
-		$id = (int)$payment_details["user"];
-		$email = $lacicloud_ftp_api -> getUserValues($id, $dbc)["email"];
-
-		$amountUSD = (int)$payment_details["amountusd"];
-
-
-		if ((int)$payment_details["confirmed"] != 1) {
-			return 35;
+		if ($lacicloud_ftp_api->getUserValues($id, $dbc)["tier"] == 1 or isset($lacicloud_ftp_api->getUserValues($id, $dbc)["sitename"])) {
+			return 54;
 		}
 
-		//allow 10$ to 13$ for tier 2, and 20$ to 25$ for tier 3
-		if ($tier == 2 and $amountUSD > 10 and $amountUSD > 13 or $tier == 3 and $amountUSD > 20 and $amountUSD < 25) {
-			$this->sendGoUrlConfirmationEmail($email, $orderID, $paymentID);
-
-
-			if ($lacicloud_errors_api -> getSuccessOrErrorFromID($lacicloud_api -> canChangeToTier($tier, $id, $dbc, $dbc_ftp)) !== "success") {
-				$lacicloud_errors_api -> msgLogger("LOW", "User is not allowed to upgrade/downgrade to tier: ".$tier." orderID: ".$orderID." (Callback IPN, probably already on tier)", 27);
-				return 27;
-			}
-
-			if ($lacicloud_errors_api -> getSuccessOrErrorFromID($lacicloud_api->upgradeToTier($tier, $payment_details["order"], $id, $dbc)) !== "success") {
-				return 35;
-			}
-
-		} else {
-			$lacicloud_errors_api -> msgLogger("LOW", "Incorrectly paid sum when upgrading to tier: ".$tier." orderID: ".$orderID." (Callback IPN)", 35);
-			return 35;
+		if ($lacicloud_errors_api -> getSuccessOrErrorFromID($this -> validateSitename($sitename, $dbc)) !== "success") {
+			$lacicloud_errors_api -> msgLogger("LOW", "Sitename not valid when creating environment... Sitename: ".$sitename, 48);
+			return 48;
 		}
 
-		return 36; 		
+		$query = "UPDATE users SET sitename = ? WHERE id = ?";
+		$stmt = mysqli_prepare($dbc, $query);
+		mysqli_stmt_bind_param($stmt, "si", $sitename, $id);
+		$result = mysqli_stmt_execute($stmt);
+
+        $done = 0;
+        $action = "addwebhostingenv";
+
+        $query = "INSERT INTO webhosting (realID, action, sitename, mysql_username, mysql_password, done) VALUES (?, ?, ?, ?, ?, ?)";
+        $stmt = mysqli_prepare($dbc, $query);
+        mysqli_stmt_bind_param($stmt, "issssi", $id, $action, $sitename, $mysql_username, $mysql_password, $done);
+        $result = mysqli_stmt_execute($stmt);
+
+        if (!$result) {
+        	$lacicloud_errors_api -> msgLogger("SEVERE", "SQL error while adding webhosting environment for realID ".$id." and for sitename ".$sitename."... Error:".mysqli_error($dbc), 1);
+        	return 1;
+        }
+ 
+        return 50;
+
 	}
 
+	public function resetWebhostingEnvPermissions($id, $sitename, $dbc) {
+		$lacicloud_errors_api = new Errors();
+		$lacicloud_ftp_api = new FTPActions();
+
+		if ($lacicloud_ftp_api->getUserValues($id, $dbc)["tier"] == 1 or empty($sitename)) {
+			return 54;
+		}
+
+        $done = 0;
+        $action = "resetperms";
+
+        $query = "INSERT INTO webhosting (realID, action, sitename, done) VALUES (?, ?, ?, ?)";
+        $stmt = mysqli_prepare($dbc, $query);
+        mysqli_stmt_bind_param($stmt, "issi", $id, $action, $sitename, $done);
+        $result = mysqli_stmt_execute($stmt);
+
+        if (!$result) {
+        	$lacicloud_errors_api -> msgLogger("SEVERE", "SQL error while adding reset permissions command to webhosting environment for realID ".$id." and for sitename ".$sitename."... Error:".mysqli_error($dbc), 1);
+        	return 1;
+        }
+ 
+        return 51;
+	}
+
+	public function resetWebhostingEnvMysql($id, $sitename, $mysql_username, $dbc) {
+		$lacicloud_errors_api = new Errors();
+		$lacicloud_ftp_api = new FTPActions();
+
+		if ($lacicloud_ftp_api->getUserValues($id, $dbc)["tier"] == 1 or empty($sitename)) {
+			return 54;
+		}
+
+		$done = 0;
+		$action = "resetmysql";
+		$mysql_password = $this->generateMysqlPassword();
+
+		//reset mysql password on normal
+		$query = "UPDATE webhosting SET mysql_username = ?, mysql_password = ? WHERE (realID=? AND action='addwebhostingenv')";
+		$stmt = mysqli_prepare($dbc, $query);
+        mysqli_stmt_bind_param($stmt, "ssi", $mysql_username, $mysql_password, $id);
+        $result = mysqli_stmt_execute($stmt);
+
+        if (!$result) {
+        	$lacicloud_errors_api -> msgLogger("SEVERE", "SQL error (1) while adding reset mysql command to webhosting environment for realID ".$id." and for sitename ".$sitename."... Error:".mysqli_error($dbc), 1);
+        	return 1;
+        }
+
+        //add reset command
+        $query = "INSERT INTO webhosting (realID, action, sitename, mysql_username, mysql_password, done) VALUES (?, ?, ?, ?, ?, ?)";
+        $stmt = mysqli_prepare($dbc, $query);
+        mysqli_stmt_bind_param($stmt, "issssi", $id, $action, $sitename, $mysql_username, $mysql_password, $done);
+        $result = mysqli_stmt_execute($stmt);
+
+        if (!$result) {
+        	$lacicloud_errors_api -> msgLogger("SEVERE", "SQL error (2) while adding reset mysql command to webhosting environment for realID ".$id." and for sitename ".$sitename."... Error:".mysqli_error($dbc), 1);
+        	return 1;
+        }
+
+        return 52;
+
+
+	}
+
+	public function getWebhostingValues($id, $dbc) {
+		$lacicloud_errors_api = new Errors();
+
+		$query = "SELECT sitename, mysql_username, mysql_password FROM webhosting WHERE (realID = ? AND action='addwebhostingenv')";
+	    $stmt = mysqli_prepare($dbc, $query);
+	    mysqli_stmt_bind_param($stmt, "i", $id);
+	    $result = mysqli_stmt_execute($stmt);
+
+	    if (!$result) {
+	    	$lacicloud_errors_api -> msgLogger("SEVERE", "SQL error while getting webhosting user's values... Error: ".mysqli_error($dbc), 1);
+	    	return 1;
+	    }
+
+	    $stmt->bind_result($mysql_sitename, $mysql_mysql_username, $mysql_mysql_password);
+
+	    $values_array = array();
+	    while ($stmt->fetch()) {
+
+	            $values_array["sitename"] = $mysql_sitename;
+
+	            $values_array["mysql_host"] = "localhost";
+
+	            $values_array["mysql_username"] = $mysql_mysql_username;
+
+	            $values_array["mysql_password"] = $mysql_mysql_password; 
+
+	    }
+
+	    if (!isset($values_array["sitename"])) {
+	    	$values_array["sitename"] = "";
+	    	$values_array["mysql_username"] = "";
+	    }
+
+	    return $values_array;
+	}
+
+	public function generateMysqlPassword() {
+		return bin2hex(openssl_random_pseudo_bytes(16));
+	}
+
+	//mysql 5.6 limitation: username must be smaller than or equal to 16
+	public function generateMysqlUsername() {
+		return bin2hex(openssl_random_pseudo_bytes(8));
+	}
 
 }
 
@@ -1479,7 +1654,7 @@ class Errors extends LaciCloud {
 		12 => "Account has not been confirmed yet... Please confirm and try again!",
 		13 => "Successfully logged in... Yay!",
 		14 => "An error occured while confirming your account with key... Please try again!",
-		15 => "Account confirmed successfully... Yay! A default FTP account has been created with the username xXxftp_usernamexXx and the password xXxftp_passwordxXx (Write it down!) !",
+		15 => "Account confirmed successfully... Yay! Please log-in!",
 		16 => "",
 		17 => "Email already exists in database... Please try again or reset your password!",
 		18 => "An unfortunate error occured while sending the email... Sorry!",
@@ -1488,10 +1663,10 @@ class Errors extends LaciCloud {
 		21 => "Email accepted... Please check your xXxemailxXx for further instructions!",
 		22 => "Reset key could not be validated... Please try again!",
 		23 => "Your new password can not be the same as the old one... Please try again!",
-		24 => "Successfully reset account! You can log-in now!",
+		24 => "Successfully reset account! You can xXxresetfixxXx now!",
 		25 => "Session timed-out... Please log-in again if you wish to continue!",
 		26 => "First-time setup completed successfully... Yay!",
-		27 => "Due to space issues, or the fact that you may be already on this tier, you can not change to this tier at this time... Check tier limits and delete some stuff accordingly!",
+		27 => "Sorry, you cannot downgrade a tier or upgrade to the same tier you are currently on!",
 		28 => "You can change to this tier if you wish... Yay!",
 		29 => "Successfully upgraded tier... Yay!", //function of upgrading tiers
 		30 => "You\"r email has been successfully sent... Yay!",
@@ -1500,7 +1675,7 @@ class Errors extends LaciCloud {
 		33 => "FTP username incorrect; no such FTP user exists under your account... Please try again!",
 		34 => "FTP user successfully removed... Yay!",
 		35 => "Internal error occured while changing to this tier... Sorry!",
-		36 => "Successfully accepted payment, tier will be upgraded shortly... Yay! Click xXxherexXx to return to the shop page!", //from payments
+		36 => "Successfully accepted payment, tier will be upgraded shortly... Yay! Click xXxherexXx to return to the interface page!", //from payments
 		37 => "Email successfully sent... Yay!",
 		38 => "QFTP user successfully created with username xXxusernamexXx and password xXxpasswordxXx!",
 		39 => "API key successfully regenerated!",
@@ -1511,7 +1686,14 @@ class Errors extends LaciCloud {
 		44 => "Not enough parameters supplied for API... Please try again!",
 		45 => "API call received OK... Yay!",
 		46 => "You need to log-in or create an account to use the shop page... Please log-in!",
-		47 => "Payment in progress... Yay!"
+		47 => "Payment cancelled or an error occured! Please contact support if you are encountering issues.",
+		48 => "Sitename already exists or is not alphanumeric!",
+		49 => "Sitename validated!",
+		50 => "Successfully added webhosting environment!",
+		51 => "Successfully reset permissions on webhosting environment!",
+		52 => "Successfully reset MySql password on webhosting environment!",
+		53 => "IPN/Payment error!",
+		54 => "Sorry, action is disallowed for your tier or your webhosting options!"
 	);
 
 	private $result_messages_map = array(
@@ -1522,15 +1704,15 @@ class Errors extends LaciCloud {
 		5 => "success",
 		6 => "error",
 		7 => "success",
-		8 => "error",
-		9 => "success",
+		8 => "",
+		9 => "",
 		10 => "error",
 		11 => "success",
 		12 => "warning",
 		13 => "login",
 		14 => "error",
 		15 => "success",
-		16 => "error",
+		16 => "",
 		17 => "warning",
 		18 => "error",
 		19 => "success",
@@ -1561,7 +1743,14 @@ class Errors extends LaciCloud {
 		44 => "error",
 		45 => "success",
 		46 => "warning",
-		47 => "info"
+		47 => "warning",
+		48 => "error",
+		49 => "success",
+		50 => "success",
+		51 => "success",
+		52 => "success",
+		53 => "error",
+		54 => "error"
 		);
 
 	public function getSuccessOrErrorFromID($id) {
@@ -1730,7 +1919,10 @@ class qFTP extends LaciCloud {
 //email templating system
 class Emails extends LaciCloud {
 		public function getEmailTemplate() {
-		$template_html = file_get_contents("../SwiftMailer/email_template.html");
+
+		$lacicloud_api = new LaciCloud();
+
+		$template_html = file_get_contents(__DIR__."/SwiftMailer/email_template.html");
 		return $template_html;
 		}
 
@@ -1780,6 +1972,10 @@ class Utils extends LaciCloud {
 		$email_array = explode("@", $email);
 		$username = $email_array[0];
 
+		//just to be safe, remove all non-alphanum, including spaces
+		$username = preg_replace("/[^A-Za-z0-9 ]/", '', $username);
+		$username = str_replace(" ", "", $username);
+
 		return $username;
 	}
 
@@ -1799,3 +1995,5 @@ class Utils extends LaciCloud {
 }
 
 ?>
+
+

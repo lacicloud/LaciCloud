@@ -1,4 +1,4 @@
-﻿<?php 
+<?php 
 require("../functions.php");
 
 $lacicloud_api = new LaciCloud();
@@ -12,31 +12,33 @@ $lacicloud_api -> isPageCached();
 <!DOCTYPE html>
 <html>
 <head>
-    <title>LaciCloud - Secure FTP(s) Cloud Storage</title>
+    <title>LaciCloud - The open-source FTP(s)-based cloud storage and webhost</title>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
   
-    <meta name="description" content="The open-source FTP(s)-based cloud storage that is very customizable and privacy-centric. Get 25GB free now!" />
-    <meta name="keywords" content="bitcoin, FTP, FTPS, cloud, cloud-storage, backup, privacy, private, encryption, security, customizable, secure, LaciCloud" />
+    <meta name="description" content="The open-source FTP(s)-based cloud storage and webhost that is very customizable and privacy-centric. Get 5GB free now!" />
+    <meta name="keywords" content="bitcoin, FTP, FTPS, cloud, cloud-storage, webhost, webhosting, backup, privacy, private, encryption, security, customizable, secure, LaciCloud" />
     <meta name="author" content="Laci, Tristan, Fabio">
     <meta name="language" content="english"> 
+
+    <meta name="norton-safeweb-site-verification" content="vm75mf5npwcd4k9ku90jt29d3df2ag5utrqzvll-2o5ytj7qvolcwdlx6ixgfwyq-jm7ce3yx0be6nx74f0soh0ozt18q10h085019weeko7m260ge-np1v-4-n6l4ox" />
 
     <link rel="author" href="https://plus.google.com/115512170582216368374"/>
     <link rel="help" href="/resources/lacicloud_help.pdf">
 
-    <meta property="og:title" content="LaciCloud - Secure FTP(s) Cloud Storage"/>
+    <meta property="og:title" content="LaciCloud - Secure FTP(s) Cloud Storage, Webhost"/>
     <meta property="og:url" content="https://lacicloud.net"/>
     <meta property="og:image" content="https://lacicloud.net/resources/logo.png"/>
     <meta property="og:image:type" content="image/png">
-    <meta property="og:description" content="The open-source FTP(s)-based cloud storage that is very customizable and privacy-centric. Get 25GB free now!"/>
+    <meta property="og:description" content="The open-source FTP(s)-based cloud storage and webhost that is very customizable and privacy-centric. Get 5GB free now!"/>
     <meta property="og:locale" content="en_US" />
 
-    <meta property="twitter:title" content="LaciCloud - Secure FTP(s) Cloud Storage"/>
+    <meta property="twitter:title" content="LaciCloud - Secure FTP(s) Cloud Storage, Webhost"/>
     <meta property="twitter:url" content="https://lacicloud.net"/>
     <meta property="twitter:image" content="https://lacicloud.net/resources/logo.png"/>
-    <meta property="twitter:description" content="The open-source FTP(s)-based cloud storage that is very customizable and privacy-centric. Get 25GB free now!"/>
+    <meta property="twitter:description" content="The open-source FTP(s)-based cloud storage and webhost that is very customizable and privacy-centric. Get 5GB free now!"/>
 
     <link rel="image_src" href="/resources/logo.png"/>
     
@@ -73,11 +75,11 @@ $lacicloud_api -> isPageCached();
     <section class="row h-about about" id="about">
         <div class="col-3 text-center">
             <div class="section-icon"><img src="resources/about-icon.png" alt="An icon of a cloud with a lock on it"/></div>
-            <div class="section-heading"><h1>A first-of-a-kind ftp-based privacy-centric cloud storage solution</h1></div>
+            <div class="section-heading"><h1>A first-of-a-kind ftp(s)-based privacy-centric cloud storage, webhosting solution</h1></div>
             <div class="section-text about-text">
-                LaciCloud is your open-source private FTP(s)-cloud storage with many features, including a flexible Bitcoin payment method, 
+                LaciCloud is your open-source private FTP(s)-cloud storage and PHP webhost with many features, including a flexible Bitcoin payment method, 
                 user-data encryption, first-class security, compatibility with virtually all computing devices around the world 
-                and extreme versitality with an API and an HTTPS public files feature. Read below.
+                and extreme versatility with an API and user subdomains. Read below.
             </div>
         </div>
     </section>
@@ -90,8 +92,8 @@ $lacicloud_api -> isPageCached();
             <div class="section-heading"><h1>Privacy</h1></div>
             <div class="section-text privacy-text">
                 Privacy and security is one of LaciCloud's most important feature. We do not, in any way or form,
-                collect PII, or sell your data to adverisers. Payments are done via Bitcoin <span class="tooltip" title="DogeCoin, Dash, PotCoin, LiteCoin, Speedcoin">(<strong>and 5 other cryptocurrencies!</strong>)</span>,
-                and user data can be possibly encrypted. Of course, you can also get quick temporary FTP accounts without registering,
+                collect PII, or sell your data to adverisers. Payments can be done via Bitcoins/Altcoins <span class="tooltip" title="Paypal, Stripe, and European IBAN">(<strong>and 3 other payment methods!</strong>)</span>,
+                and user data can be possibly encrypted. Of course, you can also get <strong><a style="color:inherit;text-decoration:none;" href="/qftp">quick temporary FTP accounts</a></strong> without registering,
                 much like temporary email addresses.
                 Additionally, the code behind LaciCloud has been tested for security issues and privilige seperation is used between
                 the webserver and the FTP(s) server.
@@ -108,8 +110,7 @@ $lacicloud_api -> isPageCached();
             <div class="section-heading"><h1>Versatility</h1></div>
             <div class="section-text compatibility-text">
                 Versitality is one of of LaciCloud's other most important feature. Our service offers you ways to 
-                display messages to your users, have hierchical user structures, and a way to host your files on a 
-                public HTTPS server. Our API allows you to write your own applications on top of LaciCloud's, whatever 
+                display messages to your users, have hierchical user structures, and a way to host your files your own user subdomain. Our API allows you to write your own applications on top of LaciCloud's, whatever 
                 it may be. Do not forget the many syncronization, backup and encryption programs that exist for FTP(s).
                 <span class="section-end">.</span>
             </div>
@@ -131,7 +132,7 @@ $lacicloud_api -> isPageCached();
                     Open-sourcing LaciCloud allows anyone access to view and enhance the source code. What this means is bug's gets fixed faster, 
                     and anyone can verify the codebase to make sure there are no back-doors and that nothing strange is going on.
                     <br>
-                    LaciCloud's Github page can be found <strong><a style="color:inherit;text-decoration:none;text-align: center;" href="https://github.com/lacicloud/LaciCloud">here.</a></strong>
+                    LaciCloud's Github page can be found <strong><a id="github_link" href="https://github.com/lacicloud/LaciCloud">here.</a></strong>
                     <span class="section-end">.</span>
                 </div>
 
@@ -152,7 +153,7 @@ $lacicloud_api -> isPageCached();
             <div class="section-text margin-center">
                 Get started with LaciCloud for free!
             </div>
-            <div class="mailing-button margin-center"><a href="/account">Get 25GB free now!</a></div>
+            <div class="mailing-button margin-center"><a href="/account">Get 5GB free now!</a></div>
         </div>
     </section>
 
@@ -162,10 +163,10 @@ $lacicloud_api -> isPageCached();
             <span class="text-uppercase bold-font">LaciCloud</span><br />
             <span class="text-italic">Made with love</span><br />
             <span class="text-italic">Brussels, Belgium  - <a href="mailto:laci@lacicloud.net">laci@lacicloud.net</a></span>
-            <br><br>
-            <span class="text-italic">Users: 27</span>
+            <br><br><br>
+            <span class="text-italic">Users: 66</span>
             <br>
-            <span class="text-italic">Space used: 19GB out of 4096GB</span>
+            <span class="text-italic">Space used: 67GB out of 4096GB</span>
             <br>
             <span class="text-italic">Service status: <strong><a href="https://stats.uptimerobot.com/r8N9QIrq1">OK</a></strong></span>
         </div>

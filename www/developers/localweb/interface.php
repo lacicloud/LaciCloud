@@ -6,6 +6,7 @@ $lacicloud_ftp_api = new FTPActions();
 $lacicloud_payments_api = new Payments();
 $lacicloud_errors_api = new Errors();
 $lacicloud_utils_api = new Utils();
+$lacicloud_webhosting_api = new Webhosting;
 
 //start gzipper
 if(!$lacicloud_utils_api->getBrowserName() == 'Internet Explorer' and substr_count($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip')) {
@@ -61,6 +62,19 @@ if(isset($_POST["action"]) and $_POST["action"] == "addftpuser" and isset($_POST
 
     $result = $lacicloud_ftp_api -> regenerateAPIKey($id, $dbc);
 
+} elseif (isset($_POST["action"]) and $_POST["action"] == "addwebhostingenv") {
+
+    $result = $lacicloud_webhosting_api->addWebhostingEnv($id, $_POST["sitename"], $lacicloud_webhosting_api->generateMysqlUsername(), $lacicloud_webhosting_api->generateMysqlPassword(), $dbc);
+
+} elseif (isset($_GET["action"]) and $_GET["action"] == "resetmysql") {
+
+    $result = $lacicloud_webhosting_api-> resetWebhostingEnvMysql($id, $lacicloud_webhosting_api->getWebhostingValues($id, $dbc)["sitename"], $lacicloud_webhosting_api->getWebhostingValues($id, $dbc)["mysql_username"], $dbc);
+
+} elseif (isset($_GET["action"]) and $_GET["action"] == "resetperms") {
+
+    $result = $lacicloud_webhosting_api-> resetWebhostingEnvPermissions($id, $lacicloud_webhosting_api->getWebhostingValues($id, $dbc)["sitename"], $dbc);
+    
+    
 } elseif (isset($_GET["action"]) and $_GET["action"] == "logout") {
     $lacicloud_api -> blowUpSession();
     header("Location: /account");
@@ -72,17 +86,22 @@ if(isset($_POST["action"]) and $_POST["action"] == "addftpuser" and isset($_POST
 //if action done (result), update user values, or if the refresh GET parameter is set
 if (@!$_SESSION["user_values_set"] or isset($result) or isset($_GET["refresh"])) {
     $user_values = $lacicloud_ftp_api->getUserValues($id, $dbc);
+    $ftp_users_used_bandwidth = $lacicloud_ftp_api -> getUsedBandwidth($id, $dbc);
     $ftp_users_list = $lacicloud_ftp_api->getFTPUsersList($id, $dbc_ftp);
     $ftp_users_values = $lacicloud_ftp_api->getFTPUsersValues($id, $dbc_ftp);
     $ftp_users_used_space = $lacicloud_ftp_api -> getFTPUsersUsedSpace($id, $dbc);
     $ftp_users_used_space_virtual = $lacicloud_ftp_api -> getFTPUsersVirtuallyUsedSpace($id, $dbc_ftp);
+    $webhosting_values = $lacicloud_webhosting_api->getWebhostingValues($id, $dbc);
 
     $_SESSION["ftp_users_list"] = $ftp_users_list;
     $_SESSION["ftp_users_values"] = $ftp_users_values;
     $_SESSION["ftp_users_used_space"] = $ftp_users_used_space;
+    $_SESSION["ftp_users_used_bandwidth"] = $ftp_users_used_bandwidth;
     $_SESSION["ftp_users_used_space_virtual"] = $ftp_users_used_space_virtual;
+    $_SESSION["webhosting_values"] = $webhosting_values;
 
     $_SESSION["tier"] = $user_values["tier"];
+    $_SESSION["sitename"] = $user_values["sitename"];
     $_SESSION["lastpayment"] = $user_values["lastpayment"];
     $_SESSION["first_time_boolean"] = $user_values["first_time_boolean"];
     $_SESSION["api_key"] = $user_values["api_key"];
@@ -93,6 +112,7 @@ if (@!$_SESSION["user_values_set"] or isset($result) or isset($_GET["refresh"]))
 
 if ($_SESSION["user_values_set"]) {
     $tier = $_SESSION["tier"];
+    $sitename = $_SESSION["sitename"];
     $lastpayment = $_SESSION["lastpayment"];
     $first_time_boolean = $_SESSION["first_time_boolean"];
     $api_key = $_SESSION["api_key"];
@@ -108,6 +128,11 @@ if ($_SESSION["user_values_set"]) {
 
     $ftp_space_user_has = $lacicloud_api -> getTierData($tier)[0] -  $_SESSION["ftp_users_used_space"];
     $ftp_space_user_has_virtual = $lacicloud_api -> getTierData($tier)[0] -  $_SESSION["ftp_users_used_space_virtual"];
+
+    $used_bandwidth = $_SESSION["ftp_users_used_bandwidth"];
+    $total_bandwidth = $lacicloud_api -> getTierData($tier)[5];
+
+    $webhosting_values = $_SESSION["webhosting_values"];
 }
 
 
@@ -157,7 +182,7 @@ if (empty($_GET["id"]) or !in_array($_GET["id"], $lacicloud_api->valid_pages_arr
 
 
 <body>
-<img src="/resources/ui_bg.jpg" style="width:100%;height:100%;position:absolute;top:0;left:0;z-index:-5000;" alt="Background image of the interface page, a famous building on Brussel's Grand Place, in blue/violet colors"> 
+<img src="/resources/ui_bg.jpg" id="ui_background" alt="Background image of the interface page, a famous building on Brussel's Grand Place, in blue/violet colors"> 
 <div id="layout">
 <!-- Menu toggle -->
     <a href="#menu" id="menuLink" class="menu-link">
@@ -173,7 +198,7 @@ if (empty($_GET["id"]) or !in_array($_GET["id"], $lacicloud_api->valid_pages_arr
                 <li class="pure-menu-item"><a rel="canonical" href="/interface?id=2" class="pure-menu-link">Payment Manager</a></li>
                 <li class="pure-menu-item"><a rel="canonical" href="/interface?id=3" class="pure-menu-link">API Manager</a></li>
                 <li class="pure-menu-item"><a rel="canonical" href="/ftp" target="_blank" class="pure-menu-link">Monsta FTP</a></li>
-                <li class="pure-menu-item"><a rel="canonical" href=<?php echo "/files/".$id ?> target="_blank" class="pure-menu-link">My Public Files</a></li>
+                <li class="pure-menu-item"><a rel="canonical" href="/interface?id=4" class="pure-menu-link">Webhosting</a></li>
                 <li class="pure-menu-item"><a rel="canonical" href="https://stats.uptimerobot.com/r8N9QIrq1" class="pure-menu-link">Status Page</a></li>
                 <li class="pure-menu-item"><a rel="canonical" href="/resources/lacicloud_help.pdf" target="_blank" class="pure-menu-link">Help</a></li>
                 <li class="pure-menu-item"><a rel="canonical" href="#" class="pure-menu-link"></a></li>
@@ -213,6 +238,11 @@ if (empty($_GET["id"]) or !in_array($_GET["id"], $lacicloud_api->valid_pages_arr
 
                     <p>FTP Users: <span class="green"><?php echo $limit;?></span></p>
 
+
+                    <?php if ($tier !== 1 and isset($sitename)) {  ?>
+                        <p>Your subdomain: <span class="green"><?php echo $sitename.".lacicloud.net";?></span></p>
+                    <?php } ?>
+                    
                     <br>
                     <br>
 
@@ -250,7 +280,11 @@ if (empty($_GET["id"]) or !in_array($_GET["id"], $lacicloud_api->valid_pages_arr
 
                       <p>Space available: <span class="green"><?php echo $ftp_space_user_has;?>MB</span> Out of <span class="green"><?php echo $ftp_space ?>MB</span></p> </p>
 
-                      <p>Virtual space available: <span class="green"><?php echo $ftp_space_user_has_virtual;?>MB</span> Out of <span class="green"><?php echo $ftp_space ?>MB</span> </p>  <a href="?id=1&refresh=">Refresh Space</a>  </p>
+                      <p>Virtual space available: <span class="green"><?php echo $ftp_space_user_has_virtual;?>MB</span> Out of <span class="green"><?php echo $ftp_space ?>MB</span></p>  
+
+                      <p>Used bandwidth: <span class="green"><?php echo $used_bandwidth;?>MB</span> Out of <span class="green"><?php echo $total_bandwidth; ?>MB</span></p>
+
+                      <p><a href="?id=1&refresh=">Refresh Variables</a> </p>  
                      
                      <div class="panel panel-default users_list">
                      <div class="panel-body">
@@ -407,7 +441,7 @@ if (empty($_GET["id"]) or !in_array($_GET["id"], $lacicloud_api->valid_pages_arr
                        
                         <p>Payment Status: 
                         <?php 
-                        if ((time() - $lastpayment) > $lacicloud_api->unix_time_1_month and $tier != 1) {
+                        if ((time() - $lastpayment) > $lacicloud_api->unix_time_1_year and $tier != 1) {
                             echo "<span class='red'>Renew Plan</span>";
                         } else {
                             echo "<span class='green'>OK</span>";
@@ -458,7 +492,78 @@ if (empty($_GET["id"]) or !in_array($_GET["id"], $lacicloud_api->valid_pages_arr
                 </div>
 
         </section>
-<?php } ?>
+<?php } elseif ($_GET["id"] == "4") { ?>
+        <section id="ui_normal">
+                <div class="panel panel-success">
+
+                <div class="panel-heading">
+
+                <h3 class="panel-title">LaciCloud Control Panel</h3>
+
+                </div>
+
+                    <div class="panel-body"> 
+
+                        <h2>Webhosting</h2>
+
+                        <div class="success"></div>
+                        <div class="warning"></div>
+                        <div class="error"></div>
+                        <div class="info"></div>
+
+                        <?php 
+                        if ($tier !== 1 and isset($sitename)) {
+                            echo "Your subdomain: ".$webhosting_values["sitename"].".lacicloud.net";
+                            echo "<br>";
+                            echo "MySql host: localhost";
+                            echo "<br>";
+                            echo "MySql username: ".$webhosting_values["mysql_username"];
+                            echo "<br>";
+                            echo "MySql password: ".$webhosting_values["mysql_password"];
+                            
+                            echo "<br><br>";
+
+                            echo "<a href='/interface?id=4&action=resetmysql&csrf_token=".$csrf_token."'>Reset MySql password</a>";
+                            echo "<br>";
+                            echo "<a href='/interface?id=4&action=resetperms&csrf_token=".$csrf_token."'>Reset permissions</a>";
+                            echo "<br>";
+                            echo "<a onClick='customDomainFunction();' href='#'>Have a domain?</a>";
+                        } elseif ($tier == 2 or $tier == 3 and !isset($sitename))   {
+                            echo "Thank you for upgrading a tier! Please fill out the form below to get your webhosting environment set-up.";
+                            ?>
+                            <form class="form-horizontal" action="/interface/?id=4" onsubmit='return ValidateSitename(this);' method="POST" accept-charset="UTF-8">
+
+                            <div class="form-group">
+                            <input type="hidden" name="action" value="addwebhostingenv">
+                            <input type="hidden" name="csrf_token" value=<?php  echo $csrf_token ?> >
+                            </div>
+
+                            <div class="form-group">
+                            <label>Sitename:</label>
+                            <input type="text" name="sitename" class="form-control" required placeholder="Required">
+                            </div>
+                          
+                            <input class="btn btn-info" type="submit" name="submit" value="Go!">
+
+                            </form>
+
+                            <?php 
+                        } else {
+                            echo "Please upgrade to tier 2 or 3 to activate webhosting functions. You won't regret it!";
+                        }
+
+                        ?>
+
+
+                        
+
+                    </div>
+
+                </div>
+
+        </section>
+
+<?php }?>
 </div>
 
 <!-- scripts -->

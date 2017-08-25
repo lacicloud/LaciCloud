@@ -151,7 +151,7 @@ filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='.myBackground.jp
       <img src="/securimage_captcha/securimage_show.php?no_cache=" alt="CAPTCHA Image"/>
       <br><br>
       <input required type="text" autocomplete="off" name="captcha_code" size="10" maxlength="6" placeholder="captcha"/>
-      <label>I agree to the <a href="/resources/lacicloud_legal.pdf">Terms and Conditions</a>:</label>
+      <label>I agree to the <a href="/resources/lacicloud_legal.pdf" target="_blank">Terms and Conditions</a>:</label>
       <input required id="terms_and_conditions_checkbox" type="checkbox" name="checkbox" value="check"/>
       <button>create</button>
       <p class="message">Already registered? <a href="#login">Sign In</a></p>
@@ -208,8 +208,15 @@ $('.forgot-form-2').toggle();
 $('.register-form').toggle();
 $('.login-form').toggle();
 
-window.onload = AccountFunc(0);
-window.onhashchange = locationHashChangedAccountEvent;
+window.onload = function() {
+	AccountFunc(0);
+	setTimeout(scrollToMiddle, 500);
+}
+
+window.onhashchange = function() {
+	locationHashChangedAccountEvent();
+	setTimeout(scrollToMiddle, 500);
+}
 
 //IE placeholder 
 $('input, textarea').placeholder();
@@ -223,8 +230,11 @@ if (isset($result)) {
     $message = str_replace("xXxemailxXx",'<a href="'.$link.'" target="_blank">email</a>', $message);
 
     //for confirm
-    $message = str_replace("xXxftp_usernamexXx", $ftp_username, $message);
-    $message = str_replace("xXxftp_passwordxXx", $ftp_password, $message);
+    //$message = str_replace("xXxftp_usernamexXx", $ftp_username, $message);
+    //$message = str_replace("xXxftp_passwordxXx", $ftp_password, $message);
+
+    //for reset
+    $message = str_replace("xXxresetfixxXx",'<a href="/account/#login" target="_blank">log-in</a>', $message);
   
     //bugfix for reset (else the forgot-form-2 would show even on error)
     if (isset($reset_step_1) and $reset_step_1 and $result == "error") {

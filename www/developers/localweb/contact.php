@@ -81,12 +81,13 @@ if (isset($_POST["contact_reason"]) and isset($_POST["subject"]) and isset($_POS
                 <div class="form-field select-wrapper">
                     <select required name="contact_reason">
                         <option selected="true" disabled="disabled">Contact Reason</option>
-                        <option>Technical Support</option>
+                        <option>Technical Support/API</option>
                         <option>Question</option>
                         <option>Sales</option>
                         <option>Feedback</option>
                         <option>Abuse</option>
                         <option>Beta Access</option>
+                        <option>Discounts</option>
                         <option>Other</option>
                     </select>
                 </div>

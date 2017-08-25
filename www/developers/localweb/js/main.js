@@ -8,6 +8,23 @@ function navFunction() {
     }
 }
 
+//detect mobile devices
+function detectMobile() { 
+ if( navigator.userAgent.match(/Android/i)
+ || navigator.userAgent.match(/webOS/i)
+ || navigator.userAgent.match(/iPhone/i)
+ || navigator.userAgent.match(/iPad/i)
+ || navigator.userAgent.match(/iPod/i)
+ || navigator.userAgent.match(/BlackBerry/i)
+ || navigator.userAgent.match(/Windows Phone/i)
+ ){
+    return true;
+  }
+ else {
+    return false;
+  }
+}
+
 function AccountFunc(speed) {
     if (location.hash === "#create") {
           $('.login-form').hide(speed);
@@ -30,6 +47,7 @@ function AccountFunc(speed) {
           $('.forgot-form').hide(speed);
           $('.forgot-form-2').animate({height: "toggle", opacity: "toggle"}, "slow");
     }
+
 }
 
 function locationHashChangedAccountEvent() {
@@ -40,8 +58,33 @@ function locationHashChangedAccountEvent() {
     AccountFunc(750);
 }
 
+function scrollToMiddle() {
+    //after form loads, always scroll to middle, if on desktop
+    if (!detectMobile()) {
+    	var body = document.body,
+    	html = document.documentElement;
+    	var height = Math.max( body.scrollHeight, body.offsetHeight,
+                   html.clientHeight, html.scrollHeight, html.offsetHeight );
+    	$('html, body').animate({
+    	scrollTop: height/2 - window.innerHeight/2 - 10
+    	}, 200);
+   }
+}
+
 function qFTPFunc() {
     $('.qftp-form').animate({height: "toggle", opacity: "toggle"}, "slow");
+}
+
+function resetPermsFunction() {
+    return confirm("By clicking OK, all webhosting files and folders (www, config, logs, tmp), will be reset to their default permissions, owned by your webhosting user, and write allowed to your FTP users, permission 775!");
+}
+
+function resetMysqlFunction() {
+    return confirm("By clicking OK, you will get a new MySql password. All your applications using your current password will stop functioning!")
+}
+
+function customDomainFunction() {
+    alert("Please contact Laci to add a custom domain at laci@lacicloud.net!");
 }
 
 function ValidateLogin(form){
@@ -92,8 +135,6 @@ function ValidateRegister(form){
     var regex_number =  /[0-9]/;
     var regex_letter = /[a-z]/;
 
-   
-
     if (!HowLong(password)) {
         errors.push("Password field empty!");
     } else if (/\s/.test(password)) {
@@ -114,7 +155,6 @@ function ValidateRegister(form){
     } else if (email.indexOf('@') === -1 || email.indexOf('.') === -1 || (/\s/.test(email)) || email.length < 5 || email.length > 320) {
         errors.push("Email is invalid!");
     }
-
     
     if (!HowLong(captcha)) {
         errors.push("Captcha field empty!");
@@ -133,6 +173,29 @@ function ValidateRegister(form){
     return true;
 }
 
+function ValidateSitename(form) {
+    var sitename = form.sitename.value;
+
+    var errors = [];
+
+    var regex_alphanum = /^[a-z0-9]+$/i
+    
+    if (!HowLong(sitename)) {
+         errors.push("Subdomain field empty!");
+    } else if (!regex_alphanum.test(sitename)) {
+         errors.push("Subdomain field must be alphanumeric!");
+    } else if (sitename.length < 4 || sitename.length > 32) {
+        errors.push("Subdomain length must be between 4 to 32 characters!");
+    }
+
+     if (errors.length > 0) {
+        ReportErrors(errors);
+        return false;
+    }
+
+    return true;
+
+}
     
 function ValidateForgotStep1(form) {
     var email = form.reset_email_address.value;
@@ -166,7 +229,7 @@ function ValidateForgotStep2(form){
     var password = form.new_password.value;
     var password_retyped = form.new_password_retyped.value;
     var reset_key = form.reset_key.value;
-
+    var captcha = form.captcha_code.value;
 
     var errors = [];
 

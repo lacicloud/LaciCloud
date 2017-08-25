@@ -77,7 +77,7 @@ $lacicloud_api -> isPageCached();
                 rights by keeping an eye on your data in a sense. Back in 2013, my Dropbox account was suspended
                 due to allegedly uploading pirated software to the site; that's when I thought I had enough.
                 By creating LaciCloud, I created a secure environment for myself and my friends where they could
-                upload files in complete security and privacy to an FTP server. This quickly grew into LaciCloud.
+                upload files in complete security and privacy to an FTP server. This quickly grew into LaciCloud, today a cloud storage and a webhost.
                 <br><strong>LaciCloud is the hard work of multiple people;</strong>
                 <!-- Quick, simple, flexible => IT REALLY ISN'T ROCKET SCIENCE! -->
             </div>
@@ -94,9 +94,9 @@ $lacicloud_api -> isPageCached();
                 <div class="section-heading"><h1>Versatility</h1></div>
                 <div class="section-text pad-lr versatility-text">
                     <ul>
-                        <li>FTP device and programs Compatibility</li>
+                        <li>FTP device and programs compatibility</li>
                         <li>API</li>
-                        <li>Public files feature for website hosting</li>
+                        <li>Per-user subdomains for PHP webhosting</li>
                         <li>Flexible payments</li>
                     </ul>
                     <span class="section-end">.</span>
@@ -186,7 +186,7 @@ $lacicloud_api -> isPageCached();
                         Over the past few months, Fabio has been greatly dedicated to this project. Finding every
                         little bug, content problem, spelling mistake and always had great suggestions for the site.
                         He is also a young aspiring computer scientist like Laci. In addition to these team members,
-                        i feel it is neccesary to mention some amazing people who have helped us on our journey to
+                        I feel it is neccesary to mention some amazing people who have helped us on our journey to
                         create LaciCloud; <br>Click
                         <strong><a style="color:inherit;text-decoration:none;" href="/humans.txt">here</a></strong>
                         to read more about these other members.

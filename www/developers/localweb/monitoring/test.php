@@ -9,6 +9,18 @@ $username = $secrets["dummy_ftp_user"];
 $password = $secrets["dummy_ftp_user_password"];
 $api_key = $secrets["monitoring_app_api_key"];
 
+function url_get_contents ($Url) {
+    if (!function_exists('curl_init')){ 
+        die('CURL is not installed!');
+    }
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $Url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    $output = curl_exec($ch);
+    curl_close($ch);
+    return $output;
+}
+
 function ping($host,$port,$timeout=6)
 {
         $fsock = fsockopen($host, $port, $errno, $errstr, $timeout);
@@ -23,7 +35,7 @@ function ping($host,$port,$timeout=6)
 }
 
 function checkWebsite($url) {
-     $result = file_get_contents($url);
+     $result = url_get_contents($url);
 
      if (strpos($result, "<html>")) {
      	return TRUE;
@@ -124,6 +136,8 @@ function testAPIPart2($url, $api_key, $username) {
 }
 
 echo "IP: ".gethostbyname("lacicloud.net");
+echo "<br>";
+echo "IPV6: ".gethostbyname("lacicloud.net");
 echo "<br>";
 echo "Testing SSH port reachibility...".var_export(ping("lacicloud.net", 8337), true);
 echo "<br>";

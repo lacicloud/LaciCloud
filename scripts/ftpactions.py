@@ -40,7 +40,6 @@ deletequery = "DELETE FROM ftpactions WHERE value=%s" #like this it prevents sql
 logging.info("Script started")
 
 while 1:
-	time.sleep(5)
 	cursor.execute("SELECT * FROM ftpactions")
 
 	#avoid using shell commands because of shell injection
@@ -48,6 +47,7 @@ while 1:
 	for row in cursor.fetchall():
  	   	value = str(row[0])
     		type = str(row[1])
+
     		if int(type) == 0: #type 0 is make symlink to public files on user creation
 			if "../" in value: 
                           logging.info("Refusing to run because ../ detected for type 0. Value is: " + value)
@@ -66,14 +66,17 @@ while 1:
 			except: 
 			   logging.info("Couldn't symlink /var/ftp/users/" + value + "/public_files to /var/ftp/public_files/" + value)
                         cursor.execute(deletequery, (value,))
-    		elif int(type)  == 1: #type 1 is remove leftover .ftpquota file from deleted FTP users directory
+
+		elif int(type)  == 1: #type 1 is remove leftover .ftpquota file from deleted FTP users directory
 				
 			try:
 			  if os.listdir("/var/ftp/users/" + value) != ['.ftpquota']:
 			  	logging.info("Refusing to run because directory not empty for type 1. Value is: " + value)	
-		          	continue
+				cursor.execute(deletequery, (value,))
+				continue
 			except:
-				logging.info("Couldn't list directory contents for type " + type + " and value is " + value)
+				logging.info("Couldn't list directory contents, probably because directory does not exist, for type " + type + " and value is " + value)
+				cursor.execute(deletequery, (value,))
 				continue
 
 			if "../" in value:
@@ -85,9 +88,10 @@ while 1:
 			   logging.info("Removed file " + value + "/.ftpquota")
                         except:
                            logging.info("Couldn't remove file /var/ftp/users/" + value + "/.ftpquota")
+			   continue
                         cursor.execute(deletequery, (value,))
 		else: 
-		   logging.info("Type is neither 0 nor 1, type is " + type + " and value is " + value)
+		   logging.info("Type is not in valid range, type is " + type + " and value is " + value)
 	break
 
 cursor.close()
@@ -111,9 +115,18 @@ cursor.execute("SELECT id FROM users")
 
 for row in cursor.fetchall():
         id = int(row[0])
-        used_space = int(get_size("/var/ftp/users/" + str(id))) / 1024 / 1024
-        cursor.execute(("UPDATE truespacecounter SET used_space=%s WHERE id=%s"), (used_space, id))
-	logging.info("Updated FTP space used for ID " + str(id) + " to " + str(used_space))
+
+	try:
+        	used_space = int(get_size("/var/ftp/users/" + str(id))) / 1024 / 1024
+     	except:	
+		logging.info("An error occured while getting user's total used space for ID " + str(id) + "!")
+		continue
+
+        affected_rows = cursor.execute(("UPDATE truespacecounter SET used_space=%s WHERE id=%s"), (used_space, id))
+	
+	#value changed
+	if affected_rows > 0:
+		logging.info("Updated FTP space used for ID " + str(id) + " to " + str(used_space))
 
 cursor.close()
 db.close()
@@ -130,8 +143,6 @@ cursor.execute("set autocommit = 1")
 
 deletequery = "DELETE FROM ftp_users WHERE user=%s" #like this it prevents sql injection
 
-logging.info("Script started")
-
 cursor.execute("SELECT expiration, user FROM ftp_users")
 
 for row in cursor.fetchall():
@@ -140,7 +151,7 @@ for row in cursor.fetchall():
         if int(time.time()) > int(expiration) and int(expiration) != 0:
                 shutil.rmtree("/var/ftp/users/qftp/" + user, ignore_errors=True)
                 cursor.execute(deletequery, (user,))
-                logging.info("Removed " + user + " with expiration " + expiration)
+                logging.info("Removed QFTP user " + user + " with expiration " + expiration)
 
 cursor.close()
 logging.info("Script stopped")

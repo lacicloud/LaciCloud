@@ -5,6 +5,7 @@ $lacicloud_api = new LaciCloud();
 $lacicloud_errors_api = new Errors();
 $lacicloud_ftp_api = new FTPActions();
 $lacicloud_payments_api = new Payments();
+$lacicloud_webhosting_api = new Webhosting();
 $lacicloud_api_api = new API();
 
 //Simple POST API for LaciCloud
@@ -105,6 +106,37 @@ if(isset($_POST["action"]) and $_POST["action"] == "addftpuser" and isset($_POST
 
 } elseif (isset($_POST["action"]) and $_POST["action"] == "gettierinfo" and isset($_POST["tier"])) {
     echo json_encode($lacicloud_api -> getTierData($_POST["tier"])); //just return array of current LaciCloud tiers
+} elseif (isset($_POST["action"]) and $_POST["action"] == "getusedbandwidth") {
+    
+    $result = $lacicloud_ftp_api->getUsedBandwidth($id, $dbc);
+    
+    if (is_int($result)) {
+        echo json_encode($result);
+    } else {
+        echo $lacicloud_api_api -> returnJSONObject($result, ($lacicloud_errors_api->getSuccessOrErrorFromID($result) == "success") ? true: false );
+    }
+} elseif (isset($_POST["action"]) and $_POST["action"] == "getwebhostingvalues") {
+    $result = $lacicloud_webhosting_api->getWebhostingValues($id, $dbc);
+
+    if (is_array($result)) {
+        echo json_encode($result);
+    } else {
+        echo $lacicloud_api_api -> returnJSONObject($result, ($lacicloud_errors_api->getSuccessOrErrorFromID($result) == "success") ? true: false );
+    }
+} elseif (isset($_POST["action"]) and $_POST["action"] == "resetwebhostingmysql") {
+    $result = $lacicloud_webhosting_api-> resetWebhostingEnvMysql($id, $lacicloud_webhosting_api->getWebhostingValues($id, $dbc)["sitename"], $lacicloud_webhosting_api->getWebhostingValues($id, $dbc)["mysql_username"], $dbc);
+
+    echo $lacicloud_api_api -> returnJSONObject($result, ($lacicloud_errors_api->getSuccessOrErrorFromID($result) == "success") ? true: false );
+
+} elseif (isset($_POST["action"]) and $_POST["action"] == "resetwebhostingperms") {
+     $result = $lacicloud_webhosting_api-> resetWebhostingEnvPermissions($id, $lacicloud_webhosting_api->getWebhostingValues($id, $dbc)["sitename"], $dbc);
+
+     echo $lacicloud_api_api -> returnJSONObject($result, ($lacicloud_errors_api->getSuccessOrErrorFromID($result) == "success") ? true: false );
+} elseif (isset($_POST["action"]) and $_POST["action"] == "addwebhostingenv" and isset($_POST["sitename"])) {
+    $result =  $lacicloud_webhosting_api->addWebhostingEnv($id, $_POST["sitename"], $lacicloud_webhosting_api->generateMysqlUsername(), $lacicloud_webhosting_api->generateMysqlPassword(), $dbc);
+
+    echo $lacicloud_api_api -> returnJSONObject($result, ($lacicloud_errors_api->getSuccessOrErrorFromID($result) == "success") ? true: false );
+
 } else {
     //a very useful function
     $result = $lacicloud_api_api -> getNotEnoughParametersSuppliedErrorID(); 

@@ -31,7 +31,7 @@ if (isset($_POST["captcha_code"]) and isset($_POST["beta_code"])) {
 
 
 <meta name="description" content="qFTP is LaciCloud's special feature that allows you to create anonymous and temporary FTP(s) accounts without creating a LaciCloud account!" />
-<meta name="keywords" content="bitcoin, FTP, FTPS, cloud, cloud-storage, backup, privacy, private, encryption, security, customizable, secure, LaciCloud, anonymous, temporary, qFTP" />
+<meta name="keywords" content="bitcoin, FTP, FTPS, cloud, cloud-storage, backup, privacy, private, encryption, security, customizable, secure, LaciCloud, anonymous, temporary, user, account, qFTP" />
 <meta name="author" content="Laci, Tristan, Fabio">
 <meta name="language" content="english"> 
 

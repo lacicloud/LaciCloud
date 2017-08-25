@@ -70,7 +70,7 @@ $lacicloud_api -> isPageCached();
             <div class="section-icon"><img src="/resources/about-icon.png" alt="An icon of a cloud with a lock on it"/></div>
             <div class="section-heading"><h1>An ftp-based privacy-centric cloud storage solution</h1></div>
             <div class="section-text about-text">
-                LaciCloud is your private FTP(s)-cloud storage with many features, including a flexible Bitcoin payment method,
+                LaciCloud is your private FTP(s)-cloud storage and webhost with many features, including a flexible Bitcoin payment method,
                 user-data encryption, first-class security, compatibility with virtually all computing devices around the world
                 and extreme versitality with an API and an HTTPS files feature. Read below.
             </div>

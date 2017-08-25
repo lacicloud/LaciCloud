@@ -25,20 +25,21 @@ ln -sf /var/ftp/config/php/php.ini /etc/php/7.0/fpm/php.ini
 ln -sf /var/ftp/config/php/php.ini /etc/php/7.0/cli/php.ini
 ln -sf /var/ftp/config/php/php.ini /etc/php/7.0/cgi/php.ini
 ln -sf /var/ftp/config/php/php-fpm.conf /etc/php/7.0/fpm/php-fpm.conf
-ln -sf /var/ftp/config/php/pool.d/www.conf /etc/php/7.0/fpm/pool.d/www.conf
+ln -sf /var/ftp/config/php/pool.d /etc/php/7.0/fpm/pool.d
 
 #nginx config
 ln -sf /var/ftp/config/nginx/nginx.conf /etc/nginx/nginx.conf
 ln -sf /var/ftp/config/nginx/mime.types /etc/nginx/mime.types
 ln -sf /var/ftp/config/nginx/.webcam /etc/nginx/.webcam
 ln -sf /var/ftp/config/nginx/.localweb_htpasswd /etc/nginx/.localweb_htpasswd
-ln -sf /var/ftp/config/nginx/sites-enabled/* /etc/nginx/sites-enabled/
+ln -sf /var/ftp/config/nginx/sites-enabled /etc/nginx/sites-enabled
 
 #mysql config
 ln -sf /var/ftp/config/mysql/my.cnf /etc/mysql/my.cnf
 
-#monitorix looks nice so we have that as well
-ln -sf /var/ftp/config/monitorix/monitorix.conf /etc/monitorix/monitorix.conf
+#monitorix looks nice so we have that as well; restart to make sure it processes full events as well
+ln -sf  /var/ftp/config/monitorix/monitorix.conf /etc/monitorix/monitorix.conf
+ln -sf  /var/ftp/config/monitorix/conf.d/00-debian.conf /etc/monitorix/conf.d/00-debian.conf
 
 #overwrite the shutdown script with whatever is in the config directory
 cp /var/ftp/config/misc/powerbtn.sh /etc/acpi/powerbtn.sh
@@ -47,8 +48,8 @@ cp /var/ftp/config/misc/rc.local /etc/rc.local
 #and crontab
 crontab /var/ftp/config/misc/crontab
 
-#maltrail also looks nce
-ln -sf /var/ftp/config/maltrail/maltrail.conf /root/old/traffic/maltrail/maltrail.conf
+#maltrail also looks nice
+ln -sf /var/ftp/config/maltrail/maltrail.conf /root/maltrail/maltrail.conf
 
 #denyhosts is a much better alternative to fail2ban in my opinion
 ln -sf /var/ftp/config/misc/hosts.deny /etc/hosts.deny
@@ -69,9 +70,9 @@ cp /var/ftp/config/smartd/smartd.conf /etc/smartd.conf
 #be quiet please
 cp /var/ftp/config/fancontrol/fancontrol /etc/fancontrol
 
-#overwrite the bootstrap script with whatever is in the scripts directory
-cp  /var/ftp/scripts/bootstrap_stage_0.sh /etc/scripts
-cp  /var/ftp/scripts/bootstrap_stage_1.sh /etc/scripts
+#copy scripts
+cp  /var/ftp/scripts/* /etc/scripts
+chmod +x /etc/scripts/*
 
 #overwrite sources with whatever is in the config directory
 cp /var/ftp/config/misc/sources.list /etc/apt/sources.list
@@ -131,9 +132,9 @@ sudo service php7.0-fpm start
 sudo service cron start
 
 
-#bug fixing at it's best, monitorix has trouble starting
-sudo service monitorix start
-sudo service monitorix start
+#start monitorix, safe and sure
+sudo service monitorix stop
+sudo service monitorix stop
 sudo service monitorix restart
 
 #no need for these
@@ -166,9 +167,11 @@ ulimit -n 4096
 #pureftpd; removed -l puredb:/var/ftp/users/accounts.pdb 
 #pureftpd; removed -X, added -D
 #pureftpd; removed -4 
+#pureftpd; added -o for pure-uploadscript
 
-#start  pure-ftpd
-/usr/local/sbin/pure-ftpd -f ftp -l mysql:/var/ftp/config/pure-ftpd/mysql.conf -t 8192:384 -0 -C 50 -c 10000 -E -A -H -D -Z -S 21 -p 12000:13000 -u 1 -j -P lacicloud.net -F /var/ftp/config/pure-ftpd/fortune_cookie -k 98 -b --fscharset=UTF-8 --clientcharset=UTF-8 -Y 1 -y 50:1 &
+#start pure-ftpd
+/usr/local/sbin/pure-ftpd -f ftp -l mysql:/var/ftp/config/pure-ftpd/mysql.conf -0 -C 50 -c 10000 -E -A -H -D -Z -S 21 -p 12000:13000 -u 1 -j -P lacicloud.net -F /var/ftp/config/pure-ftpd/fortune_cookie -k 98 -b --fscharset=UTF-8 --clientcharset=UTF-8 -Y 1 -y 50:1 -o &
+/usr/local/sbin/pure-uploadscript -B -r /etc/scripts/bandwidthcounter.sh
 
 #for some reason MySQL only starts if we put sleep 5 before, and sleep 3 after
 sleep 5

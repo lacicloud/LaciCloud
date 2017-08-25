@@ -19,7 +19,7 @@ $id = $_SESSION["id"] ?? null;
 
 //another nifty (just standard) PHP feature
 $tier = isset($id) ? $lacicloud_ftp_api -> getUserValues($id, $dbc)["tier"] : null;
-
+$lastpayment = isset($id) ? $lacicloud_ftp_api -> getUserValues($id, $dbc)["lastpayment"] : null;
 
 if (!isset($tier) or !isset($id) and !isset($result)) {
     $result = $lacicloud_payments_api->getNotLoggedInErrorID();
@@ -66,54 +66,7 @@ if (!isset($tier) and !isset($id) and isset($_GET["action"])) {
     <!--styles-->
     <link href="/css/style.css" rel="stylesheet">
 </head>
-<?php 
 
- if (isset($_GET["action"]) and isset($_GET["tier"]) and !isset($result))  {
-
-    $tier = $_GET["tier"][0];
-
-    echo "<body style='text-align: center;'>";
-
-    $result = $lacicloud_payments_api -> payWithGoUrl($tier, $id, $dbc, $dbc_ftp); 
-
-    echo '<div class="success"></div>
-          <div class="error"></div>
-          <div class="warning"></div>
-          <div class="info"></div>';
-
-    //note to user saying that payment is possible via shapeshifter.io as well
-    echo "<p>Want to pay using other cryptocurrency not listed here? Try <a target='_blank' href='https://shapeshift.io/'>shapeshift.io</a>! Supports Ethereum, Ripple and Zcash as well!</p>";
-
-    echo "<script>";
-
-    echo 'var success = document.getElementsByClassName("success")[0];
-          var error = document.getElementsByClassName("error")[0];
-          var info = document.getElementsByClassName("info")[0];
-          var warning = document.getElementsByClassName("warning")[0];
-';
-
-    if (isset($result)) {
-        $message = $lacicloud_errors_api -> getErrorMsgFromID($result);
-        $result =  $lacicloud_errors_api -> getSuccessOrErrorFromID($result);
-
-        //if payment is successful, allow user to return to the shop page
-        $message = str_replace("xXxherexXx",'<a href="/shop">here</a>',$message);
-        
-        echo "".$result.".innerHTML='".$message."';";
-        echo "\n";
-        echo "".$result.".style.display = 'block';";
-
-    }
-
-
-    echo "</script>";
-
-    echo "</body></html>";
-    //don't display the rest of the page
-    die(0);
-}
-
-?>
 <body class="body-shop">
     <!--start - main menu-->
     <nav>
@@ -147,7 +100,7 @@ if (!isset($tier) and !isset($id) and isset($_GET["action"])) {
             <div class="section-text about-text">
                 We think it's always better to have something that suits you and just you.
                 That's why we bring you a range of choice. Whoever you are, whatever your needs are, we have something for you!
-                If you don't feel that the plans we offer suit you, contact us and we'll try to tailor something to you. See below for options!
+                If you don't feel that the plans we offer suit you, contact us and we'll try to tailor something to you. All our packages are DMCA-free, see below for options!
             </div>
 
             <div style="width: 500px; margin:0 auto; padding-bottom: 10%">
@@ -172,48 +125,115 @@ if (!isset($tier) and !isset($id) and isset($_GET["action"])) {
                     <span class="shop-end">.</span>
                     <div class="shop-description">
                         <ul>
-                            <li>25 GB of storage</li>
-                            <li>25 FTP users</li>
+                            <li>5 GB of storage</li>
+                            <li>10 FTP users</li>
                             <li>Free technical support</li>
-                            <li>Limited bandwidth (16MBit up, 2MBit down)</li>
-                            <li>Host static websites</li>
+                            <li>Limited speed (8MBit up, 1MBit down)</li>
+			                <li>Limited bandwidth (10GB/Month FTP)</li>
+                            <li>No subdomain or webhosting</li>
                         </ul>
                     </div>
-                    <div class="shop-page-button"><a href="/shop/?action=buy&tier=1" <?php if (isset($id) and $tier == "1") { echo 'class="disabled"'; } ?> ><span> <?php if (isset($id) and $tier == "1") { echo "Current Tier"; } elseif (isset($id)) { echo "Select Tier 1 >&nbsp;"; } else { echo "Sign up now! >&nbsp;"; } ?></span></a></div>
+                 
+
+                    <div class="shop-page-button"><a href="/pay/?action=buy&tier=1" <?php if (isset($id)) { echo 'class="disabled"'; } ?> ><span> 
+
+                    <?php
+
+
+                    if (isset($id)) { 
+                        if ($tier == "1") {
+                            echo "Current Tier";
+                        } else {
+                            echo "Unavailable";
+                        }
+                    } else { 
+                        echo "Sign up now! >&nbsp;"; 
+                    } 
+
+                    ?>
+
+
+                     </span></a></div>
                 </div>
             </div>
             <div class="shop-row">
                 <div class="shop-user">
-                    <div class="shop-name">10€/Month - For regulars</div>
+                    <div class="shop-name">15€/Year - For regulars</div>
                     <span class="shop-end">.</span>
                     <div class="shop-description">
                         <ul>
-                            <li>250 GB of storage</li>
-                            <li>125 FTP users</li>
+                            <li>125 GB of storage</li>
+                            <li>50 FTP users</li>
                             <li>Free technical support</li>
-                            <li>Bit limited bandwidth (32MBit up, 4MBit down)</li>
-                            <li>Host static websites</li>
+                            <li>Bit limited speed (16MBit up, 2MBit down)</li>
+                            <li>Bit limited bandwidth (1TB/Month FTP and website)</li>
+                            <li>Free subdomain, PHP/MySQL webhosting</li>
                         </ul>
                     </div>
-                     <div class="shop-page-button"><a href="/shop/?action=buy&tier=2" <?php if (isset($id) and $tier == "2") { echo 'class="disabled"'; } ?>  > <span><?php if ($tier == "2") { echo "Current Tier"; } else { echo "Select Tier 2 >&nbsp;"; } ?></span></a></div>
+                     <div class="shop-page-button"><a href="/pay/?action=buy&tier=2" <?php if (isset($id) and $tier == "2" and (time() - $lastpayment) < $lacicloud_api->unix_time_1_year or isset($id) and $tier == "3") { echo 'class="disabled"'; } ?>  > <span>
+
+
+                     <?php 
+
+                    if (isset($id)) {
+                        if ($tier == "2"  and (time() - $lastpayment) > $lacicloud_api->unix_time_1_year) {
+                            echo "Renew Tier 2 >&nbsp;";
+                        } elseif ($tier == "2") {
+                            echo "Current Tier";
+                        } elseif ($tier == "1") {
+                           echo "Select Tier 2 >&nbsp;";
+                        } else {
+                            echo "Unavailable";
+                        }
+                    } else {
+                        echo "Select Tier 2 >&nbsp;";
+                    }
+
+                    ?>
+                         
+
+                     </span></a></div>
+                
+
                 </div>
                 <div class="shop-image"><img style="height:100%; width:100%" src="/resources/lacicloud_2_cats.jpg" alt="A picture of two cute cats"></div>
             </div>
             <div class="shop-row shop-row-3">
                 <div class="shop-image"><img style="height:100%; width:100%" src="/resources/lacicloud_3_cats.jpg" alt="A picture of three cute cats"></div>
                 <div class="shop-user shop-user-3">
-                    <div class="shop-name">20€/Month - For experts</div>
+                    <div class="shop-name">25€/Year - For experts</div>
                     <span class="shop-end">.</span>
                     <div class="shop-description">
                         <ul>
-                            <li>525 GB of storage</li>
-                            <li>250 FTP users</li>
+                            <li>250 GB of storage</li>
+                            <li>125 FTP users</li>
                             <li>Free technical support</li>
-                            <li>Just a lil' bit limited bandwidth (64MBit up, 8MBit down)</li>
-                            <li>Host static websites</li>
+                            <li>Just a lil' bit limited speed (32MBit up, 4MBit down)</li>
+                            <li>Just a lil' bit limited bandwidth (2TB/Month FTP and website)</li>
+			                <li>Free subdomain, PHP/MySQL webhosting</li>
                         </ul>
                     </div>
-                    <div class="shop-page-button"><a href="/shop/?action=buy&tier=3" <?php if (isset($id) and $tier == "3") { echo 'class="disabled"'; } ?>  > <span><?php if ($tier == "3") { echo "Current Tier"; } else { echo "Select Tier 3 >&nbsp;"; } ?></span></a></div>
+                    <div class="shop-page-button"><a href="/pay/?action=buy&tier=3" <?php if (isset($id) and $tier == "3" and (time() - $lastpayment) < $lacicloud_api->unix_time_1_year) { echo 'class="disabled"'; } ?>  > <span>
+
+
+                    <?php 
+
+                    if (isset($id)) {
+                        if ($tier == "3" and  (time() - $lastpayment) > $lacicloud_api->unix_time_1_year) {
+                            echo "Renew Tier 3 >&nbsp;";
+                        } elseif ($tier == "1" or $tier == "2") {
+                            echo "Select Tier 3 >&nbsp;";
+                        } else {
+                            echo "Current Tier";
+                        }
+                    } else {
+                        echo "Select Tier 3 >&nbsp;";
+                    }   
+
+                    ?>
+                        
+
+                    </span></a></div>
                 </div>
             </div>
             <div class="shop-row shop-row-4">   
@@ -222,11 +242,11 @@ if (!isset($tier) and !isset($id) and isset($_GET["action"])) {
                     <span class="shop-end">.</span>
                     <div class="shop-description">
                         <ul>
-                            <li>Up to 1Tb+ of storage</li>
+                            <li>Up to 1TB+ of storage</li>
                             <li>Up to 1000+ FTP users</li>
                             <li>Free technical support</li>
-                            <li>Unlimited bandwidth</li>
-                            <li>Host static/dynamic websites</li>
+                            <li>Unlimited speed/bandwidth</li>
+                            <li>Free subdomain, PHP/MySQL webhosting</li>
                         </ul>
                     </div>
                      <div class="shop-page-button"><a href="/contact"><span>Contact Us >&nbsp;</span></a></div>
