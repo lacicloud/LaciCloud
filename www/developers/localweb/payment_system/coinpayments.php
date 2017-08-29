@@ -28,23 +28,10 @@ if($CP->listen($_POST, $_SERVER))
 	$currency = $_POST["currency1"];
 	
 	$custom = $_POST["custom"];
-
-	if (empty($custom)) {
-		$lacicloud_errors_api -> msgLogger("SEVERE", "Coinpayments IPN error, custom is not set!", 53);
-		die(1);
-	}
-
 	$custom_decrypted =  $lacicloud_encryption_api->decryptString($custom, $lacicloud_api->grabSecret("payments_encryption_secret"));
-
-	//verify if decryption succeded
-	if (!$custom_decrypted) {
-		$lacicloud_errors_api -> msgLogger("SEVERE", "Coinpayments IPN error, encryption mismatch, custom is false!", 53);
-		die(1);
-	}
-
 	$custom_parts = explode(":", $custom_decrypted);
 
-	//simply check if element 5 is a valid email, thus verify if decryption succeeded (again)
+	//simply check if element 5 is a valid email, thus verify if decryption succeeded
 	if (!strpos($custom_parts[5], "@") or empty($custom_parts)) {
 		$lacicloud_errors_api -> msgLogger("SEVERE", "Coinpayments IPN error, encryption mismatch, custom_parts: ".print_r($custom_parts, true), 53);
 		die(1);

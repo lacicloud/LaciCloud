@@ -1,6 +1,6 @@
 LaciCloud Warrant canary - what is this? - https://www.canarywatch.org/
 
-2017/04/14 13:50PM
+2017/08/29 12:12PM
 
 As of the date below, I have never received any:
 
@@ -17,4 +17,4 @@ As of the date below, I have never received any:
 Nor have I received, nor am I aware of, occurences of any of the above,
 with respect to any and all machines I operate, maintain, and/or develop.
 
-This statement will continue to be updated weekly.
+This statement will continue to be updated monthly.

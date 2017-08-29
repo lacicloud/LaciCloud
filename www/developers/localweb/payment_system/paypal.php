@@ -1,5 +1,4 @@
 <?php 
-
 require('../../functions.php');
 
 $lacicloud_api = new LaciCloud();
@@ -38,7 +37,7 @@ if ($verified) {
     //upgrade tier
     $lacicloud_api->upgradeToTier($tier, $custom, $id, $dbc, $dbc_ftp);
 
-    //send email, passes custom_parts array with: tier, id, email
+    //send email, passes custom_parts array with: tier, id, email, passes encrypted custom as orderID
     $lacicloud_payments_api->sendPaymentEmail($amount, $custom_parts, $custom, $paymentID);
     
 }

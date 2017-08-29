@@ -154,7 +154,7 @@ if (isset($_GET["action"]) and $_GET["action"] == "buy" and isset($_GET["tier"])
 			$result = $lacicloud_payments_api->getChangeDisallowedCode();
 		} else {
 	?>
-	<form <?php echo 'action="/pay/?action=buy&tier='.$tier.'"' ?> method="POST">
+	<form <?php echo 'action="/pay/?action=buy&tier='.$tier.'&custom='.$lacicloud_encryption_api->encryptString($tier.':'.$id.':EUR:'.$price.":stripe:".$email, $lacicloud_api->grabSecret("payments_encryption_secret")).'"' ?> method="POST">
 	  <script
 	    src="https://checkout.stripe.com/checkout.js" class="stripe-button"
 	    data-key=<?php echo '"'.$lacicloud_api->grabSecret("stripe_publishable_key").'"' ?>
@@ -170,7 +170,7 @@ if (isset($_GET["action"]) and $_GET["action"] == "buy" and isset($_GET["tier"])
 	<?php } ?>
 
 	<?php 
-} elseif (isset($_POST['stripeToken'])) {
+} elseif (isset($_POST['stripeToken']) and isset($_GET["custom"])) {
 	$token = $_POST["stripeToken"];
 	$price_stripe = $price * 100;
 
@@ -188,17 +188,27 @@ if (isset($_GET["action"]) and $_GET["action"] == "buy" and isset($_GET["tier"])
 	$paymentID = $charge["balance_transaction"];
 
 	if ($charge["status"] == "succeeded" and $charge->paid == true and $lacicloud_errors_api -> getSuccessOrErrorFromID($lacicloud_api -> canChangeToTier($tier, $id, $dbc, $dbc_ftp)) == "success") {
-		 $custom = $lacicloud_encryption_api->encryptString($tier.':'.$id.':EUR:'.$price.":stripe:".$email, $lacicloud_api->grabSecret("payments_encryption_secret"));
+		 $custom = $_GET["custom"];
 		 $custom_decrypted =  $lacicloud_encryption_api->decryptString($custom, $lacicloud_api->grabSecret("payments_encryption_secret"));
 		 $custom_parts = explode(":", $custom_decrypted);
 
-		 //upgrade tier
-		 $lacicloud_api->upgradeToTier($tier, $custom, $id, $dbc, $dbc_ftp);
+		 $tampering = false;
+		 if (!strpos($custom_parts[5], "@") or empty($custom_parts)) {
+			$lacicloud_errors_api -> msgLogger("SEVERE", "Stripe payment error, encryption mismatch, custom_parts: ".print_r($custom_parts, true), 53);
+			$tampering = true;
+		}
 
-		 //send email
-		 $lacicloud_payments_api->sendPaymentEmail($price, $custom_parts, $custom, $paymentID);
+		 if (!$tampering) {
+		 	//upgrade tier
+		 	$lacicloud_api->upgradeToTier($tier, $custom, $id, $dbc, $dbc_ftp);
 
-		 $result = $lacicloud_payments_api->getSuccessCode();
+		 	//send email
+		 	$lacicloud_payments_api->sendPaymentEmail($price, $custom_parts, $custom, $paymentID);
+
+		 	$result = $lacicloud_payments_api->getSuccessCode();
+		 } else {
+		 	$result = $lacicloud_payments_api->getCancelCode();
+		 }
 
 	} else {
 		 $result = $lacicloud_payments_api->getCancelCode();

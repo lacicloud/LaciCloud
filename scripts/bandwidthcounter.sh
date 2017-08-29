@@ -12,10 +12,10 @@ password=`cfget -C /var/ftp/www/developers/secrets.ini secrets/mysql_root_passwo
 
 realID=$(/usr/bin/mysql pureftpd -u $username -p$password -se "SELECT realID FROM ftp_users WHERE user='$ftp_username'")
 
-current_used=$(/usr/bin/mysql laci_corporations_users -u $username -p$password -se "SELECT used_bandwidth FROM truebandwidthcounter WHERE id='$realID'")
+current_used=$(/usr/bin/mysql lacicloud -u $username -p$password -se "SELECT used_bandwidth FROM truebandwidthcounter WHERE id='$realID'")
 
 used_bandwidth=`python -c "print $current_used + $size_in_mb"`
 
-/usr/bin/mysql -u "$username" --password="$password" -e "USE laci_corporations_users; UPDATE truebandwidthcounter SET used_bandwidth='$used_bandwidth' WHERE id='$realID'"
+/usr/bin/mysql -u "$username" --password="$password" -e "USE lacicloud; UPDATE truebandwidthcounter SET used_bandwidth='$used_bandwidth' WHERE id='$realID'"
 
 exit

@@ -24,13 +24,16 @@ config.read('/var/ftp/www/developers/secrets.ini')
 
 username = config.get('secrets', 'ftpactions_user')
 password = config.get('secrets', 'ftpactions_password')
+db_host = config.get('secrets', 'db_host')
+db_name = config.get('secrets', 'db_name')
+
 
 #--- original ftpactions.py ---#
 
-db = MySQLdb.connect(host="localhost",    
+db = MySQLdb.connect(host=db_host,    
                      user=username,         
                      passwd=password,  
-                     db="laci_corporations_users")        
+                     db=db_name)        
 
 cursor = db.cursor()
 cursor.execute("set autocommit = 1")
@@ -133,10 +136,13 @@ db.close()
 
 #--- qftp.py ---#
 
-db = MySQLdb.connect(host="localhost",
+db_host_ftp = config.get('secrets', 'db_host_ftp')
+db_name_ftp = config.get('secrets', 'db_name_ftp')
+
+db = MySQLdb.connect(host=db_host_ftp,
                      user=username,
                      passwd=password,
-                     db="pureftpd")
+                     db=db_name_ftp)
 
 cursor = db.cursor()
 cursor.execute("set autocommit = 1")
