@@ -44,6 +44,9 @@ php_admin_value[memory_limit] = 256M
 php_admin_value[max_execution_time] = 30
 php_admin_value[max_input_time] = 30
 php_admin_value[session.save_path] = '/var/ftp/public_files/$id/tmp'
+php_admin_value[file_uploads] = On
+php_admin_value[upload_max_filesize] = 4096M
+php_admin_value[post_max_size] = 4096M
 php_admin_value[upload_tmp_dir] = '/var/ftp/public_files/$id/tmp'
 catch_workers_output = yes 
 php_admin_value[error_log] = /var/ftp/public_files/$id/logs/php.txt 
@@ -93,6 +96,8 @@ echo "server {
         ssl_trusted_certificate /var/ftp/config/letsencrypt/live/lacicloud.net/chain.pem;
         resolver 8.8.8.8 8.8.4.4 valid=300s;
         resolver_timeout 5s;
+		
+		proxy_temp_path /var/ftp/users/$id/public_files/tmp 1 2 3;
 
         location ~ \.php$ {
         	try_files \$uri =404;
