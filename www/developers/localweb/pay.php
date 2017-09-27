@@ -96,6 +96,34 @@ if (isset($_GET["action"]) and $_GET["action"] == "buy" and isset($_GET["tier"])
 		echo $CP->createForm();
 	}
 
+} elseif (isset($_GET["action"]) and $_GET["action"] == "buy" and isset($_GET["tier"]) and in_array((int)$_GET["tier"], $valid_tiers) and isset($_GET["type"]) and $_GET["type"] == "iota" and !isset($_GET["result"])) {
+	if ($lacicloud_errors_api -> getSuccessOrErrorFromID($lacicloud_api -> canChangeToTier($tier, $id, $dbc, $dbc_ftp)) !== "success") {
+		$result = $lacicloud_payments_api->getChangeDisallowedCode();
+	} else {
+		$request = array(
+			"api_key" => $lacicloud_api->grabSecret("payiota_api_key"),
+			"price" => $price,
+			"custom" => $lacicloud_encryption_api->encryptString($tier.':'.$id.':EUR:'.$price.":iota:".$email, $lacicloud_api->grabSecret("payments_encryption_secret")),
+			"action" => "new"
+			);
+
+		$curl = curl_init();
+		curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+		
+		$request = http_build_query($request);
+
+		curl_setopt($curl,CURLOPT_POST, 1);
+		curl_setopt($curl,CURLOPT_POSTFIELDS, $request);
+
+		curl_setopt($curl, CURLOPT_URL, 'https://payiota.me/api.php');
+		$response = curl_exec($curl);
+
+		$response = json_decode($response, true);
+		echo "<p style>Please send <strong>".$response[1]."</strong> IOTA's to IOTA address <strong>".$response[0]."</strong> and wait.</p>";
+		echo "<p>After you do, your transaction will be automatically processed and your tier upgraded!</p>";
+	}
+
+
 } elseif (isset($_GET["action"]) and $_GET["action"] == "buy" and isset($_GET["tier"]) and in_array((int)$_GET["tier"], $valid_tiers) and isset($_GET["type"]) and $_GET["type"] == "paypal" and !isset($_GET["result"])) {
 
 	if ($lacicloud_errors_api -> getSuccessOrErrorFromID($lacicloud_api -> canChangeToTier($tier, $id, $dbc, $dbc_ftp)) !== "success") {
@@ -217,6 +245,8 @@ if (isset($_GET["action"]) and $_GET["action"] == "buy" and isset($_GET["tier"])
 } elseif (!isset($_GET["type"])) {
 	if (isset($_GET["action"]) and isset($_GET["tier"])) {
 		echo "<a href='/pay/?action=".$_GET["action"]."&tier=".$_GET["tier"]."&type=crypto'>Pay using Bitcoin (+70 Altcoins)<a/>";
+		echo "<br><br>";
+		echo "<a href='/pay/?action=".$_GET["action"]."&tier=".$_GET["tier"]."&type=iota'>Pay using PayIOTA<a/>";
 		echo "<br><br>";
 		echo "<a href='/pay/?action=".$_GET["action"]."&tier=".$_GET["tier"]."&type=paypal'>Pay using Paypal</a>";
 		echo "<br><br>";
