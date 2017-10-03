@@ -18,5 +18,6 @@
 	service smartd restart
 	service apcupsd restart
 	service cron restart
+	service smartd restart
     endscript
 }

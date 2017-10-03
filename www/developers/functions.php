@@ -1775,7 +1775,7 @@ class Errors extends LaciCloud {
   		 }
   		 
 
-  		 @$message = "\n".date('l jS \of F Y h:i:s A').':'." Severity: ".$severity." Message: ".$msg." Error ID: ".$id." File: ".$caller['file']." Line: ".$caller['line']." User ID: ".$_SESSION["id"]." IP: ".$_SERVER["REMOTE_ADDR"]." UA: ".$_SERVER['HTTP_USER_AGENT']." Referer: ".$_SERVER["HTTP_REFERER"]." POST: ".$POST." GET: ".$GET." SERVER: ".$SERVER."\n\n";
+  		 @$message = "\n".date('l jS \of F Y h:i:s A').':'." Severity: ".$severity." Message: ".$msg." Error ID: ".$id." File: ".$caller['file']." Line: ".$caller['line']." User ID: ".$_SESSION["id"]." IP: "."0.0.0.0"." UA: ".$_SERVER['HTTP_USER_AGENT']." Referer: ".$_SERVER["HTTP_REFERER"]." POST: ".$POST." GET: ".$GET." SERVER: ".$SERVER."\n\n";
 
 		 error_log($message, 3, $lacicloud_api->document_root."/logs/website_custom.txt");
 		 
