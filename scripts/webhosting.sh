@@ -97,7 +97,10 @@ echo "server {
         resolver 8.8.8.8 8.8.4.4 valid=300s;
         resolver_timeout 5s;
 		
-		proxy_temp_path /var/ftp/users/$id/public_files/tmp 1 2 3;
+	proxy_temp_path /var/ftp/users/$id/public_files/tmp 1 2 3;
+
+	access_log /var/ftp/users/$id/public_files/logs/nginx_access.txt;
+	error_log /var/ftp/users/$id/public_files/logs/nginx.txt notice;
 
         location ~ \.php$ {
         	try_files \$uri =404;
