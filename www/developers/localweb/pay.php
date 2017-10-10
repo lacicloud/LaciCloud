@@ -103,6 +103,7 @@ if (isset($_GET["action"]) and $_GET["action"] == "buy" and isset($_GET["tier"])
 		$request = array(
 			"api_key" => $lacicloud_api->grabSecret("payiota_api_key"),
 			"price" => $price,
+			"currency" => "EUR",
 			"custom" => $lacicloud_encryption_api->encryptString($tier.':'.$id.':EUR:'.$price.":iota:".$email, $lacicloud_api->grabSecret("payments_encryption_secret")),
 			"action" => "new"
 			);
