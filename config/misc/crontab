@@ -22,8 +22,9 @@
 # m h  dom mon dow   command
 
 */5 * * * * /etc/scripts/basic_checks.sh
+0 0 * * 0 /etc/scripts/usage_checks.sh
 */5 * * * * /etc/scripts/pureftpd_anonymize.sh
-*/5 * * * * /usr/bin/php -f /var/ftp/users/1/public_files/www/payiota/automation.php
+*/30 * * * * /usr/bin/php -f /var/ftp/users/1/public_files/www/payiota/automation.php
 0 0 * * * /usr/bin/php -f /etc/scripts/clear_unconfirmed.php
 1 0 * * * /etc/scripts/backup.sh
 45 0 * * * logrotate -f /var/ftp/config/logrotate/custom
