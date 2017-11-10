@@ -55,12 +55,18 @@
 #allow webcam 
 -A INPUT -p tcp --dport 8342 -j ACCEPT
 
-#Allow FTP
+#Allow FTP and FTPS
 -A INPUT  -p tcp -m tcp --dport 21 -m conntrack --ctstate ESTABLISHED,NEW -j ACCEPT -m comment --comment "Allow ftp connections on port 21"
 -A OUTPUT -p tcp -m tcp --dport 21 -m conntrack --ctstate NEW,ESTABLISHED -j ACCEPT -m comment --comment "Allow ftp connections on port 21"
 
+-A INPUT  -p tcp -m tcp --dport 990 -m conntrack --ctstate ESTABLISHED,NEW -j ACCEPT -m comment --comment "Allow ftps connections on port 990"
+-A OUTPUT -p tcp -m tcp --dport 990 -m conntrack --ctstate NEW,ESTABLISHED -j ACCEPT -m comment --comment "Allow ftps connections on port 990"
+
 -A INPUT  -p tcp -m tcp --sport 12000: --dport 13000: -m conntrack --ctstate ESTABLISHED -j ACCEPT -m comment --comment "Allow passive inbound connections"
 -A OUTPUT -p tcp -m tcp --sport 12000: --dport 13000: -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT -m comment --comment "Allow passive inbound connections"
+
+-A INPUT -p tcp --dport 21 -j ACCEPT
+-A INPUT -p tcp --dport 990 -j ACCEPT
 
 -I INPUT -p tcp --destination-port 12000:13000 -j ACCEPT
 

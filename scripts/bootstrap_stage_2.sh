@@ -18,21 +18,21 @@ swapon -a
 
 #first SSL certs for pure-ftpd
 ln -sf /var/ftp/config/letsencrypt/live/lacicloud.net/pure-ftpd.pem /etc/ssl/private/pure-ftpd.pem
-ln -sf /var/ftp/config/letsencrypt/live/lacicloud.net/dhparams.pem /etc/ssl/private/pure-ftpd-dhparams.pem
+ln -sf /var/ftp/config/letsencrypt/live/lacicloud.net/dhparam.pem /etc/ssl/private/pure-ftpd-dhparams.pem
 
 #PHP config
 ln -sf /var/ftp/config/php/php.ini /etc/php/7.0/fpm/php.ini
 ln -sf /var/ftp/config/php/php.ini /etc/php/7.0/cli/php.ini
 ln -sf /var/ftp/config/php/php.ini /etc/php/7.0/cgi/php.ini
 ln -sf /var/ftp/config/php/php-fpm.conf /etc/php/7.0/fpm/php-fpm.conf
-ln -sf /var/ftp/config/php/pool.d /etc/php/7.0/fpm/pool.d
+ln -sn /var/ftp/config/php/pool.d /etc/php/7.0/fpm/pool.d
 
 #nginx config
 ln -sf /var/ftp/config/nginx/nginx.conf /etc/nginx/nginx.conf
 ln -sf /var/ftp/config/nginx/mime.types /etc/nginx/mime.types
 ln -sf /var/ftp/config/nginx/.webcam /etc/nginx/.webcam
 ln -sf /var/ftp/config/nginx/.localweb_htpasswd /etc/nginx/.localweb_htpasswd
-ln -sf /var/ftp/config/nginx/sites-enabled /etc/nginx/sites-enabled
+ln -sn /var/ftp/config/nginx/sites-enabled /etc/nginx/sites-enabled
 
 #mysql config
 ln -sf /var/ftp/config/mysql/my.cnf /etc/mysql/my.cnf
@@ -171,6 +171,8 @@ ulimit -n 4096
 
 #start pure-ftpd
 /usr/local/sbin/pure-ftpd -f ftp -l mysql:/var/ftp/config/pure-ftpd/mysql.conf -0 -C 50 -c 10000 -E -A -H -D -Z -S 21 -p 12000:13000 -u 1 -j -P lacicloud.net -F /var/ftp/config/pure-ftpd/fortune_cookie -k 98 -b --fscharset=UTF-8 --clientcharset=UTF-8 -Y 1 -y 50:1 -o &
+/root/pure-ftpd-implicit/pure-ftpd-implicit -f ftp -l mysql:/var/ftp/config/pure-ftpd/mysql.conf -0 -C 50 -c 10000 -E -A -H -D -Z -u 1 -j -P lacicloud.net -F /var/ftp/config/pure-ftpd/fortune_cookie -k 98 -b --fscharset=UTF-8 --clientcharset=UTF-8 -Y 3 -y 50:1 -o &
+
 /usr/local/sbin/pure-uploadscript -B -r /etc/scripts/bandwidthcounter.sh
 
 #for some reason MySQL only starts if we put sleep 5 before, and sleep 3 after
