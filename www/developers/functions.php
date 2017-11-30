@@ -866,7 +866,7 @@ class LaciCloud {
 
 		//first is space in MB, then FTP users, then upload speed in KBits, then download speed in KBits, then description, then bandwidth in MB, then webhosting functions
 		//add custom tiers to end, like 4_1, 4_2 each with their own custom contracts
-		$data = array(1 => array(5000, 10, 8192, 1024, "- Free - For Occasional Users", 10000, false), 2 => array(125000, 50, 16384, 2048, " - 15€ / Year - For Regular Users", 1000000, true), 3 => array(250000, 125, 32768, 4096, " - 25€ / Year - For Expert Users", 2000000, true));
+		$data = array(1 => array(5000, 10, 8192, 1024, "- Free - For Occasional Users", 10000, false), 2 => array(125000, 50, 16384, 2048, " - 15€ / Year - For Regular Users", 1000000, true), 3 => array(250000, 125, 32768, 4096, " - 25€ / Year - For Expert Users", 2000000, true), 4 => array(2000000, 999999, 65565, 8096, " - 250€ / Year - Custom Subscription #1", 999999, true));
 
 		return $data[$tier];
 
@@ -1456,8 +1456,8 @@ class Webhosting extends LaciCloud {
 			return 48;
 		} 
 
-		//must be between 4 to 32 characters
-		if (strlen($sitename) < 4 or strlen($sitename) > 32) {
+		//must be between 3 to 32 characters
+		if (strlen($sitename) < 3 or strlen($sitename) > 32) {
  	   		return 48;
 		}
 
@@ -1640,7 +1640,7 @@ class Errors extends LaciCloud {
 
 	//most of the error codes and their messages
 	private $messages = array(
-		1 => "An internal error occured... Damn!",
+		1 => "An internal error occured... Damn! If you are adding an FTP user, another user already has that name taken!",
 		2 => "Session could not be started.. Sorry!",
 		3 => "Session started successfully... Yay!",
 		4 => "An error occured while validating your user information... Please try again!",

@@ -184,7 +184,7 @@ function ValidateSitename(form) {
          errors.push("Subdomain field empty!");
     } else if (!regex_alphanum.test(sitename)) {
          errors.push("Subdomain field must be alphanumeric!");
-    } else if (sitename.length < 4 || sitename.length > 32) {
+    } else if (sitename.length < 3 || sitename.length > 32) {
         errors.push("Subdomain length must be between 4 to 32 characters!");
     }
 
@@ -310,7 +310,7 @@ function ValidateAddFTPUser(form){
    }
 
     //allow @ , - , _ , ! , and alphanumeric FTP usernames
-    if (!/^[a-z0-9]+$/i.test(ftp_username.replace("@", "").replace("-","").replace("_","").replace("!","").replace(".",""))) {
+    if (!/^[a-z0-9]+$/i.test(ftp_username.replace(/\@/g, "").replace(/\-/g,"").replace(/\_/g,"").replace(/\!/g,"").replace(/\./g,""))) {
         errors.push("Username must be alphanumeric (@, -, _ and ! are allowed) !");
     }
 
@@ -336,7 +336,7 @@ function ValidateAddFTPUser(form){
         errors.push("Starting directory must be in this format: /directory1/directory2");
     }
 
-    if (!/^[a-z0-9]+$/i.test(starting_directory.replace('/', '')) && starting_directory !== '/') {
+    if (!/^[a-z0-9]+$/i.test(starting_directory.replace(/\//g, '')) && starting_directory !== '/') {
         errors.push("Starting directory must be alphanumeric!");
     }
 
