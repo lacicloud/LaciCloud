@@ -168,6 +168,7 @@ ulimit -n 4096
 #pureftpd; removed -X, added -D
 #pureftpd; removed -4 
 #pureftpd; added -o for pure-uploadscript
+#pureftpd; removed -Z for read-only users
 
 #start pure-ftpd
 /usr/local/sbin/pure-ftpd -f ftp -l mysql:/var/ftp/config/pure-ftpd/mysql.conf -0 -C 50 -c 10000 -E -A -H -D -S 21 -p 12000:13000 -u 1 -j -P lacicloud.net -F /var/ftp/config/pure-ftpd/fortune_cookie -k 98 -b --fscharset=UTF-8 --clientcharset=UTF-8 -Y 1 -y 50:1 -o &
