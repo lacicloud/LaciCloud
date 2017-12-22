@@ -91,7 +91,7 @@ sudo echo 0 >> /proc/sys/vm/swappiness
 cp /var/ftp/config/misc/sudoers /etc/sudoers
 cp /var/ftp/config/misc/sysctl.conf /etc/sysctl.conf
 cp /var/ftp/config/misc/rsyslog.conf /etc/rsyslog.conf
-cp /var/ftp/config/misc/.bashrc ~/.bashrc
+cp /var/ftp/config/misc/00-aliases.sh /etc/profile.d/00-aliases.sh
 cp /var/ftp/config/misc/securetty /etc/securetty
 
 #shut down server in case any unknown USB is plugged in (anti-forensics, see Ross Ulbricht)
