@@ -16,6 +16,11 @@
 sudo modprobe it87
 /etc/init.d/kmod start
 
+#prevent everyone from running commands that could brick the system without local presence
+chmod 0 /sbin/halt
+chmod 0 /sbin/shutdown
+chmod 0 /sbin/poweroff
+
 #start some basic services
 
 #be quiet please
