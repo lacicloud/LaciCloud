@@ -32,6 +32,6 @@
 0 * * * * /etc/scripts/gadscript.sh
 * * * * * python /etc/scripts/ftpactions.py
 * * * * * /bin/sleep 15 && cd /etc/scripts && python webhosting.py
-0 0 1 * *   service nginx stop && /usr/bin/certbot --standalone renew && service nginx start && cat /var/ftp/config/letsencrypt/live/lacicloud.net/privkey.pem /var/ftp/config/letsencrypt/live/lacicloud.net/fullchain.pem > /var/ftp/config/letsencrypt/live/lacicloud.net/pure-ftpd.pem && pkill pure-ftpd && rm -r /var/ftp/www/developers/localweb/.well-known
+5 0 * * *   service nginx stop && /usr/bin/certbot --standalone renew && service nginx start && cat /var/ftp/config/letsencrypt/live/lacicloud.net/privkey.pem /var/ftp/config/letsencrypt/live/lacicloud.net/fullchain.pem > /var/ftp/config/letsencrypt/live/lacicloud.net/pure-ftpd.pem && /usr/bin/pkill pure-ftpd && rm -r /var/ftp/www/developers/localweb/.well-known
 * * * * * /usr/local/bin/goaccess /var/ftp/logs/nginx_access.txt  -a -o /var/ftp/www/developers/localweb/monitoring/statistics_longrandomstring.html --log-format=COMBINED
 
