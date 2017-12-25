@@ -254,6 +254,8 @@ if (isset($_GET["action"]) and $_GET["action"] == "buy" and isset($_GET["tier"])
 		echo "<a href='/pay/?action=".$_GET["action"]."&tier=".$_GET["tier"]."&type=stripe'>Pay using Stripe (Credit/Debit cards)</a>";
 		echo "<br><br>";
 		echo "<a href='/pay/?action=".$_GET["action"]."&tier=".$_GET["tier"]."&type=iban' onClick='alert(\"Please contact laci@lacicloud.net to pay using bank transfer manually!\"); return false;'>Pay using European Bank transfer (IBAN)</a>";
+		echo "<br><br>";
+		echo "<p>We also manually accept RaiBlocks, Bitshares, and ARK coin. Please contact support@lacicloud.net if you wish to pay using those.</p>";
 	} else {
 		header("Location: /shop");
 	}

@@ -92,7 +92,7 @@ $lacicloud_api -> isPageCached();
             <div class="section-heading"><h1>Privacy</h1></div>
             <div class="section-text privacy-text">
                 Privacy and security is one of LaciCloud's most important feature. We do not, in any way or form,
-                collect PII, or sell your data to adverisers. Payments can be done via Bitcoins/Altcoins <span class="tooltip" title="Paypal, Stripe, and European IBAN">(<strong>and 3 other payment methods!</strong>)</span>,
+                collect PII, or sell your data to adverisers. Payments can be done via Bitcoins/Altcoins (including IOTA, XRB, BTS and ARK) <span class="tooltip" title="PayPal, Stripe, and European IBAN">(<strong>and 3 other payment methods!</strong>)</span>,
                 and user data can be possibly encrypted. Of course, you can also get <strong><a style="color:inherit;text-decoration:none;" href="/qftp">quick temporary FTP accounts</a></strong> without registering,
                 much like temporary email addresses.
                 Additionally, the code behind LaciCloud has been tested for security issues and privilige seperation is used between
@@ -164,9 +164,9 @@ $lacicloud_api -> isPageCached();
             <span class="text-italic">Made with love</span><br />
             <span class="text-italic">Brussels, Belgium  - <a href="mailto:laci@lacicloud.net">laci@lacicloud.net</a></span>
             <br><br><br>
-            <span class="text-italic">Users: 66</span>
+            <span class="text-italic">Users: 131</span>
             <br>
-            <span class="text-italic">Space used: 67GB out of 4096GB</span>
+            <span class="text-italic">Space used: 345GB out of 4096GB</span>
             <br>
             <span class="text-italic">Service status: <strong><a href="https://stats.uptimerobot.com/r8N9QIrq1">OK</a></strong></span>
         </div>
