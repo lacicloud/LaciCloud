@@ -26,6 +26,7 @@ ln -sf /var/ftp/config/php/php.ini /etc/php/7.0/cli/php.ini
 ln -sf /var/ftp/config/php/php.ini /etc/php/7.0/cgi/php.ini
 ln -sf /var/ftp/config/php/php-fpm.conf /etc/php/7.0/fpm/php-fpm.conf
 ln -sn /var/ftp/config/php/pool.d /etc/php/7.0/fpm/pool.d
+cp /var/ftp/config/php/conf.d/* /etc/php/7.0/fpm/conf.d/
 
 #nginx config
 ln -sf /var/ftp/config/nginx/nginx.conf /etc/nginx/nginx.conf
