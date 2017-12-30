@@ -34,21 +34,14 @@ if (isset($_POST["address"]) and isset($_POST["custom"]) and isset($_POST["verif
 	$tier = $custom_parts[0];
 	$id = $custom_parts[1];
 	
-	//convert paid iota to euro/dollars
-	$paid_miota = $paid_iota / 1000000;
-
 	$curl = curl_init();
 	curl_setopt_array($curl, array(
 	    CURLOPT_RETURNTRANSFER => 1,
-	    CURLOPT_URL => 'https://api.coinmarketcap.com/v1/ticker/iota/',
+	    CURLOPT_URL => "https://payiota.me/api.php?action=convert_to_usd&iota=".$paid_iota,
 	));
-	$data = curl_exec($curl);
+
+	$paid = curl_exec($curl);
 	curl_close($curl);
-
-	$data = json_decode($data, true);
-	$price_usd = (double)$data[0]["price_usd"];
-
-	$paid = $price_usd * $paid_miota;
 
 	//upgrade tier
 	$lacicloud_api->upgradeToTier($tier, $custom, $id, $dbc, $dbc_ftp);
