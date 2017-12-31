@@ -1,4 +1,5 @@
 <?php
+error_reporting(0);
 
     class DateTransformer {
         private static $instance = null;
