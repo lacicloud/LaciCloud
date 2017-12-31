@@ -43,6 +43,7 @@ php_admin_value[cgi.fix_pathinfo] = 0
 php_admin_value[memory_limit] = 256M
 php_admin_value[max_execution_time] = 30
 php_admin_value[max_input_time] = 30
+request_terminate_timeout = 30
 php_admin_value[session.save_path] = '/var/ftp/public_files/$id/tmp'
 php_admin_value[file_uploads] = On
 php_admin_value[upload_max_filesize] = 4096M
