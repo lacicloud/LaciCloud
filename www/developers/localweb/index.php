@@ -163,6 +163,7 @@ $lacicloud_api -> isPageCached();
             <span class="text-uppercase bold-font">LaciCloud</span><br />
             <span class="text-italic">Made with love</span><br />
             <span class="text-italic">Brussels, Belgium  - <a href="mailto:laci@lacicloud.net">laci@lacicloud.net</a></span>
+			<span class="text-italic">Copyright &copy; LaciCloud 2018. All Rights Reserved.</span>
             <br><br><br>
             <span class="text-italic">Users: 131</span>
             <br>
