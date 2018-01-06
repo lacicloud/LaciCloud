@@ -106,13 +106,7 @@ ln -sf /var/ftp/config/git/.git-credentials /root/.git-credentials
 #stop wget from writing known hosts to text file
 chattr +i /root/.wget-hsts
 
-#make these sensitive files read-only
-chattr +i /etc/shadow
-chattr +i /etc/passwd
-chattr +i /etc/group
-chattr +i /etc/shadow
-
-#also these
+#make these read only
 chattr -R +i /var/ftp/config
 chattr -R +i /var/ftp/scripts
 chattr -R +i /var/ftp/www

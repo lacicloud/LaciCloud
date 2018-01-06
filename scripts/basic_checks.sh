@@ -71,11 +71,6 @@ if [[ $CPUTEMP  > 75 ]]; then
 	echo "Killed top process $TOPPROCESS with pid $TOPPID with name $TOPNAME because cpu temperature was over safe limit (75) by $CPUTEMP at $date"
 fi 
 
-#make these directories read only
-#chattr -R +i /var/ftp/config
-#chattr -R +i /var/ftp/scripts
-#chattr -R +i /var/ftp/www
-
 #restart networking in case of networking problems
 ROUTER_IP=192.168.1.1
 
