@@ -51,6 +51,7 @@ function testFTPConnection($host, $port, $username, $password) {
 
 	// login with username and password
 	$login_result = ftp_login($conn_id, $username, $password);
+	
 	//fix issue with monitoring app
 	ftp_pasv($conn_id, true);
 
