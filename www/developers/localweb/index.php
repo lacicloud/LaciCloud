@@ -110,7 +110,7 @@ $lacicloud_api -> isPageCached();
             <div class="section-heading"><h1>Versatility</h1></div>
             <div class="section-text compatibility-text">
                 Versitality is one of of LaciCloud's other most important feature. Our service offers you ways to 
-                display messages to your users, have hierchical user structures, and a way to host your files your own user subdomain. Our API allows you to write your own applications on top of LaciCloud's, whatever 
+                display messages to your users, have hierarchical  user structures, and a way to host your files your own user subdomain. Our API allows you to write your own applications on top of LaciCloud's, whatever 
                 it may be. Do not forget the many syncronization, backup and encryption programs that exist for FTP(s).
                 <span class="section-end">.</span>
             </div>
@@ -163,9 +163,9 @@ $lacicloud_api -> isPageCached();
             <span class="text-uppercase bold-font">LaciCloud</span><br />
             <span class="text-italic">Made with love</span><br />
             <span class="text-italic">Brussels, Belgium  - <a href="mailto:laci@lacicloud.net">laci@lacicloud.net</a></span>
-			<span class="text-italic">Copyright &copy; LaciCloud 2018. All Rights Reserved.</span>
+	    <span class="text-italic">Copyright &copy; LaciCloud 2018. All Rights Reserved.</span>
             <br><br><br>
-            <span class="text-italic">Users: 131</span>
+            <span class="text-italic">Users: <?php echo $lacicloud_api -> getUserCount($dbc); ?> </span>
             <br>
             <span class="text-italic">Space used: 345GB out of 4096GB</span>
             <br>

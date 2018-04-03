@@ -136,6 +136,12 @@ if(isset($_POST["action"]) and $_POST["action"] == "addftpuser" and isset($_POST
     $result =  $lacicloud_webhosting_api->addWebhostingEnv($id, $_POST["sitename"], $lacicloud_webhosting_api->generateMysqlUsername(), $lacicloud_webhosting_api->generateMysqlPassword(), $dbc);
 
     echo $lacicloud_api_api -> returnJSONObject($result, ($lacicloud_errors_api->getSuccessOrErrorFromID($result) == "success") ? true: false );
+} elseif (isset($_POST["action"]) and $_POST["action"] == "getusercount")  {
+    $result = $lacicloud_api->getUserCount($dbc);
+
+    if (is_int($result)) {
+        echo json_encode($result);
+    }
 
 } else {
     //a very useful function

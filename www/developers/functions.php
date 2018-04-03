@@ -225,6 +225,22 @@ class LaciCloud {
 
 	}
 
+	public function getUserCount($dbc) {
+		$query = "SELECT count(*) FROM users";
+        $stmt = mysqli_prepare($dbc, $query);
+        $result = mysqli_stmt_execute($stmt);
+
+        $stmt->bind_result($mysql_count);
+
+        while ($stmt->fetch()) {
+
+        	$count = $mysql_count;
+
+		}
+
+		return $count;
+	}
+
 	public function confirmAccount($unique_key, $ftp_password, $dbc, $dbc_ftp) {
 		$lacicloud_api = new LaciCloud();
 		$lacicloud_errors_api = new Errors();
@@ -943,7 +959,7 @@ class LaciCloud {
 		$lacicloud_errors_api = new Errors();
 
 		//captcha required	  	
-		if ($lacicloud_errors_api -> getSuccessOrErrorFromID($this -> checkCaptcha($captcha)) !== "success") {
+		if ($lacicloud_errors_api -> getSuccessOrErrorFromID($this -> checkCaptcha($captcha)) !== "success" or is_null($reply_to_address)) {
 						return 10;
 		}
 
