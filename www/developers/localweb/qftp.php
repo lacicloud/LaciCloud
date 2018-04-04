@@ -8,7 +8,7 @@ $lacicloud_errors_api = new Errors();
 $dbc = $lacicloud_api -> getMysqlConn();
 $dbc_ftp = $lacicloud_api -> getFtpMysqlConn();
 
-if (isset($_POST["captcha_code"]) and isset($_POST["beta_code"])) {
+if (isset($_POST["captcha_code"])) {
   
   $username = $lacicloud_qftp_api -> generateFTPUsername();
   $password = bin2hex(openssl_random_pseudo_bytes(8));

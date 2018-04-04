@@ -86,7 +86,6 @@ if (isset($_POST["contact_reason"]) and isset($_POST["subject"]) and isset($_POS
                         <option>Sales</option>
                         <option>Feedback</option>
                         <option>Abuse</option>
-                        <option>Beta Access</option>
                         <option>Discounts</option>
                         <option>Other</option>
                     </select>
