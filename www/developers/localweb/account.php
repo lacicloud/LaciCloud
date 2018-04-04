@@ -25,7 +25,7 @@ if (isset($_SESSION["logged_in"]) and $_SESSION["logged_in"] == 1) {
 if (isset($_POST["email"]) and isset($_POST["password"]) and isset($_POST["password_retyped"]) and isset($_POST["captcha_code"]) and isset($_POST["checkbox"]) and !isset($result)) {
 
     $dbc = $lacicloud_api -> getMysqlConn();
-    $result = $lacicloud_api -> registerUser($_POST["email"], $_POST["password"], $_POST["password_retyped"], $_POST["captcha_code"], $_POST["beta_code"], $dbc);
+    $result = $lacicloud_api -> registerUser($_POST["email"], $_POST["password"], $_POST["password_retyped"], $_POST["captcha_code"], $dbc);
 
  
     $link = $lacicloud_utils_api->getEmailProvider($_POST["email"])[1]; //email link for message
@@ -147,7 +147,6 @@ filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='.myBackground.jp
       <input required type="text" name="email" placeholder="email address"/>
       <input required type="password" name="password" placeholder="password"/>
       <input required type="password" name="password_retyped" placeholder="confirm password"/>
-      <input required type="text" name="beta_code" placeholder="beta code"/>
       <img src="/securimage_captcha/securimage_show.php?no_cache=" alt="CAPTCHA Image"/>
       <br><br>
       <input required type="text" autocomplete="off" name="captcha_code" size="10" maxlength="6" placeholder="captcha"/>

@@ -306,24 +306,11 @@ class LaciCloud {
         return 15;
 	}
 
-	public function verifyBetaCode($beta_code) {
-		//beta code verificaiton
-    	if ($beta_code !== $this->grabSecret("beta_code_lacicloud")) {
-    		return 41;
-    	}
-
-    	return 42;
-	}
-
-	public function registerUser($email, $password, $password_retyped, $captcha, $beta_code, $dbc) {
+	public function registerUser($email, $password, $password_retyped, $captcha, $dbc) {
 		$lacicloud_errors_api = new Errors();
 		$lacicloud_emails_api = New Emails();
 		$lacicloud_webhosting_api = new Webhosting();
 		
-		if ($lacicloud_errors_api -> getSuccessOrErrorFromID($this -> verifyBetaCode($beta_code)) !== "success") {
-			return 41;
-		}
-
 		//captcha required	  	
 		if ($lacicloud_errors_api -> getSuccessOrErrorFromID($this -> checkCaptcha($captcha)) !== "success") {
 			return 10;
@@ -1696,8 +1683,6 @@ class Errors extends LaciCloud {
 		38 => "QFTP user successfully created with username xXxusernamexXx and password xXxpasswordxXx!",
 		39 => "API key successfully regenerated!",
 		40 => "Username or password incorrect... Please try again!",
-		41 => "Beta code incorrect... Please contact Laci for beta access!",
-		42 => "Beta code successfully validated... Yay!", //the answer to life, the universe, and everything
 		43 => "API key incorrect... Please try again!",
 		44 => "Not enough parameters supplied for API... Please try again!",
 		45 => "API call received OK... Yay!",
@@ -1897,17 +1882,13 @@ class qFTP extends LaciCloud {
 
 	}
 
-	public function addQFTPUser($username, $password, $captcha, $beta_code, $dbc_ftp) {
+	public function addQFTPUser($username, $password, $captcha, $dbc_ftp) {
 		$lacicloud_api = new LaciCloud();
 		$lacicloud_errors_api = new Errors();
 
 		if ($lacicloud_errors_api->getSuccessOrErrorFromID($lacicloud_api -> checkCaptcha($captcha)) !== "success") {
     		return 10;
   		}
-
-  		if ($lacicloud_errors_api -> getSuccessOrErrorFromID($lacicloud_api -> verifyBetaCode($beta_code)) !== "success") {
-			return 41;
-		}
 
 		$ftp_starting_directory = $lacicloud_api->document_root."/users/qftp/".$username;
 		$expiration = strtotime('+1 day', time());

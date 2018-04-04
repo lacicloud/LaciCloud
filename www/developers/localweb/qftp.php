@@ -13,7 +13,7 @@ if (isset($_POST["captcha_code"]) and isset($_POST["beta_code"])) {
   $username = $lacicloud_qftp_api -> generateFTPUsername();
   $password = bin2hex(openssl_random_pseudo_bytes(8));
 
-  $result = $lacicloud_qftp_api -> addQFTPUser($username, $password, $_POST["captcha_code"], $_POST["beta_code"], $dbc_ftp);
+  $result = $lacicloud_qftp_api -> addQFTPUser($username, $password, $_POST["captcha_code"], $dbc_ftp);
 
 }   
 
@@ -75,9 +75,8 @@ background-size: cover;">
     <div class="info"></div>
     
     <form class="qftp-form" action="/qftp/"  method="POST" accept-charset="UTF-8">
-      <h4>Please enter the captcha and the beta code to generate your qFTP account!</h4>
+      <h4>Please enter the captcha to generate your qFTP account!</h4>
       <br><br>
-      <input required type="text" name="beta_code" placeholder="beta code"/>
       <img src="/securimage_captcha/securimage_show.php?no_cache=" alt="CAPTCHA Image"/>
       <br><br>
       <input required type="text" autocomplete="off" name="captcha_code" size="10" maxlength="6" placeholder="captcha"/>
