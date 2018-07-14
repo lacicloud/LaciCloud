@@ -107,9 +107,9 @@ ln -sf /var/ftp/config/git/.git-credentials /root/.git-credentials
 chattr +i /root/.wget-hsts
 
 #make these read only
-chattr -R +i /var/ftp/config
-chattr -R +i /var/ftp/scripts
-chattr -R +i /var/ftp/www
+#chattr -R +i /var/ftp/config
+#chattr -R +i /var/ftp/scripts
+#chattr -R +i /var/ftp/www
 
 #a little start never hurts
 sudo service rsyslog start
