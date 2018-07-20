@@ -16,7 +16,7 @@ mysql_username=$4
 
 if id "$sitename" >/dev/null 2>&1; then
         service nginx stop
-	service php7.0-fpm stop
+	service php7.2-fpm stop
 else
         echo "Error: User does not exist..."
 	exit 1
@@ -42,6 +42,6 @@ rm -r /var/ftp/config/letsencrypt/renewal/$sitename_name.lacicloud.net*
 /usr/bin/mysql -u "$username" --password="$password" -e "DROP DATABASE $sitename; DROP USER '$mysql_username'@'localhost'"
 
 service nginx start
-service php7.0-fpm start
+service php7.2-fpm start
 
 exit 0

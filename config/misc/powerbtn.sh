@@ -7,7 +7,7 @@ date=$(date +"%T")
 echo "Hardware Shutdown at $date" >> /var/ftp/logs/events.txt
 
 service nginx stop
-service php7.0-fpm stop
+service php7.2-fpm stop
 service mysql stop
 service cron stop
 
