@@ -3,6 +3,7 @@
     rotate 36500
     sharedscripts
     postrotate 
+	touch /var/ftp/config/logrotate/logs_default/* 
 	cp -p /var/ftp/config/logrotate/logs_default/* /var/ftp/logs
 	service rsyslog restart
 	service mysql restart
