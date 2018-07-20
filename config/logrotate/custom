@@ -3,11 +3,11 @@
     rotate 36500
     sharedscripts
     postrotate 
-	touch /var/ftp/config/logrotate/logs_default/* 
+	touch /var/ftp/config/logrotate/logs_default/*
 	cp -p /var/ftp/config/logrotate/logs_default/* /var/ftp/logs
 	service rsyslog restart
 	service mysql restart
-	service php7.0-fpm restart
+	service php7.2-fpm restart
 	/usr/bin/pkill pure-ftpd  
 	killall -r  pure-uploadscript
 	/usr/local/sbin/pure-ftpd -f ftp -l mysql:/var/ftp/config/pure-ftpd/mysql.conf -0 -C 50 -c 10000 -E -A -H -D -S 21 -p 12000:13000 -u 1 -j -P lacicloud.net -F /var/ftp/config/pure-ftpd/fortune_cookie -k 98 -b --fscharset=UTF-8 --clientcharset=ISO-8859-2 -Y 1 -y 50:1 -o &

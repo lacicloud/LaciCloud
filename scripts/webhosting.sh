@@ -155,7 +155,7 @@ if [ "$?" -eq "1" ]; then
    exit 3;
 fi
 
-service php7.0-fpm reload
+service php7.2-fpm reload
 
 #check php success
 if [ "$?" -eq "1" ]; then

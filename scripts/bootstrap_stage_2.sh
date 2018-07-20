@@ -21,12 +21,11 @@ ln -sf /var/ftp/config/letsencrypt/live/lacicloud.net/pure-ftpd.pem /etc/ssl/pri
 ln -sf /var/ftp/config/letsencrypt/live/lacicloud.net/dhparam.pem /etc/ssl/private/pure-ftpd-dhparams.pem
 
 #PHP config
-ln -sf /var/ftp/config/php/php.ini /etc/php/7.0/fpm/php.ini
-ln -sf /var/ftp/config/php/php.ini /etc/php/7.0/cli/php.ini
-ln -sf /var/ftp/config/php/php.ini /etc/php/7.0/cgi/php.ini
-ln -sf /var/ftp/config/php/php-fpm.conf /etc/php/7.0/fpm/php-fpm.conf
-ln -sn /var/ftp/config/php/pool.d /etc/php/7.0/fpm/pool.d
-cp /var/ftp/config/php/conf.d/* /etc/php/7.0/fpm/conf.d/
+ln -sf /var/ftp/config/php/php.ini /etc/php/7.2/fpm/php.ini
+ln -sf /var/ftp/config/php/php.ini /etc/php/7.2/cli/php.ini
+ln -sf /var/ftp/config/php/php-fpm.conf /etc/php/7.2/fpm/php-fpm.conf
+ln -sn /var/ftp/config/php/pool.d /etc/php/7.2/fpm/pool.d
+cp /var/ftp/config/php/conf.d/* /etc/php/7.2/fpm/conf.d/
 
 #nginx config
 ln -sf /var/ftp/config/nginx/nginx.conf /etc/nginx/nginx.conf
@@ -123,7 +122,7 @@ sudo service nginx start
 cat /var/log/nginx/error.log >> /var/ftp/logs/nginx.txt
 
 #start services
-sudo service php7.0-fpm start
+sudo service php7.2-fpm start
 sudo service cron start
 
 
@@ -132,13 +131,8 @@ sudo service monitorix stop
 sudo service monitorix stop
 sudo service monitorix restart
 
-#no need for these
-#/etc/init.d/samba stop
+#no need for this
 systemctl stop samba-ad-dc
-sudo service apache2 stop
-sudo service php5-fpm stop
-sudo service postfix stop
-sudo service postgresql stop
 
 #need this tho
 /etc/init.d/samba start
@@ -150,9 +144,6 @@ modprobe ip_nat_ftp
 #load iptables rules
 /sbin/iptables-restore < /var/ftp/config/misc/iptables.rules
 /sbin/ip6tables-restore < /var/ftp/config/misc/ip6tables.rules
-
-#allow FTP on port 21 as well for LAN, no need for it now
-#iptables -t nat -A PREROUTING -p tcp -d 192.168.1.6 --dport 21 -j DNAT --to 192.168.1.6:60
 
 #set total process limit
 ulimit -n 4096
@@ -181,9 +172,6 @@ sleep 3
 #start maltral
 python /root/maltrail/sensor.py & 
 python /root/maltrail/server.py & 
-
-#start mosquitto server
-service mosquitto start
 
 exit 0
 
