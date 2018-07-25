@@ -32,7 +32,7 @@ mkdir -p /var/ftp/public_files/$id/config
 echo "[$sitename]
 user = $sitename
 group = $sitename
-listen = /var/run/php7.0-fpm-$sitename.sock
+listen = /var/run/php7.2-fpm-$sitename.sock
 listen.owner = www-data
 listen.group = www-data
 php_admin_value[disable_functions] = disk_total_space, diskfreespace, exec, system, popen, proc_open, proc_close, proc_nice, shell_exec, passthru, dl, mail, putenv, getenv, set_time_limit, pcntl_exec
@@ -106,7 +106,7 @@ echo "server {
         location ~ \.php$ {
         	try_files \$uri =404;
         	fastcgi_split_path_info ^(.+\.php)(/.+)$;
-       	        fastcgi_pass unix:/var/run/php7.0-fpm-$sitename.sock;
+       	        fastcgi_pass unix:/var/run/php7.2-fpm-$sitename.sock;
 		fastcgi_read_timeout 30;
         	fastcgi_index index.php;
         	fastcgi_param SCRIPT_FILENAME \$document_root\$fastcgi_script_name;
