@@ -30,7 +30,7 @@
 0 0 * * * /usr/bin/php -f /etc/scripts/clear_unconfirmed.php
 1 0 * * * /etc/scripts/backup.sh
 0 * * * * cd /etc/scripts && ./gadscript.sh
-* * * * * python /etc/scripts/ftpactions.py
+*/2 * * * * python /etc/scripts/ftpactions.py
 * * * * * /bin/sleep 15 && cd /etc/scripts && python webhosting.py
 5 0 * * *  /etc/scripts/renew_certs.sh
 * * * * * /usr/local/bin/goaccess /var/ftp/logs/nginx_access.txt  -a -o /var/ftp/www/developers/localweb/monitoring/statistics_longrandomstring.html --log-format=COMBINED
