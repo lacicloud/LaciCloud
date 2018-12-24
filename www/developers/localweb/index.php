@@ -130,7 +130,7 @@ $lacicloud_api -> isPageCached();
                 <div class="section-heading"><h1>Open-Source</h1></div>
                 <div class="section-text pad-lr versatility-text">
                     Open-sourcing LaciCloud allows anyone access to view and enhance the source code. As a result, bugs get fixed faster, 
-                    and anyone can verify the codebase to make sure there are no back-doors and that nothing strange is going on.
+                    and anyone can verify the codebase to make sure there are no backdoors and that nothing strange is going on.
                     <br>
                     LaciCloud's Github page can be found <strong><a id="github_link" href="https://github.com/lacicloud/LaciCloud">here.</a></strong>
                     <span class="section-end">.</span>
