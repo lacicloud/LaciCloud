@@ -92,7 +92,7 @@ $lacicloud_api -> isPageCached();
             <div class="section-heading"><h1>Privacy</h1></div>
             <div class="section-text privacy-text">
                 Privacy and security is one of LaciCloud's most important feature. We do not, in any way or form,
-                collect PII, or sell your data to adverisers. Payments can be done via Bitcoins/Altcoins (including IOTA, XRB, BTS and ARK) <span class="tooltip" title="PayPal, Stripe, and European IBAN">(<strong>and 3 other payment methods!</strong>)</span>,
+                collect PII, or sell your data to adverisers. Payments can be done via Bitcoins/Altcoins (including IOTA, XRB, NYC, BTS and ARK) <span class="tooltip" title="PayPal, Stripe, and European IBAN">(<strong>and 3 other payment methods!</strong>)</span>,
                 and user data can be possibly encrypted. Of course, you can also get <strong><a style="color:inherit;text-decoration:none;" href="/qftp">quick temporary FTP accounts</a></strong> without registering,
                 much like temporary email addresses.
                 Additionally, the code behind LaciCloud has been tested for security issues and privilige seperation is used between
@@ -109,7 +109,7 @@ $lacicloud_api -> isPageCached();
             <div class="section-icon"><img src="resources/compatibility-icon.png" alt="An icon of two people shaking hands"/></div>
             <div class="section-heading"><h1>Versatility</h1></div>
             <div class="section-text compatibility-text">
-                Versitality is one of of LaciCloud's other most important feature. Our service offers you ways to 
+                Versatility is one of of LaciCloud's other most important feature. Our service offers you ways to 
                 display messages to your users, have hierarchical  user structures, and a way to host your files your own user subdomain. Our API allows you to write your own applications on top of LaciCloud's, whatever 
                 it may be. Do not forget the many syncronization, backup and encryption programs that exist for FTP(s).
                 <span class="section-end">.</span>
@@ -129,7 +129,7 @@ $lacicloud_api -> isPageCached();
                 <div class="section-icon"><img src="resources/open_source-icon.png" alt="The open-source logo" /></div>
                 <div class="section-heading"><h1>Open-Source</h1></div>
                 <div class="section-text pad-lr versatility-text">
-                    Open-sourcing LaciCloud allows anyone access to view and enhance the source code. What this means is bug's gets fixed faster, 
+                    Open-sourcing LaciCloud allows anyone access to view and enhance the source code. As a result, bugs gets fixed faster, 
                     and anyone can verify the codebase to make sure there are no back-doors and that nothing strange is going on.
                     <br>
                     LaciCloud's Github page can be found <strong><a id="github_link" href="https://github.com/lacicloud/LaciCloud">here.</a></strong>
@@ -175,6 +175,10 @@ $lacicloud_api -> isPageCached();
             <a href="https://twitter.com/lacicloud" target="_blank" class="icon tw"><img src="resources/social-twitter.png" alt="Twitter icon"/></a>
             <a href="https://www.facebook.com/lacicloudhosting/" target="_blank" class="icon fb"><img src="resources/social-facebook.png" alt="FaceBook icon"/></a>
             <a href="https://www.youtube.com/channel/UC6cwh-kIj7aq4XoiRkzVSug" target="_blank" class="icon yt"><img src="resources/social-youtube.png" alt="YouTube icon" /></a>
+        </div>
+        <div class="footer-payments">
+        <img src="resources/nyc.png" height="70" alt="NYC Accepted">
+        <img src="resources/cloakcoin.png" height="70" alt="CloakCoin Accepted">
         </div>
     </footer>
     <!--scripts-->

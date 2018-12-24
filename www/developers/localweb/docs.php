@@ -72,7 +72,7 @@ $lacicloud_api -> isPageCached();
             <div class="section-text about-text">
                 LaciCloud is your private FTP(s)-cloud storage and webhost with many features, including a flexible Bitcoin payment method,
                 user-data encryption, first-class security, compatibility with virtually all computing devices around the world
-                and extreme versitality with an API and an HTTPS files feature. Read below.
+                and extreme versatility with an API and an HTTPS files feature. Read below.
             </div>
         </div>
     </section>

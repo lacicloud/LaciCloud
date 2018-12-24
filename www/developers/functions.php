@@ -41,7 +41,7 @@ class LaciCloud {
 		$secrets = parse_ini_file($this->secrets_file);
 		return $secrets[$name];
 
-	} 
+	}
 
 	public function getMysqlConn() {
 		
@@ -1990,7 +1990,4 @@ class Utils extends LaciCloud {
 	}
 
 }
-
 ?>
-
-
