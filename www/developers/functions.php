@@ -1106,7 +1106,7 @@ class FTPActions extends LaciCloud {
 		$lacicloud_api = new LaciCloud();
 		$lacicloud_errors_api = new Errors();
 
-		//validate with dummy data, except for the username
+		//validate FTP username
 		if ($lacicloud_errors_api->getSuccessOrErrorFromID($this->validateFTPUserInfo($ftp_username, bin2hex(openssl_random_pseudo_bytes(16)), "mb", "100", "/dummy")) !== "success") {
 			return 33;
 		} 
@@ -1285,6 +1285,12 @@ class FTPActions extends LaciCloud {
 	public function getIndividualFTPUsersUsedSpaceFromFTP($ftp_username, $ftp_password, $id, $dbc, $dbc_ftp) {
 		$lacicloud_errors_api = new Errors();
 		$lacicloud_api = new LaciCloud();
+
+		//validate FTP username and password
+		if ($lacicloud_errors_api->getSuccessOrErrorFromID($this->validateFTPUserInfo($ftp_username, $ftp_password, "mb", "100", "/dummy")) !== "success") {
+			return 33;
+		} 
+
 		
 		//first see whether user owns FTP user
 		$query = "SELECT realID FROM ftp_users WHERE user = ?";
