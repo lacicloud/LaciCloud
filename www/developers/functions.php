@@ -1130,7 +1130,7 @@ class FTPActions extends LaciCloud {
 		
 
 		if ($id !== $ftp_user_real_id) {
-			$lacicloud_errors_api -> msgLogger("LOW", "FTP user '".$ftp_username."' not his for user ID: ".$id." Real ID: ".$ftp_user_real_id, 33);
+			$lacicloud_errors_api -> msgLogger("SEVERE", "FTP user '".$ftp_username."' not his for user ID: ".$id.", FTP user belongs to user ID: ".$ftp_user_real_id, 33);
 			return 33;
 		}
 
@@ -1280,6 +1280,46 @@ class FTPActions extends LaciCloud {
 		    }
 
 		    return (int)$ftp_used_bandwidth;
+	}
+
+	public function getIndividualFTPUsersUsedSpaceFromFTP($ftp_username, $ftp_password, $id, $dbc, $dbc_ftp) {
+		$lacicloud_errors_api = new Errors();
+		$lacicloud_api = new LaciCloud();
+		
+		//first see whether user owns FTP user
+		$query = "SELECT realID FROM ftp_users WHERE user = ?";
+		$stmt = mysqli_prepare($dbc_ftp, $query);
+		mysqli_stmt_bind_param($stmt, "s", $ftp_username);
+		$result = mysqli_stmt_execute($stmt);
+
+		if (!$result) {
+			$lacicloud_errors_api -> msgLogger("SEVERE", "SQL error while getting individual used FTP space for FTP user '".$ftp_username."'... Error: ".mysqli_error($dbc_ftp), 1);
+			return 1;
+		}
+
+		$stmt->bind_result($mysql_ftp_user_real_id);
+		while ($stmt->fetch()) {
+			$ftp_user_real_id = $mysql_ftp_user_real_id;
+		}
+
+		if ($id !== $ftp_user_real_id) {
+			$lacicloud_errors_api -> msgLogger("SEVERE", "FTP user '".$ftp_username."' not his for user ID: ".$id.", FTP user belongs to user ID: ".$ftp_user_real_id, 33);
+			return 33;
+		}
+
+
+
+		$fp = ftp_connect("lacicloud.net");
+		ftp_raw($fp, "USER ".$ftp_username);
+		$usage = ftp_raw($fp, "PASS ".$ftp_password);
+
+		if ($usage[0] == "530 Login authentication failed") {
+			$lacicloud_errors_api -> msgLogger("LOW", "Wrong password when getting used FTP space for FTP user ".$ftp_username."!", 40);
+			return 40;
+		}
+
+		preg_match_all('!\d+!', $usage[2], $usage);
+		return $usage;
 	}
 	
 	public function getFTPUsersUsedSpace($id, $dbc) { 
@@ -1643,7 +1683,7 @@ class Errors extends LaciCloud {
 
 	//most of the error codes and their messages
 	private $messages = array(
-		1 => "An internal error occured... Damn! If you are adding an FTP user, another user already has that name taken!",
+		1 => "An internal error occured... Damn! If you are adding an FTP user, another user already has that name taken or you already have this FTP username!",
 		2 => "Session could not be started.. Sorry!",
 		3 => "Session started successfully... Yay!",
 		4 => "An error occured while validating your user information... Please try again!",
@@ -1694,7 +1734,7 @@ class Errors extends LaciCloud {
 		51 => "Successfully reset permissions on webhosting environment!",
 		52 => "Successfully reset MySql password on webhosting environment!",
 		53 => "IPN/Payment error!",
-		54 => "Sorry, action is disallowed for your tier or your webhosting options!"
+		54 => "Sorry, action is disallowed for your tier or your webhosting options!",
 	);
 
 	private $result_messages_map = array(

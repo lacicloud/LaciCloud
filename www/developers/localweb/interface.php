@@ -58,6 +58,10 @@ if(isset($_POST["action"]) and $_POST["action"] == "addftpuser" and isset($_POST
 
     $result = $lacicloud_ftp_api -> removeFTPUser($_GET["ftp_username"], $id, $dbc, $dbc_ftp);
 
+} elseif (isset($_POST["action"]) and $_POST["action"] == "getindividualftpusersusedspacefromftp" and isset($_POST["ftp_username"]) and isset($_POST["ftp_username"]) and isset($_POST["ftp_password"])) {
+
+    $result = $lacicloud_ftp_api -> getIndividualFTPUsersUsedSpaceFromFTP($_POST["ftp_username"], $_POST["ftp_password"], $id, $dbc, $dbc_ftp);
+
 } elseif (isset($_GET["action"]) and $_GET["action"] == "regenerateapikey") {
 
     $result = $lacicloud_ftp_api -> regenerateAPIKey($id, $dbc);
@@ -285,7 +289,7 @@ if (empty($_GET["id"]) or !in_array($_GET["id"], $lacicloud_api->valid_pages_arr
                       <p>Used bandwidth: <span class="green"><?php echo $used_bandwidth;?>MB</span> Out of <span class="green"><?php echo $total_bandwidth; ?>MB</span></p>
 
                       <p><a href="?id=1&refresh=">Refresh Variables</a> </p>  
-                     
+
                      <div class="panel panel-default users_list">
                      <div class="panel-body">
                     <?php
@@ -311,7 +315,7 @@ if (empty($_GET["id"]) or !in_array($_GET["id"], $lacicloud_api->valid_pages_arr
                             }
 
                             $position++;
-                            echo "<p><span class='green'>" . $print_them_out . "</span><span> <a rel='canonical' onclick='return ValidateUserRemove()' href='/interface?id=1&action=removeftpuser&ftp_username=$print_them_out&csrf_token=".$csrf_token."'>Remove</a></span><span>&nbsp;<a href='/ftp/?ftp_username=$print_them_out' target='_blank'>Monsta FTP</a></span>";
+                            echo "<p><span class='green'>" . $print_them_out . "</span><span> <a rel='canonical' onclick='return ValidateUserRemove()' href='/interface?id=1&action=removeftpuser&ftp_username=$print_them_out&csrf_token=".$csrf_token."'>Remove</a></span><span>&nbsp;<a href='/ftp/?ftp_username=$print_them_out' target='_blank'>Monsta FTP</a>&nbsp;<a onclick='return getIndividualFTPUsersUsedSpaceFromFTP(\"$print_them_out\",\"$csrf_token\")' href='#'>View used space</a></span>";
                         }
 
                         $number_of_inactive_users = ($limit - $position);
@@ -343,7 +347,7 @@ if (empty($_GET["id"]) or !in_array($_GET["id"], $lacicloud_api->valid_pages_arr
                     ?>
                     </div>
                     </div>
-         
+
                     <a class="btn btn-default" style="float: right;" rel="canonical" href="/interface?id=1_1">Add User</a>
 
 		    	</div>
@@ -528,7 +532,7 @@ if (empty($_GET["id"]) or !in_array($_GET["id"], $lacicloud_api->valid_pages_arr
                             echo "<a href='/interface?id=4&action=resetperms&csrf_token=".$csrf_token."'>Reset permissions</a>";
                             echo "<br>";
                             echo "<a onClick='customDomainFunction();' href='#'>Have a domain?</a>";
-                        } elseif ($tier == 2 or $tier == 3 and !isset($sitename))   {
+                        } elseif ($tier > 1 and !isset($sitename))   {
                             echo "Thank you for upgrading a tier! Please fill out the form below to get your webhosting environment set-up.";
                             ?>
                             <form class="form-horizontal" action="/interface/?id=4" onsubmit='return ValidateSitename(this);' method="POST" accept-charset="UTF-8">
@@ -611,12 +615,22 @@ function ui_load() {
     <?php 
 
     if (isset($result)) {
-    $message = $lacicloud_errors_api -> getErrorMsgFromID($result);
-    $result =  $lacicloud_errors_api -> getSuccessOrErrorFromID($result);
-    
-    echo "".$result.".innerHTML='".$message."';";
-    echo "\n";
-    echo "".$result.".style.display = 'block';";
+
+        if (is_array($result)) {
+            //getIndividualFTPUsersUsedSpaceFromFTP
+            $message = "According to the FTP server, you have used ".((int)$result[0][1] / 1024)."MB out of ".((int)$result[0][3] / 1024)."MB, which is ".$result[0][2]."% of the allowed space!";
+            echo "success.innerHTML='".$message."';";
+            echo "\n";
+            echo "success.style.display = 'block';";
+        } else {
+            $message = $lacicloud_errors_api -> getErrorMsgFromID($result);
+            $result =  $lacicloud_errors_api -> getSuccessOrErrorFromID($result);
+            
+            echo "".$result.".innerHTML='".$message."';";
+            echo "\n";
+            echo "".$result.".style.display = 'block';";
+        }
+
 
     }
 
