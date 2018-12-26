@@ -1,4 +1,4 @@
-﻿<?php 
+﻿<?php
 require("../functions.php");
 $lacicloud_errors_api = new Errors();
 $lacicloud_api = new LaciCloud();
@@ -70,7 +70,7 @@ if (isset($_POST["contact_reason"]) and isset($_POST["subject"]) and isset($_POS
     <!--start - contact-->
     <section class="row h-contact contact" id="contact">
         <div class="col-half">
-            <div class="section-heading"><h1>Having trouble? Send us an e-mail</h1></div>
+            <div class="section-heading"><h1>Send us an e-mail to get your customized solution!</h1></div>
 
             <div class="success"></div>
             <div class="error"></div>
@@ -83,7 +83,7 @@ if (isset($_POST["contact_reason"]) and isset($_POST["subject"]) and isset($_POS
                         <option selected="true" disabled="disabled">Contact Reason</option>
                         <option>Technical Support/API</option>
                         <option>Question</option>
-                        <option>Sales</option>
+                        <option>Personalized Sales</option>
                         <option>Feedback</option>
                         <option>Abuse</option>
                         <option>Discounts</option>
@@ -119,7 +119,7 @@ if (isset($_POST["contact_reason"]) and isset($_POST["subject"]) and isset($_POS
             </div>
             <div class="youtube-embed-container">
                 <div class="youtube-embed-inner">
-                    <iframe width="535" height="397" src="https://www.youtube.com/embed/dtTJgc6Vroo" frameborder="0" allowfullscreen></iframe>
+                    <iframe width="535" height="397" src="https://www.youtube.com/watch?v=PeiXwNHEJo0" frameborder="0" allowfullscreen></iframe>
                 </div>
             </div>
         </div>
