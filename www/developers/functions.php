@@ -1325,7 +1325,7 @@ class FTPActions extends LaciCloud {
 		}
 
 		preg_match_all('!\d+!', $usage[2], $usage);
-		return $usage;
+		return $usage[0];
 	}
 	
 	public function getFTPUsersUsedSpace($id, $dbc) { 
