@@ -618,7 +618,7 @@ function ui_load() {
 
         if (is_array($result)) {
             //getIndividualFTPUsersUsedSpaceFromFTP
-            $message = "According to the FTP server, you have used ".((int)$result[0][1] / 1024)."MB out of ".((int)$result[0][3] / 1024)."MB, which is ".$result[0][2]."% of the allowed space!";
+            $message = "According to the FTP server, you have used ".((int)$result[1] / 1024)."MB out of ".((int)$result[3] / 1024)."MB, which is ".$result[2]."% of the allowed space!";
             echo "success.innerHTML='".$message."';";
             echo "\n";
             echo "success.style.display = 'block';";

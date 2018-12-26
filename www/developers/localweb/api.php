@@ -60,6 +60,15 @@ if(isset($_POST["action"]) and $_POST["action"] == "addftpuser" and isset($_POST
         echo $lacicloud_api_api -> returnJSONObject($result, ($lacicloud_errors_api->getSuccessOrErrorFromID($result) == "success") ? true: false );
     }
 
+} elseif (isset($_POST["action"]) and $_POST["action"] == "getindividualftpusersusedspacefromftp" and isset($_POST["ftp_username"]) and isset($_POST["ftp_password"])) {
+
+    $result = $lacicloud_ftp_api -> getIndividualFTPUsersUsedSpaceFromFTP($_POST["ftp_username"], $_POST["ftp_password"], $id, $dbc, $dbc_ftp);
+
+    if (is_array($result)) {
+        echo json_encode($result);
+    } else {
+        echo $lacicloud_api_api -> returnJSONObject($result, ($lacicloud_errors_api->getSuccessOrErrorFromID($result) == "success") ? true: false );
+    }
 
 } elseif (isset($_POST["action"]) and $_POST["action"] == "getftpusersvalues") {
 
