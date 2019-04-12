@@ -392,7 +392,7 @@ function ValidateAPIKeyRegenerate() {
    
 }
 
-function ValidateUserRemove(link) {
+function ValidateUserRemove() {
     return confirm("Are you sure you want to remove this user? You will still be able to access all his file and home directory, Continue?");
 }
 

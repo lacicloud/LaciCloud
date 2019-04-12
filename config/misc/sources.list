@@ -1,11 +1,18 @@
-# Testing
-deb http://ftp.debian.org/debian/ testing main contrib non-free
-deb-src http://ftp.debian.org/debian/ testing main contrib non-free
-# Testing Security http://secure-testing-master.debian.net/
-deb http://security.debian.org squeeze/updates main contrib non-free
-deb-src http://security.debian.org squeeze/updates main contrib non-free
+#------------------------------------------------------------------------------#
+#                   OFFICIAL DEBIAN REPOS                    
+#------------------------------------------------------------------------------#
 
-deb http://http.debian.net/debian jessie-backports main
+###### Debian Main Repos
+deb http://deb.debian.org/debian/ stable main contrib non-free
+deb-src http://deb.debian.org/debian/ stable main contrib non-free
 
-deb http://deb.torproject.org/torproject.org sid main
-deb-src http://deb.torproject.org/torproject.org sid main
+deb http://deb.debian.org/debian/ stable-updates main contrib non-free
+deb-src http://deb.debian.org/debian/ stable-updates main contrib non-free
+
+deb http://deb.debian.org/debian-security stable/updates main
+deb-src http://deb.debian.org/debian-security stable/updates main
+
+deb http://ftp.debian.org/debian stretch-backports main
+deb-src http://ftp.debian.org/debian stretch-backports main
+
+deb http://hwraid.le-vert.net/debian stretch main

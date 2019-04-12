@@ -12,8 +12,9 @@
 #
 # By default this script does nothing
 
-#for sensors
+#for sensors and tape drive
 sudo modprobe it87
+sudo modprobe st
 /etc/init.d/kmod start
 
 #start some basic services

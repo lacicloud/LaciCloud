@@ -1,16 +1,15 @@
+<?php
+require("../functions.php");
+
+$lacicloud_api = new LaciCloud();
+$lacicloud_api -> isPageCached();
+?>
 <!--
 Author: W3layouts
 Author URL: http://w3layouts.com
 License: Creative Commons Attribution 3.0 Unported
 License URL: http://creativecommons.org/licenses/by/3.0/
 -->
-<?php 
-require("../functions.php");
-
-$lacicloud_api = new LaciCloud();
-$lacicloud_api -> isPageCached();
-
-?>
 <!DOCTYPE HTML>
 <html>
 <head>
@@ -46,4 +45,3 @@ document.onkeypress = function (e) {
 
 </body>
 </html>
-

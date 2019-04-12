@@ -21,11 +21,11 @@ ln -sf /var/ftp/config/letsencrypt/live/lacicloud.net/pure-ftpd.pem /etc/ssl/pri
 ln -sf /var/ftp/config/letsencrypt/live/lacicloud.net/dhparam.pem /etc/ssl/private/pure-ftpd-dhparams.pem
 
 #PHP config
-ln -sf /var/ftp/config/php/php.ini /etc/php/7.2/fpm/php.ini
-ln -sf /var/ftp/config/php/php.ini /etc/php/7.2/cli/php.ini
-ln -sf /var/ftp/config/php/php-fpm.conf /etc/php/7.2/fpm/php-fpm.conf
-ln -sn /var/ftp/config/php/pool.d /etc/php/7.2/fpm/pool.d
-cp /var/ftp/config/php/conf.d/* /etc/php/7.2/fpm/conf.d/
+ln -sf /var/ftp/config/php/php.ini /etc/php/7.3/fpm/php.ini
+ln -sf /var/ftp/config/php/php.ini /etc/php/7.3/cli/php.ini
+ln -sf /var/ftp/config/php/php-fpm.conf /etc/php/7.3/fpm/php-fpm.conf
+ln -sn /var/ftp/config/php/pool.d /etc/php/7.3/fpm/pool.d
+cp /var/ftp/config/php/conf.d/* /etc/php/7.3/fpm/conf.d/
 
 #nginx config
 ln -sf /var/ftp/config/nginx/nginx.conf /etc/nginx/nginx.conf
@@ -122,7 +122,7 @@ sudo service nginx start
 cat /var/log/nginx/error.log >> /var/ftp/logs/nginx.txt
 
 #start services
-sudo service php7.2-fpm start
+sudo service php7.3-fpm start
 sudo service cron start
 
 
@@ -135,7 +135,8 @@ sudo service monitorix restart
 systemctl stop samba-ad-dc
 
 #need this tho
-/etc/init.d/samba start
+/etc/init.d/smbd start
+/etc/init.d/nmbd start
 
 #just to be sure
 modprobe ip_conntrack_ftp

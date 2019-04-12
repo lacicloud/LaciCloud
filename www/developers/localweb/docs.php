@@ -1,4 +1,4 @@
-﻿<?php 
+﻿<?php
 require("../functions.php");
 
 $lacicloud_api = new LaciCloud();
@@ -68,11 +68,9 @@ $lacicloud_api -> isPageCached();
     <section class="row h-about about" id="about">
         <div class="col-3 text-center">
             <div class="section-icon"><img src="/resources/about-icon.png" alt="An icon of a cloud with a lock on it"/></div>
-            <div class="section-heading"><h1>An ftp-based privacy-centric cloud storage solution</h1></div>
+            <div class="section-heading"><h1>A FIRM SPECIALIZING IN PROVIDING BACKUP SOLUTIONS FOR WEBSITES, (SMALL) BUSINESSES AND INDIVIDUALS</h1></div>
             <div class="section-text about-text">
-                LaciCloud is your private FTP(s)-cloud storage and webhost with many features, including a flexible Bitcoin payment method,
-                user-data encryption, first-class security, compatibility with virtually all computing devices around the world
-                and extreme versatility with an API and an HTTPS files feature. Read below.
+                LaciCloud is your backup consultancy firm, with in-house cloud storage and PHP webhosting, comprising of many features including flexible payments, data encryption, high security, compatibility with a variety of devices/softwares and an API-based dashboard on your personal subdomain for our solutions. Read below.
             </div>
         </div>
     </section>

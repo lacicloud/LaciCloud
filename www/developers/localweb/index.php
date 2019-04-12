@@ -1,4 +1,4 @@
-<?php 
+<?php
 require("../functions.php");
 
 $lacicloud_api = new LaciCloud();
@@ -75,11 +75,9 @@ $lacicloud_api -> isPageCached();
     <section class="row h-about about" id="about">
         <div class="col-3 text-center">
             <div class="section-icon"><img src="resources/about-icon.png" alt="An icon of a cloud with a lock on it"/></div>
-            <div class="section-heading"><h1>A first-of-a-kind ftp(s)-based privacy-centric cloud storage, webhosting solution</h1></div>
+            <div class="section-heading"><h1>A FIRM SPECIALIZING IN PROVIDING BACKUP SOLUTIONS FOR WEBSITES, (SMALL) BUSINESSES AND INDIVIDUALS</h1></div>
             <div class="section-text about-text">
-                LaciCloud is your open-source private FTP(s)-cloud storage and PHP webhost with many features, including a flexible Bitcoin payment method, 
-                user-data encryption, first-class security, compatibility with virtually all computing devices around the world 
-                and extreme versatility with an API and user subdomains. Read below.
+                LaciCloud is your backup consultancy firm, with in-house cloud storage and PHP webhosting, comprising of many features including flexible payments, data encryption, high security, compatibility with a variety of devices/softwares and an API-based dashboard on your personal subdomain for our solutions. Read below.
             </div>
         </div>
     </section>
@@ -89,14 +87,10 @@ $lacicloud_api -> isPageCached();
         <div class="col-2 f-left left-img-box"><img class="h-600" src="resources/about-1.jpg" alt="An image of a datacenter"/></div>
         <div class="col-1 text-center content-h-400 content-box">
             <div class="section-icon"><img src="resources/privacy-icon.png" alt="An icon of a lock"/></div>
-            <div class="section-heading"><h1>Privacy</h1></div>
+            <div class="section-heading"><h1>PRIVACY AND SECURITY</h1></div>
             <div class="section-text privacy-text">
-                Privacy and security is one of LaciCloud's most important feature. We do not, in any way or form,
-                collect PII, or sell your data to adverisers. Payments can be done via Bitcoins/Altcoins (including IOTA, XRB, NYC, BTS and ARK) <span class="tooltip" title="PayPal, Stripe, and European IBAN">(<strong>and 3 other payment methods!</strong>)</span>,
-                and user data can be possibly encrypted. Of course, you can also get <strong><a style="color:inherit;text-decoration:none;" href="/qftp">quick temporary FTP accounts</a></strong> without registering,
-                much like temporary email addresses.
-                Additionally, the code behind LaciCloud has been tested for security issues and privilige seperation is used between
-                the webserver and the FTP(s) server.
+                One of LaciCloud’s most important features is its commitment to keeping your data safe and encrypted at all times. With our custom solutions, you can be sure that your data is in good hands wherever it is. Payments can be done via Bitcoins/Altcoins (including BIT-Z, IOTA, XRB, NYC, BTS and ARK) <span class="tooltip" title="PayPal, Stripe, and European IBAN">(<strong>and 3 other non-crypto payment methods!</strong>)</span>,
+                and encryption is inbuilt. Additionally, the code behind LaciCloud has been tested for security issues and privilege seperation is used between the webserver and the FTP(s), or other server(s).
                 <span class="section-end">.</span>
             </div>
         </div>
@@ -107,11 +101,9 @@ $lacicloud_api -> isPageCached();
     <section class="row h-body compatibility" id="compatibility">
         <div class="col-1 text-center content-h-400 content-box">
             <div class="section-icon"><img src="resources/compatibility-icon.png" alt="An icon of two people shaking hands"/></div>
-            <div class="section-heading"><h1>Versatility</h1></div>
+            <div class="section-heading"><h1>VERSATILITY AND CUSTOMIZABILITY</h1></div>
             <div class="section-text compatibility-text">
-                Versatility is one of of LaciCloud's other most important feature. Our service offers you ways to 
-                display messages to your users, have hierarchical  user structures, and a way to host your files your own user subdomain. Our API allows you to write your own applications on top of LaciCloud's, whatever 
-                it may be. Do not forget the many syncronization, backup and encryption programs that exist for FTP(s).
+                Our backup consulting process is based on finding the right fit for you, keeping in mind the nature of your business and your budget. We will find the right solution, such as location, services (our FTP(s) server or other cloud storage services as per your organization's needs) and programs to use, in order to safely backup all your critical business data for the devices in your organization. All this is managed through our API, through which you can manage your backups, and write custom applications on top of our service. <span class="tooltip" title="TBA"><strong>There are many partners with who we work to achieve our, and your goals.</strong></span>
                 <span class="section-end">.</span>
             </div>
         </div>
@@ -127,12 +119,9 @@ $lacicloud_api -> isPageCached();
         <div class="bodylast-content-wrapper content-box">
             <div class="col-1 text-center content-h-400">
                 <div class="section-icon"><img src="resources/open_source-icon.png" alt="The open-source logo" /></div>
-                <div class="section-heading"><h1>Open-Source</h1></div>
+                <div class="section-heading"><h1>CLOUD STORAGE & WEBHOSTING</h1></div>
                 <div class="section-text pad-lr versatility-text">
-                    Open-sourcing LaciCloud allows anyone access to view and enhance the source code. As a result, bugs get fixed faster, 
-                    and anyone can verify the codebase to make sure there are no backdoors and that nothing strange is going on.
-                    <br>
-                    LaciCloud's Github page can be found <strong><a id="github_link" href="https://github.com/lacicloud/LaciCloud">here.</a></strong>
+                    Not only are we a consultancy firm, but we also offer FTP(s) storage/access and PHP-based webhosting to clients; we realize that some clients may be IT experts or developers for a company who can set up the backup procedures themselves, while others may need consultation. You can take advantage of the flexibility given by using non-proprietary FTP(s), such as having hierarchical user structures, a plethora of integrations, sending messages to your users, scripting and more. We are also partly open-source and transparent about our data processing, and we offer quick support.
                     <span class="section-end">.</span>
                 </div>
 
@@ -177,6 +166,7 @@ $lacicloud_api -> isPageCached();
             <a href="https://www.youtube.com/channel/UC6cwh-kIj7aq4XoiRkzVSug" target="_blank" class="icon yt"><img src="resources/social-youtube.png" alt="YouTube icon" /></a>
         </div>
         <div class="footer-payments">
+        <img src="resources/bitz.png" height="70" alt="BIT-Z accepted and recommended for trading!">
         <img src="resources/nyc.png" height="70" alt="NYC Accepted">
         <img src="resources/cloakcoin.png" height="70" alt="CloakCoin Accepted">
         </div>

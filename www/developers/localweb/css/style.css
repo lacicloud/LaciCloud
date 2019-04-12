@@ -710,6 +710,11 @@ ul {
         color: #898B8B;
     }
 
+.footer-payments {
+    float: right;
+    padding-right: 3%;
+}
+
 .footer-social {
     width: 160px;
     margin: 0 auto;

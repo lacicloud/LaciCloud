@@ -1,9 +1,33 @@
-<!DOCTYPE html>
+<?php
+require("../functions.php");
+
+$lacicloud_api = new LaciCloud();
+$lacicloud_errors_api = new Errors();
+$lacicloud_ftp_api = new FTPActions();
+$lacicloud_encryption_api = new Encryption();
+$lacicloud_payments_api = new Payments();
+$lacicloud_utils_api = new Utils();
+$dbc = $lacicloud_api->getMysqlConn();
+$dbc_ftp = $lacicloud_api->getFtpMysqlConn();
+
+$CP = new \MineSQL\CoinPayments();
+
+\Stripe\Stripe::setApiKey($lacicloud_api->grabSecret("stripe_secret_key"));
+
+//check if logged in, and also redirect if wanted tier is 1
+$session = $lacicloud_api -> startSession();
+if (!isset($_SESSION["logged_in"]) or $_SESSION["logged_in"] !== 1 or isset($_GET["tier"]) and $_GET["tier"] == "1") {
+  header("Location: /account");
+  die(0);
+}
+
+echo
+'<!DOCTYPE html>
 <html>
 <head>
-	<title>LaciCloud Payment Gateway</title>
+        <title>LaciCloud Payment Gateway</title>
 
-	<!--scripts-->
+        <!--scripts-->
     <script src="/js/main.js"></script>
     <!--styles-->
     <link href="/css/style.css" rel="stylesheet">
@@ -22,33 +46,10 @@
 <div class="warning"></div>
 <div class="error"></div>
 <div class="info"></div>
-
-
-<?php 
-require("../functions.php");
-
-$lacicloud_api = new LaciCloud();
-$lacicloud_errors_api = new Errors();
-$lacicloud_ftp_api = new FTPActions();
-$lacicloud_encryption_api = new Encryption();
-$lacicloud_payments_api = new Payments();
-$dbc = $lacicloud_api->getMysqlConn();
-$dbc_ftp = $lacicloud_api->getFtpMysqlConn();
-
-$CP = new \MineSQL\CoinPayments();
-
-\Stripe\Stripe::setApiKey($lacicloud_api->grabSecret("stripe_secret_key"));
-
-//check if logged in, and also redirect if wanted tier is 1
-$session = $lacicloud_api -> startSession();
-if (!isset($_SESSION["logged_in"]) or $_SESSION["logged_in"] !== 1 or isset($_GET["tier"]) and $_GET["tier"] == "1") {
-  header("Location: /account");
-  die(0);
-}
-
+';
 
 //load variables
-$id = $_SESSION["id"];  
+$id = $_SESSION["id"];
 $user_values = $lacicloud_ftp_api->getUserValues($id, $dbc);
 $email = $user_values["email"];
 $valid_tiers = $lacicloud_payments_api->valid_tiers;
@@ -124,6 +125,28 @@ if (isset($_GET["action"]) and $_GET["action"] == "buy" and isset($_GET["tier"])
 		echo "<p>After you do, your transaction will be automatically processed and your tier upgraded!</p>";
 	}
 
+} elseif (isset($_GET["action"]) and $_GET["action"] == "buy" and isset($_GET["tier"]) and in_array((int)$_GET["tier"], $valid_tiers) and isset($_GET["type"]) and $_GET["type"] == "bitz" and !isset($_GET["result"])) {
+
+	if ($lacicloud_errors_api -> getSuccessOrErrorFromID($lacicloud_api -> canChangeToTier($tier, $id, $dbc, $dbc_ftp)) !== "success") {
+		$result = $lacicloud_payments_api->getChangeDisallowedCode();
+	} else {
+		$address = $lacicloud_payments_api->getBitZPaymentAddress();
+		$ticker = $lacicloud_utils_api->getBitZTicker("bz_usdt");
+
+		//calculate price in Bit-Z tokens
+		if (!is_array($ticker)) {
+			$result = $lacicloud_payments_api->getTickerFailedCode();
+		}
+
+		$price_of_one_bitz = (float)$ticker["data"]["now"];
+		$price_bitz = $price / $price_of_one_bitz;
+
+		$reference = $lacicloud_encryption_api->encryptString($tier.':'.$id.':EUR:'.$price.":bitz:".$email, $lacicloud_api->grabSecret("payments_encryption_secret"));
+
+		echo '<img src="/resources/bitz.png" height="120" alt="BIT-Z accepted and recommended for trading!">';
+		echo "<p>Please send <strong>".$price_bitz."</strong> Bit-Z tokens to <strong>".$address."</strong>!</p>";
+		echo '<p>Please include the payment reference <strong>'.$reference.'</strong> in your Ethereum transaction, then your tier will be automatically upgraded!</p>';
+	}
 
 } elseif (isset($_GET["action"]) and $_GET["action"] == "buy" and isset($_GET["tier"]) and in_array((int)$_GET["tier"], $valid_tiers) and isset($_GET["type"]) and $_GET["type"] == "paypal" and !isset($_GET["result"])) {
 
@@ -178,7 +201,7 @@ if (isset($_GET["action"]) and $_GET["action"] == "buy" and isset($_GET["tier"])
 } elseif (isset($_GET["action"]) and $_GET["action"] == "buy" and isset($_GET["tier"]) and in_array((int)$_GET["tier"], $valid_tiers) and isset($_GET["type"]) and $_GET["type"] == "stripe" and !isset($_GET["result"])) {
 	?>
 
-	<?php  
+	<?php
 		if ($lacicloud_errors_api -> getSuccessOrErrorFromID($lacicloud_api -> canChangeToTier($tier, $id, $dbc, $dbc_ftp)) !== "success") {
 			$result = $lacicloud_payments_api->getChangeDisallowedCode();
 		} else {
@@ -198,7 +221,7 @@ if (isset($_GET["action"]) and $_GET["action"] == "buy" and isset($_GET["tier"])
 	</form>
 	<?php } ?>
 
-	<?php 
+	<?php
 } elseif (isset($_POST['stripeToken']) and isset($_GET["custom"])) {
 	$token = $_POST["stripeToken"];
 	$price_stripe = $price * 100;
@@ -249,6 +272,8 @@ if (isset($_GET["action"]) and $_GET["action"] == "buy" and isset($_GET["tier"])
 		echo "<br><br>";
 		echo "<a href='/pay/?action=".$_GET["action"]."&tier=".$_GET["tier"]."&type=iota'>Pay using PayIOTA<a/>";
 		echo "<br><br>";
+		echo "<a href='/pay/?action=".$_GET["action"]."&tier=".$_GET["tier"]."&type=bitz'>Pay using BIT-Z</a>";
+		echo "<br><br>";
 		echo "<a href='/pay/?action=".$_GET["action"]."&tier=".$_GET["tier"]."&type=paypal'>Pay using Paypal</a>";
 		echo "<br><br>";
 		echo "<a href='/pay/?action=".$_GET["action"]."&tier=".$_GET["tier"]."&type=stripe'>Pay using Stripe (Credit/Debit cards)</a>";
@@ -270,7 +295,7 @@ var error = document.getElementsByClassName("error")[0];
 var info = document.getElementsByClassName("info")[0];
 var warning = document.getElementsByClassName("warning")[0];
 
-<?php 
+<?php
 
 if (isset($result)) {
     $message = $lacicloud_errors_api -> getErrorMsgFromID($result);
@@ -284,7 +309,6 @@ if (isset($result)) {
 }
 
 ?>
-
 </script>
 
 </body>

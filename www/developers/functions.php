@@ -421,7 +421,7 @@ class LaciCloud {
         
      	try{
      		$title = "LaciCloud_Create_Email";
-        	$transport = Swift_SmtpTransport::newInstance(gethostbyname("mail.gandi.net"), 465, "ssl") 
+        	$transport = Swift_SmtpTransport::newInstance("mail.gandi.net", 465, "ssl") 
 				->setUsername($this -> grabSecret("email"))
 				->setPassword($this -> grabSecret("email_password"))
 				->setSourceIp("0.0.0.0");
@@ -540,7 +540,7 @@ class LaciCloud {
 
 		try{
      		$title = "LaciCloud_Forgot_Email";
-	        $transport = Swift_SmtpTransport::newInstance(gethostbyname("mail.gandi.net"), 465, "ssl") 
+	        $transport = Swift_SmtpTransport::newInstance("mail.gandi.net", 465, "ssl") 
 				->setUsername($this -> grabSecret("email"))
 				->setPassword($this -> grabSecret("email_password"))
 				->setSourceIp("0.0.0.0");
@@ -642,7 +642,7 @@ class LaciCloud {
 
 		try{
      		$title = "LaciCloud_Forgot2_Email";
-	        $transport = Swift_SmtpTransport::newInstance(gethostbyname("mail.gandi.net"), 465, "ssl") 
+	        $transport = Swift_SmtpTransport::newInstance("mail.gandi.net", 465, "ssl") 
 				->setUsername($this -> grabSecret("email"))
 				->setPassword($this -> grabSecret("email_password"))
 				->setSourceIp("0.0.0.0");
@@ -910,7 +910,7 @@ class LaciCloud {
 		try {
 			//sends email to user & me about overdue payment or overused space
 			$title = "LaciCloud_OverUsed_Email";
-		    $transport = Swift_SmtpTransport::newInstance(gethostbyname("mail.gandi.net"), 465, "ssl") 
+		    $transport = Swift_SmtpTransport::newInstance("mail.gandi.net", 465, "ssl") 
 				->setUsername($this -> grabSecret("email"))
 				->setPassword($this -> grabSecret("email_password"))
 				->setSourceIp("0.0.0.0");
@@ -954,7 +954,7 @@ class LaciCloud {
 		//spent 15 mins debugging why the object was sending its own headers, turns out i named the $body variable $message at first... :P
 		try{
      		$title = "LaciCloud_Contact_Email";
-	        $transport = Swift_SmtpTransport::newInstance(gethostbyname("mail.gandi.net"), 465, "ssl") 
+	        $transport = Swift_SmtpTransport::newInstance("mail.gandi.net", 465, "ssl") 
 				->setUsername($this -> grabSecret("email"))
 				->setPassword($this -> grabSecret("email_password"))
 				->setSourceIp("0.0.0.0");
@@ -1325,7 +1325,7 @@ class FTPActions extends LaciCloud {
 		}
 
 		preg_match_all('!\d+!', $usage[2], $usage);
-		return $usage[0];
+		return $usage;
 	}
 	
 	public function getFTPUsersUsedSpace($id, $dbc) { 
@@ -1423,6 +1423,15 @@ class Payments extends LaciCloud {
 		return 46;
 	}
 
+	public function getTickerFailedCode() {
+		return 55;
+	}
+
+	public function getBitZPaymentAddress() {
+		$lacicloud_api = new LaciCloud();
+		return $lacicloud_api->grabSecret("bitz_payment_address");
+	}
+
 	public function sendPaymentEmail($amount, $order_info, $orderID, $paymentID) {
 		$lacicloud_api = new LaciCloud();
 		$lacicloud_emails_api = New Emails();
@@ -1438,7 +1447,7 @@ class Payments extends LaciCloud {
 		try {
 			//sends email to user & me about payment
 			$title = "LaciCloud_Payment_Email";
-		    $transport = Swift_SmtpTransport::newInstance(gethostbyname("mail.gandi.net"), 465, "ssl") 
+		    $transport = Swift_SmtpTransport::newInstance("mail.gandi.net", 465, "ssl") 
 				->setUsername($lacicloud_api -> grabSecret("email"))
 				->setPassword($lacicloud_api -> grabSecret("email_password"))
 				->setSourceIp("0.0.0.0");
@@ -1741,6 +1750,7 @@ class Errors extends LaciCloud {
 		52 => "Successfully reset MySql password on webhosting environment!",
 		53 => "IPN/Payment error!",
 		54 => "Sorry, action is disallowed for your tier or your webhosting options!",
+		55 => "Failed to get ticker from Bit-Z's API!"
 	);
 
 	private $result_messages_map = array(
@@ -1797,7 +1807,8 @@ class Errors extends LaciCloud {
 		51 => "success",
 		52 => "success",
 		53 => "error",
-		54 => "error"
+		54 => "error",
+		55 => "error"
 		);
 
 	public function getSuccessOrErrorFromID($id) {
@@ -1973,6 +1984,21 @@ class Emails extends LaciCloud {
 
 //anything that does not belong to the core of LaciCloud
 class Utils extends LaciCloud {
+
+	public function getBitZTicker($ticker) {
+
+		$curl = curl_init();
+		curl_setopt_array($curl, array(
+		    CURLOPT_RETURNTRANSFER => 1,
+		    CURLOPT_URL => "https://apiv2.bitz.com/Market/ticker?symbol=".$ticker,
+		));
+
+		$response = curl_exec($curl);
+		curl_close($curl);
+
+		return json_decode($response, true);
+	}
+
 	public function getEmailProvider($email) {
 
 		//strrpos is not misspelled

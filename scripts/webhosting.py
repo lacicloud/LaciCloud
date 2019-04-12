@@ -26,13 +26,16 @@ config.read('/var/ftp/www/developers/secrets.ini')
 
 username = config.get('secrets', 'webhosting_user')
 password = config.get('secrets', 'webhosting_password')
+db_host = config.get('secrets', 'db_host')
+db_name = config.get('secrets', 'db_name')
+
 
 #--- mysql starts here ---#
 
-db = MySQLdb.connect(host="localhost",
+db = MySQLdb.connect(host=db_host,
                      user=username,
                      passwd=password,
-                     db="laci_corporations_users")
+                     db=db_name)
 
 cursor = db.cursor()
 cursor.execute("set autocommit = 1")

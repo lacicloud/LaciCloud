@@ -11,9 +11,9 @@
 
     $marshaller = new RequestMarshaller();
 
+
     try {
         $request = json_decode($_POST['request'], true);
-
         if ($request['actionName'] == 'fetchFile' || $request['actionName'] == 'downloadMultipleFiles') {
             switch ($request['actionName']) {
                 case 'fetchFile':
@@ -21,8 +21,9 @@
                     $outputFileName = basename($request['context']['remotePath']);
                     break;
                 case 'downloadMultipleFiles':
-                    $outputResponse = $marshaller->marshallRequest($request, false, true);
-                    $outputPath = $outputResponse["data"];
+	            $outputResponse = $marshaller->marshallRequest($request, false, true);
+                    echo "yes1";
+		    $outputPath = $outputResponse["data"];
                     $outputFileName = "mftp_zip_" . date("Y_m_d_H_i_s") . ".zip";
             }
 

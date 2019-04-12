@@ -99,8 +99,8 @@ if (!isset($tier) and !isset($id) and isset($_GET["action"])) {
             <div class="section-heading"><h1>We believe in choice.</h1></div>
             <div class="section-text about-text">
                 We think it's always better to have something that suits you and just you.
-                That's why we bring you a range of choice. Whoever you are, whatever your needs are, we have something for you!
-                If you don't feel that the plans we offer suit you, contact us and we'll try to tailor something to you. All our packages are DMCA-free, see below for options!
+                That is why we bring you a range of choice. Whoever you are, whatever your needs are, we have something for you!
+                Either select your standalone FTP(s) and webhosting plan, without special support, budgetary considerations and backup tracking (for IT managers and developers) or contact us to get the most cost savings with a tailored evaluation of the best possible backup plan for you! 
             </div>
 
             <div style="width: 500px; margin:0 auto; padding-bottom: 10%">
@@ -118,18 +118,38 @@ if (!isset($tier) and !isset($id) and isset($_GET["action"])) {
     <!--start - meet the shop-->
     <section class="row h-features meettheshop">
         <div class="shop-wrapper">
+            <div class="shop-row shop-row-4">
+                <div class="shop-image"><img style="height:100%; width:100%" src="/resources/personalized_evaluation.jpg" alt="A picture of one cute cat"></div>
+                <div class="shop-user shop-user-4">
+                    <div class="shop-name">Personalized Evaluation - As low as 1€/Month</div>
+                    <span class="shop-end">.</span>
+                    <div class="shop-description">
+                        <ul>
+                            <li>Personalized backup plan to your needs and budget</li>
+                            <li>Usage of custom software and backup flow</li>
+                            <li>Guarantee of adequate resources and data protection</li>
+                            <li>Quick and free support</li>
+                            <li>Backup dashboard, free subdomains and PHP/MySQL webhosting</li>
+                        </ul>
+                    </div>
+                 
+                     <div class="shop-page-button"><a href="/contact"><span>Contact Us >&nbsp;</span></a></div>
+
+                    </div>
+                </div>
+            </div>
             <div class="shop-row shop-row-1">
-                <div class="shop-image"><img style="height:100%; width:100%" src="/resources/lacicloud_1_cat.jpg" alt="A picture of one cute cat"></div>
+                
                 <div class="shop-user shop-user-1">
-                    <div class="shop-name">Free - For First Timers</div>
+                    <div class="shop-name">Tier 1 - 2.5€/Month - Free For 30 Days</div>
                     <span class="shop-end">.</span>
                     <div class="shop-description">
                         <ul>
                             <li>5 GB of storage</li>
                             <li>10 FTP users</li>
-                            <li>Free technical support</li>
+                            <li>No support</li>
                             <li>Limited speed (8MBit up, 1MBit down)</li>
-			                <li>Limited bandwidth (10GB/Month FTP)</li>
+                            <li>Limited bandwidth (10GB/Month FTP)</li>
                             <li>No subdomain or webhosting</li>
                         </ul>
                     </div>
@@ -155,19 +175,21 @@ if (!isset($tier) and !isset($id) and isset($_GET["action"])) {
 
                      </span></a></div>
                 </div>
+                <div class="shop-image"><img style="height:100%; width:100%" src="/resources/lacicloud_1_cat.jpg" alt="A picture of one cute cat"></div>
             </div>
             <div class="shop-row">
+                <div class="shop-image"><img style="height:100%; width:100%" src="/resources/lacicloud_2_cats.jpg" alt="A picture of two cute cats"></div>
                 <div class="shop-user">
-                    <div class="shop-name">15€/Year - For regulars</div>
+                    <div class="shop-name">Tier 2 - 5€/Month</div>
                     <span class="shop-end">.</span>
                     <div class="shop-description">
                         <ul>
                             <li>125 GB of storage</li>
                             <li>50 FTP users</li>
-                            <li>Free technical support</li>
+                            <li>No support</li>
                             <li>Bit limited speed (16MBit up, 2MBit down)</li>
                             <li>Bit limited bandwidth (1TB/Month FTP and website)</li>
-                            <li>Free subdomain, PHP/MySQL webhosting</li>
+                            <li>One free subdomain, one PHP/MySQL webhosting environnment</li>
                         </ul>
                     </div>
                      <div class="shop-page-button"><a href="/pay/?action=buy&tier=2" <?php if (isset($id) and $tier == "2" and (time() - $lastpayment) < $lacicloud_api->unix_time_1_year or isset($id) and $tier == "3") { echo 'class="disabled"'; } ?>  > <span>
@@ -196,21 +218,21 @@ if (!isset($tier) and !isset($id) and isset($_GET["action"])) {
                 
 
                 </div>
-                <div class="shop-image"><img style="height:100%; width:100%" src="/resources/lacicloud_2_cats.jpg" alt="A picture of two cute cats"></div>
+                
             </div>
             <div class="shop-row shop-row-3">
-                <div class="shop-image"><img style="height:100%; width:100%" src="/resources/lacicloud_3_cats.jpg" alt="A picture of three cute cats"></div>
+                
                 <div class="shop-user shop-user-3">
-                    <div class="shop-name">25€/Year - For experts</div>
+                    <div class="shop-name">Tier 3 - 10€/Month</div>
                     <span class="shop-end">.</span>
                     <div class="shop-description">
                         <ul>
                             <li>250 GB of storage</li>
                             <li>125 FTP users</li>
-                            <li>Free technical support</li>
+                            <li>Quick and free support</li>
                             <li>Just a lil' bit limited speed (32MBit up, 4MBit down)</li>
                             <li>Just a lil' bit limited bandwidth (2TB/Month FTP and website)</li>
-			                <li>Free subdomain, PHP/MySQL webhosting</li>
+			                <li>Five free subdomains, five PHP/MySQL webhosting environnments</li>
                         </ul>
                     </div>
                     <div class="shop-page-button"><a href="/pay/?action=buy&tier=3" <?php if (isset($id) and $tier == "3" and (time() - $lastpayment) < $lacicloud_api->unix_time_1_year) { echo 'class="disabled"'; } ?>  > <span>
@@ -235,24 +257,9 @@ if (!isset($tier) and !isset($id) and isset($_GET["action"])) {
 
                     </span></a></div>
                 </div>
+                <div class="shop-image"><img style="height:100%; width:100%" src="/resources/lacicloud_3_cats.jpg" alt="A picture of three cute cats"></div>
             </div>
-            <div class="shop-row shop-row-4">   
-                <div class="shop-user shop-user-4">
-                    <div class="shop-name">Customise it</div>
-                    <span class="shop-end">.</span>
-                    <div class="shop-description">
-                        <ul>
-                            <li>Up to 1TB+ of storage</li>
-                            <li>Up to 1000+ FTP users</li>
-                            <li>Free technical support</li>
-                            <li>Unlimited speed/bandwidth</li>
-                            <li>Free subdomain, PHP/MySQL webhosting</li>
-                        </ul>
-                    </div>
-                     <div class="shop-page-button"><a href="/contact"><span>Contact Us >&nbsp;</span></a></div>
-                </div>
-                <div class="shop-image"><img style="height:100%; width:100%" src="/resources/lacicloud_4_cats.jpg" alt="A picture of four cute cats"></div>
-            </div>
+        
     </section>
 
     <div class="clear"></div>

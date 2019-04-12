@@ -200,11 +200,21 @@ if (empty($_GET["id"]) or !in_array($_GET["id"], $lacicloud_api->valid_pages_arr
                 <li class="pure-menu-item"><a rel="canonical" href="/interface" class="pure-menu-link">Main</a></li>
                 <li class="pure-menu-item"><a rel="canonical" href="/interface?id=1" class="pure-menu-link">User Manager</a></li>
                 <li class="pure-menu-item"><a rel="canonical" href="/interface?id=2" class="pure-menu-link">Payment Manager</a></li>
-                <li class="pure-menu-item"><a rel="canonical" href="/interface?id=3" class="pure-menu-link">API Manager</a></li>
+                <li class="pure-menu-item"><a rel="canonical" href="/interface?id=3" class="pure-menu-link">API Manager</a></li>   
+                <li class="pure-menu-item"><a rel="canonical" href="/interface?id=4" class="pure-menu-link">PHP Webhosting</a></li>
+                <li class="pure-menu-item"><a rel="canonical" href="/interface?id=5" class="pure-menu-link">Dedicated Servers</a></li>
+                <li class="pure-menu-item"><a rel="canonical" href="/interface?id=6" class="pure-menu-link">Backup Dashboard</a></li>
+                <li class="pure-menu-item"><a rel="canonical" href="#" class="pure-menu-link"></a></li>
+                <li class="pure-menu-item"><a rel="canonical" href="#" class="pure-menu-link"></a></li>
+                <li class="pure-menu-item"><a rel="canonical" href="#" class="pure-menu-link">Tools and Useful:</a></li>
                 <li class="pure-menu-item"><a rel="canonical" href="/ftp" target="_blank" class="pure-menu-link">Monsta FTP</a></li>
-                <li class="pure-menu-item"><a rel="canonical" href="/interface?id=4" class="pure-menu-link">Webhosting</a></li>
-                <li class="pure-menu-item"><a rel="canonical" href="https://stats.uptimerobot.com/r8N9QIrq1" class="pure-menu-link">Status Page</a></li>
+                <li class="pure-menu-item"><a rel="canonical" href="https://stats.uptimerobot.com/r8N9QIrq1" target="_blank" class="pure-menu-link">Status Page</a></li>
                 <li class="pure-menu-item"><a rel="canonical" href="/resources/lacicloud_help.pdf" target="_blank" class="pure-menu-link">Help</a></li>
+                <li class="pure-menu-item"><a rel="canonical" href="#" class="pure-menu-link"></a></li>
+                <li class="pure-menu-item"><a rel="canonical" href="#" class="pure-menu-link"></a></li>
+                <li class="pure-menu-item"><a rel="canonical" href="#" class="pure-menu-link">Safety and Privacy:</a></li>
+                <li class="pure-menu-item"><a rel="canonical" href="https://go.nordvpn.net/aff_c?offer_id=15&aff_id=21011&url_id=902" target="_blank" class="pure-menu-link">NordVPN</a></li>
+                <li class="pure-menu-item"><a rel="canonical" href="http://www.kqzyfj.com/click-8968543-12782632" target="_blank" class="pure-menu-link">Malwarebytes AV</a></li>
                 <li class="pure-menu-item"><a rel="canonical" href="#" class="pure-menu-link"></a></li>
                 <li class="pure-menu-item"><a rel="canonical" href="#" class="pure-menu-link"></a></li>
                 <li class="pure-menu-item"><a rel="canonical" href=<?php echo "/interface?action=logout&csrf_token=".$csrf_token;?> class="pure-menu-link">Logout</a></li>
@@ -566,6 +576,58 @@ if (empty($_GET["id"]) or !in_array($_GET["id"], $lacicloud_api->valid_pages_arr
                 </div>
 
         </section>
+<?php } elseif ($_GET["id"] == "5") { ?>
+    <section id="ui_normal">
+            <div class="panel panel-success">
+
+            <div class="panel-heading">
+
+            <h3 class="panel-title">LaciCloud Control Panel</h3>
+
+            </div>
+
+                <div class="panel-body"> 
+
+                    <h2>Dedicated Servers</h2>
+
+                    <div class="success"></div>
+                    <div class="warning"></div>
+                    <div class="error"></div>
+                    <div class="info"></div>
+
+                    <p>Coming soon.</p>
+
+                </div>
+
+            </div>
+
+    </section>
+<?php } elseif ($_GET["id"] == "6") { ?>
+        <section id="ui_normal">
+                <div class="panel panel-success">
+
+                <div class="panel-heading">
+
+                <h3 class="panel-title">LaciCloud Control Panel</h3>
+
+                </div>
+
+                    <div class="panel-body"> 
+
+                        <h2>Backup Dashboard</h2>
+
+                        <div class="success"></div>
+                        <div class="warning"></div>
+                        <div class="error"></div>
+                        <div class="info"></div>
+
+                        <p>Coming soon.</p>
+
+                    </div>
+
+                </div>
+
+        </section>
 
 <?php }?>
 </div>
@@ -618,7 +680,7 @@ function ui_load() {
 
         if (is_array($result)) {
             //getIndividualFTPUsersUsedSpaceFromFTP
-            $message = "According to the FTP server, you have used ".((int)$result[1] / 1024)."MB out of ".((int)$result[3] / 1024)."MB, which is ".$result[2]."% of the allowed space!";
+            $message = "According to the FTP server, you have used ".((int)$result[0][1] / 1024)."MB out of ".((int)$result[0][3] / 1024)."MB, which is ".$result[0][2]."% of the allowed space!";
             echo "success.innerHTML='".$message."';";
             echo "\n";
             echo "success.style.display = 'block';";

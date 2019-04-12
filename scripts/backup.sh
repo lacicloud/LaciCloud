@@ -40,9 +40,10 @@ find /var/ftp -ls -path /var/ftp/private -prune -o -iname findme -print -iname f
 rm /var/ftp/tmp/backup/*
 
 #git backup
-git add /var/ftp/*
-git commit -m "Auto-commit at $date by backup.sh"
-git push https://"$username":"$password"@bitbucket.org/lacicloud/lacicloud.git/
+#cd /var/ftp
+#git add /var/ftp/*
+#git commit -m "Auto-commit at $date by backup.sh"
+#git push https://"$username":"$password"@bitbucket.org/lacicloud/lacicloud-v3.git/
 
 echo "Backed-up system at $date" >> /var/ftp/logs/events.txt
 echo "Backed-up system at $date" >> $LOG
