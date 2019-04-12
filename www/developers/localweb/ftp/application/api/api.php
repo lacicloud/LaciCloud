@@ -22,7 +22,6 @@
                     break;
                 case 'downloadMultipleFiles':
 	            $outputResponse = $marshaller->marshallRequest($request, false, true);
-                    echo "yes1";
 		    $outputPath = $outputResponse["data"];
                     $outputFileName = "mftp_zip_" . date("Y_m_d_H_i_s") . ".zip";
             }
